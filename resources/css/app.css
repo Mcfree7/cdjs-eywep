@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --fo-primary: #0d6efd;
+        --fo-primary-deep: #0a4fb3;
+        --fo-ink: #152033;
+        --fo-muted: #62708a;
+        --fo-paper: #fffaf4;
+        --fo-panel: rgba(255, 255, 255, 0.78);
+        --fo-line: rgba(25, 39, 67, 0.12);
+        --fo-shadow: 0 24px 60px rgba(16, 32, 62, 0.14);
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: 'Space Grotesk', sans-serif;
+        color: var(--fo-ink);
+        background:
+            radial-gradient(circle at top left, rgba(13, 110, 253, 0.16), transparent 34%),
+            radial-gradient(circle at top right, rgba(255, 146, 43, 0.22), transparent 26%),
+            linear-gradient(180deg, #fffdf8 0%, #fff8f1 32%, #f7fbff 100%);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        font-family: 'Fraunces', serif;
+    }
+}
+
+@layer components {
+    .fo-shell {
+        @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+    }
+
+    .fo-glass {
+        background: var(--fo-panel);
+        backdrop-filter: blur(18px);
+        border: 1px solid var(--fo-line);
+        box-shadow: var(--fo-shadow);
+    }
+
+    .fo-card {
+        @apply fo-glass rounded-[2rem] p-6 transition duration-300;
+    }
+
+    .fo-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 28px 70px rgba(16, 32, 62, 0.18);
+    }
+
+    .fo-pill {
+        @apply inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em];
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(255, 255, 255, 0.82);
+        color: var(--fo-primary-deep);
+    }
+
+    .fo-section-title {
+        @apply max-w-3xl text-3xl font-semibold leading-tight text-slate-900 sm:text-4xl;
+    }
+
+    .fo-section-copy {
+        @apply max-w-2xl text-base leading-8 text-slate-600;
+    }
+
+    .fo-button {
+        @apply inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold text-white transition duration-300;
+        background: linear-gradient(135deg, var(--fo-primary) 0%, var(--fo-primary-deep) 100%);
+        box-shadow: 0 16px 30px rgba(13, 110, 253, 0.24);
+    }
+
+    .fo-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 22px 36px rgba(13, 110, 253, 0.28);
+    }
+
+    .fo-button-secondary {
+        @apply inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold transition duration-300;
+        color: var(--fo-ink);
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(21, 32, 51, 0.1);
+    }
+
+    .fo-button-secondary:hover {
+        background: rgba(255, 255, 255, 1);
+        transform: translateY(-1px);
+    }
+
+    .fo-kicker {
+        @apply text-sm font-semibold uppercase tracking-[0.3em];
+        color: var(--fo-primary-deep);
+    }
+
+    .fo-grid {
+        @apply grid gap-6 md:grid-cols-2 xl:grid-cols-3;
+    }
+}
