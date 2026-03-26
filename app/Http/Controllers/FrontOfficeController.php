@@ -25,7 +25,7 @@ class FrontOfficeController extends Controller
             'articles' => Article::with('coverImage')
                 ->latest('datePublication')
                 ->latest('id')
-                ->take(3)
+                ->take(4)
                 ->get(),
             'activities' => Activity::with('coverImage')
                 ->latest('datePublication')

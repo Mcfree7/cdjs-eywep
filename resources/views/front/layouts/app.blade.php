@@ -147,5 +147,6 @@
     @yield('content')
 
     @include('front.partials.footer')
+    @stack('scripts')
 </body>
 </html>
