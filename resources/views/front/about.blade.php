@@ -11,9 +11,6 @@
 
     @include('front.partials.page-banner', ['bannerTitle' => 'À propos'])
 
-    {{-- ========================================================
-         INTRO — QUI SOMMES-NOUS
-    ======================================================== --}}
     @php
         // ── Textes modifiables directement ici ──────────────────────────────
         $aboutTitle   = 'À propos de ' . ($settings->company_name ?? 'EYWEP');
@@ -30,28 +27,41 @@
             'Présence dans 15 pays avec un réseau actif de plus de 500 jeunes.',
         ];
         $stats = [
-            ['target' => 500, 'suffix' => '+',  'label' => 'Jeunes accompagnés'],
-            ['target' => 120, 'suffix' => '+',  'label' => 'Projets financés'],
-            ['target' => 15,  'suffix' => '',   'label' => 'Pays couverts'],
-            ['target' => 8,   'suffix' => '+',  'label' => 'Années d\'expérience'],
+            ['target' => 500, 'suffix' => '+', 'label' => 'Jeunes accompagnés'],
+            ['target' => 120, 'suffix' => '+', 'label' => 'Projets financés'],
+            ['target' => 15,  'suffix' => '',  'label' => 'Pays couverts'],
+            ['target' => 8,   'suffix' => '+', 'label' => 'Années d\'expérience'],
+        ];
+        $mvv = [
+            [
+                'title' => 'Notre Mission',
+                'text'  => 'Promouvoir l\'entrepreneuriat jeune en fournissant formation, financement et accompagnement pour créer des entreprises durables et à impact social.',
+                'icon'  => '<path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+            ],
+            [
+                'title' => 'Notre Vision',
+                'text'  => 'Devenir la plateforme de référence de l\'entrepreneuriat jeune en Afrique centrale d\'ici 2030, avec un réseau actif de 10 000 entrepreneurs.',
+                'icon'  => '<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/><path d="M12 1V3M12 21V23M4.22 4.22L5.64 5.64M18.36 18.36L19.78 19.78M1 12H3M21 12H23M4.22 19.78L5.64 18.36M18.36 5.64L19.78 4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+            ],
+            [
+                'title' => 'Nos Valeurs',
+                'text'  => 'Excellence, inclusion, innovation et intégrité guident chacune de nos actions et partenariats pour un impact durable.',
+                'icon'  => '<path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+            ],
         ];
         // ────────────────────────────────────────────────────────────────────
     @endphp
 
-    <section class="section-padding mt-40">
+    {{-- INTRO --}}
+    <section class="py-5">
         <div class="container">
-            <div class="row align-items-center g-5">
+            <div class="row align-items-center g-4">
                 <div class="col-lg-6">
-                    <img
-                        src="{{ $aboutImage }}"
-                        alt="À propos EYWEP"
-                        loading="eager"
-                        class="radius18 w-100"
-                        style="max-height:500px; object-fit:cover;"
-                    >
+                    <img src="{{ $aboutImage }}" alt="À propos EYWEP" loading="eager"
+                        class="radius18 w-100" style="height:auto;">
                 </div>
                 <div class="col-lg-6">
-                    <div class="section-headings mb-4">
+                    <div class="section-headings mb-3">
                         <div class="subheading text-20 subheading-bg">
                             <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                                 <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="currentColor"/>
@@ -60,9 +70,9 @@
                         </div>
                         <h1 class="heading text-50 fw-700">{{ $aboutTitle }}</h1>
                     </div>
-                    <p class="text text-18 mb-3 fw-500">{{ $aboutLead }}</p>
-                    <p class="text text-16 mb-4" style="color:var(--color-foreground-subheading);">{{ $aboutBody }}</p>
-                    <ul class="list-unstyled mb-4" style="display:flex; flex-direction:column; gap:12px;">
+                    <p class="text text-18 mb-2 fw-500">{{ $aboutLead }}</p>
+                    <p class="text text-16 mb-3" style="color:var(--color-foreground-subheading);">{{ $aboutBody }}</p>
+                    <ul class="list-unstyled mb-3" style="display:flex; flex-direction:column; gap:10px;">
                         @foreach ($aboutBullets as $bullet)
                         <li class="d-flex align-items-start gap-2">
                             <svg style="flex-shrink:0; margin-top:2px; width:22px; height:22px; color:var(--color-primary);" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -90,85 +100,10 @@
         </div>
     </section>
 
-    {{-- ========================================================
-         STATS — style counter-up Consulo
-    ======================================================== --}}
-    <counter-up class="counter-up d-block mt-60">
-        <div class="container">
-            <div class="counter-up-box radius18">
-                <div class="row product-grid text-center">
-                    @foreach ($stats as $i => $stat)
-                    <div class="col-12 col-md-3" data-aos="fade-up" @if($i > 0) data-aos-delay="{{ $i * 100 }}" @endif>
-                        <div class="counter-item">
-                            <h2 class="heading text-50" data-target="{{ $stat['target'] }}">
-                                0<span>{{ $stat['suffix'] }}</span>
-                            </h2>
-                            <div class="text text-18 fw-500">{{ $stat['label'] }}</div>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    </counter-up>
-
-    {{-- ========================================================
-         MISSION / VISION / VALEURS
-    ======================================================== --}}
-    @php
-        $mvv = [
-            [
-                'title' => 'Notre Mission',
-                'text'  => 'Promouvoir l\'entrepreneuriat jeune en fournissant formation, financement et accompagnement pour créer des entreprises durables et à impact social.',
-                'icon'  => '<path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
-            ],
-            [
-                'title' => 'Notre Vision',
-                'text'  => 'Devenir la plateforme de référence de l\'entrepreneuriat jeune en Afrique centrale d\'ici 2030, avec un réseau actif de 10 000 entrepreneurs.',
-                'icon'  => '<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/><path d="M12 1V3M12 21V23M4.22 4.22L5.64 5.64M18.36 18.36L19.78 19.78M1 12H3M21 12H23M4.22 19.78L5.64 18.36M18.36 5.64L19.78 4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
-            ],
-            [
-                'title' => 'Nos Valeurs',
-                'text'  => 'Excellence, inclusion, innovation et intégrité guident chacune de nos actions et partenariats pour un impact durable.',
-                'icon'  => '<path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
-            ],
-        ];
-    @endphp
-    <section class="section-padding" style="background:#f8f9fa;">
-        <div class="container">
-            <div class="section-headings text-center mb-60">
-                <div class="subheading text-20 subheading-bg">
-                    <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                        <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="currentColor"/>
-                    </svg>
-                    Ce qui nous guide
-                </div>
-                <h2 class="heading text-50 fw-700">Mission, Vision & Valeurs</h2>
-            </div>
-            <div class="row g-4">
-                @foreach ($mvv as $item)
-                <div class="col-md-4">
-                    <div class="radius18 p-4 h-100" style="background:#fff; border:1px solid rgba(0,0,0,.06);">
-                        <div class="mb-3" style="width:52px; height:52px; border-radius:12px; background:var(--color-primary); display:flex; align-items:center; justify-content:center;">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color:#fff;">
-                                {!! $item['icon'] !!}
-                            </svg>
-                        </div>
-                        <h3 class="heading text-22 fw-700 mb-2">{{ $item['title'] }}</h3>
-                        <p class="text text-16 mb-0" style="color:var(--color-foreground-subheading);">{{ $item['text'] }}</p>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
-    {{-- ========================================================
-         PARTENAIRES (défilement)
-    ======================================================== --}}
+    {{-- PARTENAIRES (défilement) --}}
     @if ($partners->isNotEmpty())
     @php $sponsorList = $partners->all(); @endphp
-    <section class="py-5 section-padding" style="background:#fff; overflow:hidden;">
+    <section class="section-sponsors py-5" style="background:#fff; overflow:hidden;">
         <div class="container mb-4">
             <div class="section-headings text-center">
                 <div class="subheading text-20 subheading-bg d-inline-flex">
@@ -179,19 +114,22 @@
                 </div>
             </div>
         </div>
-        <div style="position:relative;">
+        <div class="sponsors-track-wrapper" style="position:relative;">
             <div style="pointer-events:none;position:absolute;top:0;left:0;width:120px;height:100%;background:linear-gradient(to right,#fff,transparent);z-index:2;"></div>
             <div style="pointer-events:none;position:absolute;top:0;right:0;width:120px;height:100%;background:linear-gradient(to left,#fff,transparent);z-index:2;"></div>
-            <div class="d-flex align-items-center gap-5" style="width:max-content; animation:sponsors-scroll 30s linear infinite;">
-                @foreach (array_merge($sponsorList, $sponsorList) as $partner)
-                <div class="flex-shrink-0 text-center px-3">
+            <div class="sponsors-track d-flex align-items-center gap-5" style="width:max-content;">
+                @foreach (array_merge($sponsorList, $sponsorList, $sponsorList, $sponsorList) as $partner)
+                <div class="sponsor-item flex-shrink-0 text-center px-3">
+                    @if ($partner->lien)
+                        <a href="{{ $partner->lien }}" target="_blank" rel="noopener noreferrer" class="sponsor-link" title="{{ $partner->titre }}">
+                    @endif
                     @if ($partner->logo_path)
-                        <img src="{{ Storage::url($partner->logo_path) }}" alt="{{ $partner->titre }}" loading="lazy"
-                            style="max-height:70px;max-width:160px;object-fit:contain;filter:grayscale(60%);opacity:.8;transition:filter .3s,opacity .3s;"
-                            onmouseover="this.style.filter='grayscale(0)';this.style.opacity='1';"
-                            onmouseout="this.style.filter='grayscale(60%)';this.style.opacity='.8';">
+                        <img src="{{ Storage::url($partner->logo_path) }}" alt="{{ $partner->titre }}" loading="lazy" class="sponsor-logo">
                     @else
                         <span class="fw-600 text-16" style="color:var(--color-foreground-subheading);white-space:nowrap;">{{ $partner->titre }}</span>
+                    @endif
+                    @if ($partner->lien)
+                        </a>
                     @endif
                 </div>
                 @endforeach
@@ -200,14 +138,64 @@
         <style>
             @keyframes sponsors-scroll {
                 from { transform: translateX(0); }
-                to   { transform: translateX(-50%); }
+                to   { transform: translateX(-25%); }
             }
-            @media (prefers-reduced-motion: reduce) {
-                .sponsors-track { animation: none !important; }
-            }
+            .sponsors-track { animation: sponsors-scroll 15s linear infinite; }
+            .sponsors-track-wrapper:hover .sponsors-track { animation-play-state: paused; }
+            @media (prefers-reduced-motion: reduce) { .sponsors-track { animation: none !important; } }
+            .sponsor-logo { max-height:70px; max-width:160px; object-fit:contain; filter:grayscale(60%); opacity:.8; transition:filter .3s,opacity .3s,transform .3s; }
+            .sponsor-item:hover .sponsor-logo { filter:grayscale(0); opacity:1; transform:scale(1.05); }
+            .sponsor-link { display:inline-block; text-decoration:none; }
         </style>
     </section>
     @endif
+
+    {{-- COUNTER UP --}}
+    <counter-up class="counter-up d-block mt-40">
+        <div class="container">
+            <div class="counter-up-box radius18">
+                <div class="row product-grid text-center">
+                    @foreach ($stats as $i => $stat)
+                    <div class="col-12 col-md-3" data-aos="fade-up" @if($i > 0) data-aos-delay="{{ $i * 100 }}" @endif>
+                        <div class="counter-item">
+                            <h2 class="heading text-50" data-target="{{ $stat['target'] }}">0<span>{{ $stat['suffix'] }}</span></h2>
+                            <div class="text text-18 fw-500">{{ $stat['label'] }}</div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </counter-up>
+
+    {{-- MISSION / VISION / VALEURS --}}
+    <section class="py-5 mt-40" style="background:#f8f9fa;">
+        <div class="container">
+            <div class="section-headings text-center mb-40">
+                <div class="subheading text-20 subheading-bg">
+                    <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="currentColor"/>
+                    </svg>
+                    Ce qui nous guide
+                </div>
+                <h2 class="heading text-50 fw-700">Mission, Vision & Valeurs</h2>
+            </div>
+            <div class="row g-3">
+                @foreach ($mvv as $item)
+                <div class="col-md-4">
+                    <div class="radius18 p-4 h-100" style="background:#fff; border:1px solid rgba(0,0,0,.06);">
+                        <div class="mb-3" style="width:48px; height:48px; border-radius:10px; background:var(--color-primary); display:flex; align-items:center; justify-content:center;">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color:#fff;">{!! $item['icon'] !!}</svg>
+                        </div>
+                        <h3 class="heading text-20 fw-700 mb-2">{{ $item['title'] }}</h3>
+                        <p class="text text-15 mb-0" style="color:var(--color-foreground-subheading);">{{ $item['text'] }}</p>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
 
 </main>
 @endsection

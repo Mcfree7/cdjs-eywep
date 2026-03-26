@@ -24,6 +24,30 @@
         }
     @endphp
 
+    @php
+        $heroVideoUrl      = $settings->hero_video_url ?? null;
+        $heroVideoFilePath = $settings->hero_video_file_path ?? null;
+        $heroVideoEmbed    = null;
+        $heroVideoIsLocal  = false;
+
+        if ($heroVideoFilePath) {
+            // Fichier uploadé en local — priorité sur l'URL externe
+            $heroVideoEmbed   = Storage::url($heroVideoFilePath);
+            $heroVideoIsLocal = true;
+        } elseif ($heroVideoUrl) {
+            preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/', $heroVideoUrl, $ytM);
+            preg_match('/vimeo\.com\/(\d+)/', $heroVideoUrl, $vimM);
+            if (!empty($ytM[1])) {
+                $heroVideoEmbed = 'https://www.youtube.com/embed/' . $ytM[1] . '?rel=0&modestbranding=1';
+            } elseif (!empty($vimM[1])) {
+                $heroVideoEmbed = 'https://player.vimeo.com/video/' . $vimM[1];
+            } else {
+                $heroVideoEmbed   = Str::startsWith($heroVideoUrl, ['http', '//']) ? $heroVideoUrl : Storage::url($heroVideoUrl);
+                $heroVideoIsLocal = true;
+            }
+        }
+        $heroVideoActive = !empty($heroVideoEmbed);
+    @endphp
     <hero-slider class="hero-slider with-floating-header">
         <div class="swiper">
             <div class="swiper-wrapper">
@@ -41,46 +65,224 @@
                         </picture>
                         <div class="slider-content">
                             <div class="container height-100 d-flex align-items-center">
-                                <div class="content-box slider-animation section-headings">
-                                    <div class="subheading text-20 subheading-bg">
-                                        <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                                            <g clip-path="url(#clip-hero-{{ $index }})">
-                                                <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="CurrentColor"/>
-                                            </g>
-                                            <defs><clipPath id="clip-hero-{{ $index }}"><rect width="14" height="14" fill="CurrentColor"/></clipPath></defs>
-                                        </svg>
-                                        <span>{{ $settings->company_name ?? 'EYWEP' }}</span>
-                                        <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                                            <g clip-path="url(#clip-hero-b-{{ $index }})">
-                                                <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="CurrentColor"/>
-                                            </g>
-                                            <defs><clipPath id="clip-hero-b-{{ $index }}"><rect width="14" height="14" fill="CurrentColor"/></clipPath></defs>
-                                        </svg>
-                                    </div>
-                                    <h2 class="heading text-90 fw-700">
-                                        {{ $settings->hero_title ?? 'Entrepreneuriat &amp; Innovation' }}
-                                    </h2>
-                                    <div class="text text-18">
-                                        {{ $settings->hero_subtitle ?? 'Programme de promotion de l\'entrepreneuriat jeune — articles, activités, ressources et projets.' }}
-                                    </div>
-                                    <div class="buttons">
-                                        <a href="{{ route('front.projects.index') }}" class="button button--secondary" aria-label="Nos Projets">
-                                            Nos Projets
-                                            <span class="svg-wrapper">
-                                                <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
+                                <div class="row align-items-center w-100 g-4">
+                                    {{-- Texte --}}
+                                    <div class="{{ $heroVideoActive ? 'col-lg-6' : 'col-12' }}">
+                                        <div class="content-box slider-animation section-headings">
+                                            <div class="subheading text-20 subheading-bg">
+                                                <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                                    <g clip-path="url(#clip-hero-{{ $index }})">
+                                                        <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="CurrentColor"/>
+                                                    </g>
+                                                    <defs><clipPath id="clip-hero-{{ $index }}"><rect width="14" height="14" fill="CurrentColor"/></clipPath></defs>
                                                 </svg>
-                                            </span>
-                                        </a>
-                                        <a href="{{ route('front.contact') }}" class="button button--secondary" aria-label="Nous contacter">
-                                            Nous contacter
-                                            <span class="svg-wrapper">
-                                                <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
+                                                <span>{{ $settings->company_name ?? 'EYWEP' }}</span>
+                                                <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                                    <g clip-path="url(#clip-hero-b-{{ $index }})">
+                                                        <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="CurrentColor"/>
+                                                    </g>
+                                                    <defs><clipPath id="clip-hero-b-{{ $index }}"><rect width="14" height="14" fill="CurrentColor"/></clipPath></defs>
                                                 </svg>
-                                            </span>
-                                        </a>
+                                            </div>
+                                            <h2 class="heading text-90 fw-700">
+                                                {{ $settings->hero_title ?? 'Entrepreneuriat &amp; Innovation' }}
+                                            </h2>
+                                            <div class="text text-18">
+                                                {{ $settings->hero_subtitle ?? 'Programme de promotion de l\'entrepreneuriat jeune — articles, activités, ressources et projets.' }}
+                                            </div>
+                                            <div class="buttons">
+                                                <a href="{{ route('front.projects.index') }}" class="button button--secondary" aria-label="Nos Projets">
+                                                    Nos Projets
+                                                    <span class="svg-wrapper">
+                                                        <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
+                                                        </svg>
+                                                    </span>
+                                                </a>
+                                                <a href="{{ route('front.contact') }}" class="button button--secondary" aria-label="Nous contacter">
+                                                    Nous contacter
+                                                    <span class="svg-wrapper">
+                                                        <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
+                                                        </svg>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
+                                    {{-- Vidéo miniature (uniquement si renseignée) --}}
+                                    @if ($heroVideoActive)
+                                    <div class="col-lg-6 d-none d-lg-block" style="padding-top: 80px;">
+                                        <div class="hv-outer">
+                                            {{-- Badge --}}
+                                            <div class="hv-badge">
+                                                <span class="hv-dot"></span>
+                                                Présentation
+                                            </div>
+                                            {{-- Carte vidéo --}}
+                                            <div class="hv-card">
+                                                <div class="hv-ratio">
+                                                    @if (!$heroVideoIsLocal)
+                                                        <iframe id="hv-iframe"
+                                                            src="{{ $heroVideoEmbed }}"
+                                                            style="position:absolute;inset:0;width:100%;height:100%;border:0;"
+                                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                            allowfullscreen loading="lazy"
+                                                        ></iframe>
+                                                    @else
+                                                        <video id="hv-video"
+                                                            src="{{ $heroVideoEmbed }}"
+                                                            preload="metadata"
+                                                            style="position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:cover;"
+                                                        ></video>
+                                                    @endif
+                                                    {{-- Overlay play --}}
+                                                    <div id="hv-play" class="hv-overlay">
+                                                        <div class="hv-pulse-ring"></div>
+                                                        <div class="hv-play-btn">
+                                                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                                                                <path d="M7 4.5v15l13-7.5L7 4.5z" fill="currentColor"/>
+                                                            </svg>
+                                                        </div>
+                                                        <span class="hv-label">Voir la vidéo</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{-- Déco bas --}}
+                                            <div class="hv-footer">
+                                                <div class="hv-bar"></div>
+                                                <span class="hv-duration">{{ $settings->company_name ?? 'EYWEP' }}</span>
+                                                <div class="hv-bar"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <style>
+                                    .hv-outer {
+                                        display: flex;
+                                        flex-direction: column;
+                                        gap: 12px;
+                                    }
+                                    .hv-badge {
+                                        display: inline-flex;
+                                        align-items: center;
+                                        gap: 8px;
+                                        background: rgba(255,255,255,.15);
+                                        border: 1px solid rgba(255,255,255,.3);
+                                        backdrop-filter: blur(8px);
+                                        color: #fff;
+                                        font-size: 12px;
+                                        font-weight: 600;
+                                        letter-spacing: .06em;
+                                        text-transform: uppercase;
+                                        padding: 6px 14px;
+                                        border-radius: 999px;
+                                        width: fit-content;
+                                    }
+                                    .hv-dot {
+                                        width: 8px; height: 8px;
+                                        border-radius: 50%;
+                                        background: #4ade80;
+                                        box-shadow: 0 0 6px #4ade80;
+                                        animation: hv-blink 1.6s ease-in-out infinite;
+                                    }
+                                    @keyframes hv-blink {
+                                        0%,100% { opacity:1; } 50% { opacity:.3; }
+                                    }
+                                    .hv-card {
+                                        border-radius: 20px;
+                                        overflow: hidden;
+                                        border: 2px solid rgba(255,255,255,.35);
+                                        box-shadow: 0 24px 64px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.08);
+                                    }
+                                    .hv-ratio {
+                                        position: relative;
+                                        padding-top: 56.25%;
+                                    }
+                                    .hv-overlay {
+                                        position: absolute;
+                                        inset: 0;
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: center;
+                                        justify-content: center;
+                                        gap: 16px;
+                                        background: linear-gradient(135deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,.25) 100%);
+                                        cursor: pointer;
+                                        transition: background .3s;
+                                        z-index: 5;
+                                    }
+                                    .hv-overlay:hover { background: linear-gradient(135deg, rgba(0,0,0,.25) 0%, rgba(0,0,0,.1) 100%); }
+                                    .hv-pulse-ring {
+                                        position: absolute;
+                                        width: 96px; height: 96px;
+                                        border-radius: 50%;
+                                        border: 2px solid rgba(255,255,255,.5);
+                                        animation: hv-pulse 2s ease-out infinite;
+                                    }
+                                    @keyframes hv-pulse {
+                                        0%   { transform: scale(1);   opacity:.6; }
+                                        100% { transform: scale(1.7); opacity:0;  }
+                                    }
+                                    .hv-play-btn {
+                                        width: 76px; height: 76px;
+                                        border-radius: 50%;
+                                        background: rgba(255,255,255,.95);
+                                        color: #111;
+                                        display: flex; align-items: center; justify-content: center;
+                                        box-shadow: 0 4px 28px rgba(0,0,0,.4);
+                                        transition: transform .25s, box-shadow .25s;
+                                        padding-left: 4px;
+                                        position: relative; z-index: 1;
+                                    }
+                                    .hv-overlay:hover .hv-play-btn {
+                                        transform: scale(1.1);
+                                        box-shadow: 0 8px 36px rgba(0,0,0,.55);
+                                    }
+                                    .hv-label {
+                                        color: #fff;
+                                        font-size: 13px;
+                                        font-weight: 600;
+                                        letter-spacing: .05em;
+                                        text-shadow: 0 1px 6px rgba(0,0,0,.6);
+                                    }
+                                    .hv-footer {
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 10px;
+                                    }
+                                    .hv-bar {
+                                        flex: 1;
+                                        height: 1px;
+                                        background: rgba(255,255,255,.25);
+                                    }
+                                    .hv-duration {
+                                        color: rgba(255,255,255,.6);
+                                        font-size: 11px;
+                                        font-weight: 500;
+                                        letter-spacing: .08em;
+                                        white-space: nowrap;
+                                    }
+                                    </style>
+                                    <script>
+                                    (function(){
+                                        document.addEventListener('DOMContentLoaded', function(){
+                                            var overlay = document.getElementById('hv-play');
+                                            var video   = document.getElementById('hv-video');
+                                            var iframe  = document.getElementById('hv-iframe');
+                                            if (!overlay) return;
+                                            overlay.addEventListener('click', function(){
+                                                overlay.style.display = 'none';
+                                                if (video) {
+                                                    video.controls = true;
+                                                    video.play();
+                                                } else if (iframe) {
+                                                    iframe.src += (iframe.src.includes('?') ? '&' : '?') + 'autoplay=1';
+                                                }
+                                            });
+                                        });
+                                    })();
+                                    </script>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -142,7 +344,7 @@
                             alt="À propos EYWEP"
                             loading="lazy"
                             class="radius18 w-100"
-                            style="max-height:500px; object-fit:cover;"
+                            style="height:auto;"
                         >
                         {{-- Stats flottantes --}}
                         <div class="d-flex gap-3 flex-wrap" style="position:absolute; bottom:-20px; left:20px;">
@@ -217,7 +419,7 @@
                     <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                         <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="currentColor"/>
                     </svg>
-                    Ils nous font confiance
+                    Nos Partenaires
                 </div>
             </div>
         </div>
@@ -227,20 +429,24 @@
             <div style="pointer-events:none;position:absolute;top:0;left:0;width:120px;height:100%;background:linear-gradient(to right,#fff,transparent);z-index:2;"></div>
             <div style="pointer-events:none;position:absolute;top:0;right:0;width:120px;height:100%;background:linear-gradient(to left,#fff,transparent);z-index:2;"></div>
 
-            <div class="sponsors-track d-flex align-items-center gap-5" style="width:max-content; animation:sponsors-scroll 30s linear infinite;">
-                @foreach (array_merge($sponsorList, $sponsorList) as $partner)
-                <div class="flex-shrink-0 text-center px-3">
+            <div class="sponsors-track d-flex align-items-center gap-5" style="width:max-content;">
+                @foreach (array_merge($sponsorList, $sponsorList, $sponsorList, $sponsorList) as $partner)
+                <div class="sponsor-item flex-shrink-0 text-center px-3">
+                    @if ($partner->lien)
+                        <a href="{{ $partner->lien }}" target="_blank" rel="noopener noreferrer" class="sponsor-link" title="{{ $partner->titre }}">
+                    @endif
                     @if ($partner->logo_path)
                         <img
                             src="{{ Storage::url($partner->logo_path) }}"
                             alt="{{ $partner->titre }}"
                             loading="lazy"
-                            style="max-height:70px; max-width:160px; object-fit:contain; filter:grayscale(60%); opacity:.8; transition:filter .3s,opacity .3s;"
-                            onmouseover="this.style.filter='grayscale(0)';this.style.opacity='1';"
-                            onmouseout="this.style.filter='grayscale(60%)';this.style.opacity='.8';"
+                            class="sponsor-logo"
                         >
                     @else
                         <span class="fw-600 text-16" style="color:var(--color-foreground-subheading); white-space:nowrap;">{{ $partner->titre }}</span>
+                    @endif
+                    @if ($partner->lien)
+                        </a>
                     @endif
                 </div>
                 @endforeach
@@ -250,10 +456,33 @@
         <style>
             @keyframes sponsors-scroll {
                 from { transform: translateX(0); }
-                to   { transform: translateX(-50%); }
+                to   { transform: translateX(-25%); }
+            }
+            .sponsors-track {
+                animation: sponsors-scroll 15s linear infinite;
+            }
+            .sponsors-track-wrapper:hover .sponsors-track {
+                animation-play-state: paused;
             }
             @media (prefers-reduced-motion: reduce) {
                 .sponsors-track { animation: none !important; }
+            }
+            .sponsor-logo {
+                max-height: 70px;
+                max-width: 160px;
+                object-fit: contain;
+                filter: grayscale(60%);
+                opacity: .8;
+                transition: filter .3s, opacity .3s, transform .3s;
+            }
+            .sponsor-item:hover .sponsor-logo {
+                filter: grayscale(0);
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            .sponsor-link {
+                display: inline-block;
+                text-decoration: none;
             }
         </style>
     </section>
