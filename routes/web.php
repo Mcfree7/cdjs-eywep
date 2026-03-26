@@ -30,6 +30,8 @@ Route::get('/ressources/{resourceItem}/telecharger', [FrontOfficeController::cla
 Route::get('/projets', [FrontOfficeController::class, 'projects'])->name('front.projects.index');
 Route::get('/projets/{project}', [FrontOfficeController::class, 'project'])->name('front.projects.show');
 Route::post('/projets/{project}/candidater', [FrontOfficeController::class, 'applyToProject'])->name('front.projects.apply');
+Route::get('/a-propos', [FrontOfficeController::class, 'about'])->name('front.about');
+Route::get('/contact', [FrontOfficeController::class, 'contact'])->name('front.contact');
 
 Route::middleware('auth')->group(function () {
     Route::redirect('/dashboard', '/admin/dashboard')->name('dashboard');

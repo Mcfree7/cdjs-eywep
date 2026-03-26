@@ -81,6 +81,54 @@
     />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
+      /* Neutralise le fond décoratif du front-office */
+      body {
+        background: #f4f6f9 !important;
+      }
+      .app-sidebar {
+        background: #ffffff !important;
+      }
+
+      /* Sidebar nav links hover */
+      .app-sidebar .nav-link:hover,
+      .app-sidebar .nav-link:focus {
+        background-color: rgba(13, 110, 253, 0.18) !important;
+        color: #0d6efd !important;
+        border-radius: 0.375rem;
+      }
+      .app-sidebar .nav-link:hover .nav-icon,
+      .app-sidebar .nav-link:focus .nav-icon {
+        color: #0d6efd !important;
+      }
+      /* Parent actif (section ouverte) : bleu doux */
+      .app-sidebar .nav-item.menu-open > .nav-link.active {
+        background-color: rgba(13, 110, 253, 0.15) !important;
+        color: #0d6efd !important;
+        border-radius: 0.375rem;
+      }
+      .app-sidebar .nav-item.menu-open > .nav-link.active .nav-icon,
+      .app-sidebar .nav-item.menu-open > .nav-link.active .nav-arrow {
+        color: #0d6efd !important;
+      }
+      /* Sous-lien actif (page exacte) : bleu vif */
+      .app-sidebar .nav-treeview .nav-link.active {
+        background-color: #0d6efd !important;
+        color: #fff !important;
+        border-radius: 0.375rem;
+      }
+      .app-sidebar .nav-treeview .nav-link.active .nav-icon {
+        color: #fff !important;
+      }
+      /* Dashboard actif (pas de sous-menu) */
+      .app-sidebar .nav-item:not(.menu-open) > .nav-link.active {
+        background-color: #0d6efd !important;
+        color: #fff !important;
+        border-radius: 0.375rem;
+      }
+      .app-sidebar .nav-item:not(.menu-open) > .nav-link.active .nav-icon {
+        color: #fff !important;
+      }
+
       .floating-success {
         position: fixed;
         top: 50%;

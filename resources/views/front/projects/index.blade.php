@@ -4,54 +4,43 @@
 @endphp
 @extends('front.layouts.app')
 
-@section('title', 'Galeries - ' . ($settings->company_name ?? 'EYWEP'))
-@section('description', 'Parcourez les galeries photos et vidéos de ' . ($settings->company_name ?? 'EYWEP'))
+@section('title', 'Projets - ' . ($settings->company_name ?? 'EYWEP'))
+@section('description', 'Découvrez tous les projets de ' . ($settings->company_name ?? 'EYWEP') . ' et postulez en ligne.')
 
 @section('content')
 <main>
 
-    @include('front.partials.page-banner', ['bannerTitle' => 'Galeries'])
+    @include('front.partials.page-banner', ['bannerTitle' => 'Projets'])
 
     <div class="page-projects mt-100">
         <div class="container-fluid">
             <div class="row product-grid">
 
-                @forelse ($galleries as $gallery)
+                @forelse ($projects as $project)
                 @php
-                    $firstMedia = $gallery->medias->first();
-                    $isVideo    = $firstMedia && $firstMedia->media_type === 'video';
-                    $mediaSrc   = $firstMedia
-                        ? Storage::url($firstMedia->media_path)
-                        : asset('front-assets/consulo/img/project/card/' . (($loop->index % 8) + 1) . '.jpg');
+                    $statutLabel = match($project->statut) {
+                        'ouvert' => 'Ouvert',
+                        'ferme'  => 'Fermé',
+                        default  => 'Archivé',
+                    };
                 @endphp
                 <div class="col-12 col-sm-6 col-lg-4 col-xl-3" data-aos="fade-up" data-aos-delay="{{ ($loop->index % 4) * 100 }}">
                     <a
                         class="card-project radius18"
-                        aria-label="{{ $gallery->titre }}"
-                        href="{{ route('front.galleries.show', $gallery) }}"
+                        aria-label="{{ $project->titre }}"
+                        href="{{ route('front.projects.show', $project) }}"
                     >
-                        @if ($isVideo)
-                            <video
-                                src="{{ $mediaSrc }}"
-                                width="645"
-                                height="690"
-                                muted
-                                preload="none"
-                                style="object-fit:cover; width:100%; height:100%;"
-                            ></video>
-                        @else
-                            <img
-                                src="{{ $mediaSrc }}"
-                                alt="{{ $gallery->titre }}"
-                                width="645"
-                                height="690"
-                                loading="lazy"
-                            >
-                        @endif
+                        <img
+                            src="{{ $project->coverImage ? Storage::url($project->coverImage->image_path) : asset('front-assets/consulo/img/project/card/' . (($loop->index % 8) + 1) . '.jpg') }}"
+                            alt="{{ $project->titre }}"
+                            width="645"
+                            height="690"
+                            loading="lazy"
+                        >
                         <div class="card-project-content-absolute">
                             <div class="card-project-content">
-                                <h2 class="heading text-24">{{ $gallery->titre }}</h2>
-                                <p class="text text-16">{{ $gallery->medias->count() }} média{{ $gallery->medias->count() > 1 ? 's' : '' }}</p>
+                                <h2 class="heading text-24">{{ $project->titre }}</h2>
+                                <p class="text text-16">{{ $statutLabel }}{{ $project->candidatures_count ? ' · ' . $project->candidatures_count . ' candidature' . ($project->candidatures_count > 1 ? 's' : '') : '' }}</p>
                             </div>
                         </div>
                         <span class="svg-wrapper icon-project-link">
@@ -66,7 +55,7 @@
                 @empty
                 <div class="col-12">
                     <div class="text-center py-5">
-                        <p class="text text-18" style="color: var(--color-foreground-subheading);">Aucune galerie disponible pour le moment.</p>
+                        <p class="text text-18" style="color: var(--color-foreground-subheading);">Aucun projet disponible pour le moment.</p>
                         <a href="{{ route('front.home') }}" class="button button--secondary mt-3">Retour à l'accueil</a>
                     </div>
                 </div>
@@ -74,9 +63,9 @@
 
             </div>
 
-            @if ($galleries->hasPages())
+            @if ($projects->hasPages())
             <div class="d-flex justify-content-center mt-5 pb-5">
-                {{ $galleries->links() }}
+                {{ $projects->links() }}
             </div>
             @endif
 

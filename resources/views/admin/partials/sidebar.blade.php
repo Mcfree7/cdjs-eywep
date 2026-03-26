@@ -21,11 +21,16 @@
     $isPartnersSectionActive = request()->routeIs('admin.partners.*');
     $isPartnersCreateActive = request()->routeIs('admin.partners.create');
     $isPartnersIndexActive = request()->routeIs('admin.partners.index', 'admin.partners.show', 'admin.partners.edit', 'admin.partners.update');
+    $isProjectsSectionActive = request()->routeIs('admin.projects.*');
+    $isProjectsCreateActive = request()->routeIs('admin.projects.create');
+    $isProjectsIndexActive = request()->routeIs('admin.projects.index', 'admin.projects.show', 'admin.projects.edit', 'admin.projects.update');
+    $isCandidaturesSectionActive = request()->routeIs('admin.candidatures.*');
+    $isCandidaturesIndexActive = request()->routeIs('admin.candidatures.index', 'admin.candidatures.show');
     $isSettingsSectionActive = request()->routeIs('admin.settings.*');
     $isFrontOfficeSettingsActive = request()->routeIs('admin.settings.front-office');
 @endphp
 
-<aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+<aside class="app-sidebar bg-body-secondary shadow">
     <div class="sidebar-brand">
         <a href="{{ route('admin.dashboard') }}" class="brand-link">
             @if ($adminSettings && $adminSettings->company_logo_path)
@@ -225,6 +230,36 @@
                             <a href="{{ route('admin.partners.index') }}" class="nav-link {{ $isPartnersIndexActive ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Liste des partenaires</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item {{ $isProjectsSectionActive ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ $isProjectsSectionActive ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-briefcase-fill"></i>
+                        <p>
+                            Projets
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.projects.create') }}" class="nav-link {{ $isProjectsCreateActive ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Creer un projet</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.projects.index') }}" class="nav-link {{ $isProjectsIndexActive ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Liste des projets</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.candidatures.index') }}" class="nav-link {{ $isCandidaturesSectionActive ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Candidatures</p>
                             </a>
                         </li>
                     </ul>

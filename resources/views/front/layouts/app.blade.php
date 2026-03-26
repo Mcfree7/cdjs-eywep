@@ -65,12 +65,12 @@
             --color-secondary-button-background: rgba(255, 255, 255, 1);
             --color-secondary-button-border: rgba(255, 255, 255, 1);
             --color-secondary-button-icon: rgba(255, 255, 255, 1);
-            --color-secondary-button-icon-background: rgba(32, 40, 45, 1);
+            --color-secondary-button-icon-background: {{ $settings->primary_color ?: '#1c2539' }};
             --color-secondary-button-hover-text: rgba(255, 255, 255, 1);
-            --color-secondary-button-hover-background: rgba(32, 40, 45, 1);
-            --color-secondary-button-hover-border: rgba(32, 40, 45, 1);
-            --color-secondary-button-hover-icon: rgba(28, 37, 57, 1);
-            --color-secondary-button-icon-background: rgba(255, 255, 255, 1);
+            --color-secondary-button-hover-background: {{ $settings->primary_color ?: '#1c2539' }};
+            --color-secondary-button-hover-border: {{ $settings->primary_color ?: '#1c2539' }};
+            --color-secondary-button-hover-icon: {{ $settings->primary_color ?: '#1c2539' }};
+            --color-secondary-button-hover-icon-background: rgba(255, 255, 255, 1);
             --style-border-width-buttons-primary: 1px;
             --style-border-width-buttons-secondary: 1px;
             --style-border-radius-buttons-primary: 40px;
@@ -87,200 +87,65 @@
             }
         }
 
+        /* Navbar sticky — couleur primaire */
+        .header-1.header-floating:hover,
+        .header-1.header-sticky.scrolled-past-header {
+            --color-background: {{ $settings->primary_color ?: '#1c2539' }} !important;
+        }
+
+        /* Footer — couleur primaire */
+        .footer-main {
+            --color-background: {{ $settings->primary_color ?: '#1c2539' }};
+        }
+        .footer-bottom {
+            --color-background: {{ $settings->primary_color ?: '#1c2539' }};
+            filter: brightness(0.85);
+        }
+        footer .social-link {
+            background-color: {{ $settings->primary_color ?: '#1c2539' }};
+        }
+
+        /* Navbar — même police et graisse que index.html */
+        .menu-link {
+            font-family: var(--font-heading--family);
+            font-weight: 500;
+            font-size: var(--font-nav-main);
+            letter-spacing: .01em;
+        }
+
         .eywep-topbar {
             background: linear-gradient(90deg, {{ $settings->primary_color ?: '#1c2539' }} 0%, #101728 100%);
         }
 
         .eywep-dynamic-logo {
-            max-height: 36px;
+            max-height: 52px;
             width: auto;
         }
+
+        .eywep-brand-name {
+            font-family: var(--font-heading--family);
+            font-weight: 700;
+            font-size: 22px;
+            color: #fff;
+            letter-spacing: .02em;
+            line-height: 1;
+        }
+
+        .header-1:not(.is-sticky) .eywep-brand-name { color: #fff; }
+        .header-1.is-sticky .eywep-brand-name { color: var(--color-foreground-heading); }
+
     </style>
 
     <link rel="stylesheet" href="{{ asset('front-assets/consulo/css/vendor.css') }}">
     <link rel="stylesheet" href="{{ asset('front-assets/consulo/css/style.css') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('styles')
 </head>
 <body>
-    <div class="eywep-topbar py-2">
-        <div class="container">
-            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 text-white">
-                <div class="text text-16 text-white">
-                    {{ $settings->company_slogan ?? 'Programme de promotion de l’entrepreneuriat EYWEP' }}
-                </div>
-                <div class="d-flex flex-wrap gap-3 text text-16 text-white">
-                    @if ($settings->company_phone)
-                        <a href="tel:{{ $settings->company_phone }}" class="text-white">{{ $settings->company_phone }}</a>
-                    @endif
-                    @if ($settings->company_email)
-                        <a href="mailto:{{ $settings->company_email }}" class="text-white">{{ $settings->company_email }}</a>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <sticky-header data-sticky-type="always">
-        <header class="header-1">
-            <div class="container-fluid">
-                <div class="header-grid">
-                    <a class="header-logo" href="{{ route('front.home') }}" aria-label="{{ $settings->company_name ?? 'EYWEP' }}">
-                        @if ($settings->company_logo_path)
-                            <img
-                                src="{{ Storage::url($settings->company_logo_path) }}"
-                                alt="{{ $settings->company_name }}"
-                                class="eywep-dynamic-logo"
-                            >
-                        @else
-                            <img
-                                src="{{ asset('front-assets/consulo/img/logo.png') }}"
-                                alt="{{ $settings->company_name ?? 'EYWEP' }}"
-                                width="189"
-                                height="32"
-                            >
-                        @endif
-                    </a>
-
-                    <drawer-menu>
-                        <nav class="header-nav drawer-menu">
-                            <div class="d-lg-none header-nav-headings">
-                                <a class="header-logo" href="{{ route('front.home') }}" aria-label="{{ $settings->company_name ?? 'EYWEP' }}">
-                                    @if ($settings->company_logo_path)
-                                        <img
-                                            src="{{ Storage::url($settings->company_logo_path) }}"
-                                            alt="{{ $settings->company_name }}"
-                                            class="eywep-dynamic-logo"
-                                        >
-                                    @else
-                                        <img
-                                            src="{{ asset('front-assets/consulo/img/logo.png') }}"
-                                            alt="{{ $settings->company_name ?? 'EYWEP' }}"
-                                            width="189"
-                                            height="32"
-                                        >
-                                    @endif
-                                </a>
-                                <drawer-opener class="svg-wrapper menu-close" data-drawer=".drawer-menu">
-                                    <span class="text text-16">Fermer</span>
-                                </drawer-opener>
-                            </div>
-
-                            <ul class="header-menu list-unstyled">
-                                <li><a href="{{ route('front.home') }}" class="menu-link">Accueil</a></li>
-                                <li><a href="{{ route('front.articles.index') }}" class="menu-link">Articles</a></li>
-                                <li><a href="{{ route('front.activities.index') }}" class="menu-link">Activites</a></li>
-                                <li><a href="{{ route('front.success-stories.index') }}" class="menu-link">Temoignages</a></li>
-                                <li><a href="{{ route('front.galleries.index') }}" class="menu-link">Galeries</a></li>
-                                <li><a href="{{ route('front.resources.index') }}" class="menu-link">Ressources</a></li>
-                            </ul>
-                        </nav>
-                    </drawer-menu>
-
-                    <div class="header-actions d-flex align-items-center">
-                        <a href="#contact" class="button button--primary" aria-label="Nous contacter">
-                            Nous contacter
-                        </a>
-                        <drawer-opener class="header-sidebar svg-wrapper d-lg-none ms-3" data-drawer=".drawer-menu">
-                            <span class="text text-16">Menu</span>
-                        </drawer-opener>
-                    </div>
-                </div>
-            </div>
-        </header>
-    </sticky-header>
+    @include('front.partials.header')
 
     @yield('content')
 
-    <footer class="footer-1 bg-primary-foreground overflow-hidden" id="contact">
-        <div class="footer-background">
-            <img
-                src="{{ asset('front-assets/consulo/img/footer/footer-map.png') }}"
-                alt="Footer background"
-                loading="lazy"
-            >
-        </div>
-        <div class="container">
-            <div class="footer-top section-padding">
-                <div class="row g-4">
-                    <div class="col-12 col-lg-5">
-                        <div class="footer-widget">
-                            <div class="widget-heading heading text-22 text-white">
-                                {{ $settings->company_name ?? 'EYWEP' }}
-                            </div>
-                            <p class="text text-18 text-white mt-3">
-                                {{ $settings->hero_subtitle ?? $settings->company_slogan ?? 'Programme de promotion de l’entrepreneuriat avec contenus publics, activites et ressources.' }}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6 col-lg-3">
-                        <div class="footer-widget footer-widget-menu">
-                            <div class="widget-heading heading text-22 text-white">Navigation</div>
-                            <ul class="footer-menu list-unstyled">
-                                <li><a href="{{ route('front.articles.index') }}" class="text text-16 link text-white">Articles</a></li>
-                                <li><a href="{{ route('front.activities.index') }}" class="text text-16 link text-white">Activites</a></li>
-                                <li><a href="{{ route('front.success-stories.index') }}" class="text text-16 link text-white">Temoignages</a></li>
-                                <li><a href="{{ route('front.galleries.index') }}" class="text text-16 link text-white">Galeries</a></li>
-                                <li><a href="{{ route('front.resources.index') }}" class="text text-16 link text-white">Ressources</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <div class="footer-widget footer-widget-menu">
-                            <div class="widget-heading heading text-22 text-white">Contact</div>
-                            <ul class="footer-menu list-unstyled">
-                                @if ($settings->company_address)
-                                    <li><span class="text text-16 text-white">{{ $settings->company_address }}</span></li>
-                                @endif
-                                @if ($settings->company_phone)
-                                    <li><a href="tel:{{ $settings->company_phone }}" class="text text-16 link text-white">{{ $settings->company_phone }}</a></li>
-                                @endif
-                                @if ($settings->company_email)
-                                    <li><a href="mailto:{{ $settings->company_email }}" class="text text-16 link text-white">{{ $settings->company_email }}</a></li>
-                                @endif
-                                @if ($settings->company_location)
-                                    <li><a href="{{ $settings->company_location }}" target="_blank" rel="noreferrer" class="text text-16 link text-white">Voir la localisation</a></li>
-                                @endif
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <div class="row footer-bottom-row">
-                    <div class="col-12 col-md-6">
-                        <div class="footer-copyright text text-16 text-white">
-                            Copyright &copy;<span class="current-year"></span> {{ $settings->company_name ?? 'EYWEP' }}.
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <ul class="footer-menu footer-policies list-unstyled">
-                            <li><a href="{{ route('front.home') }}" class="text text-16 link text-white">Accueil</a></li>
-                            <li><a href="{{ route('front.resources.index') }}" class="text text-16 link text-white">Ressources</a></li>
-                            <li><a href="#contact" class="text text-16 link text-white">Contact</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <drawer-opener id="drawer-overlay"></drawer-opener>
-
-    <scroll-top>
-        <div class="scroll-to-top">
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-            >
-                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5"/>
-            </svg>
-        </div>
-    </scroll-top>
-
-    <script src="{{ asset('front-assets/consulo/js/vendor.js') }}" defer></script>
-    <script src="{{ asset('front-assets/consulo/js/main.js') }}" defer></script>
+    @include('front.partials.footer')
 </body>
 </html>

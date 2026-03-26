@@ -246,6 +246,21 @@ class FrontOfficeController extends Controller
         return back()->with('success', 'Votre candidature a bien ete envoyee. Nous vous contacterons bientot.');
     }
 
+    public function about()
+    {
+        return view('front.about', [
+            'settings' => $this->settings(),
+            'partners' => Partner::query()->latest('id')->get(),
+        ]);
+    }
+
+    public function contact()
+    {
+        return view('front.contact', [
+            'settings' => $this->settings(),
+        ]);
+    }
+
     private function settings(): FrontOfficeSetting
     {
         return FrontOfficeSetting::firstOrCreate(
