@@ -158,6 +158,7 @@
                         @endif
 
                         <form
+                            id="candidature-form"
                             action="{{ route('front.projects.apply', $project) }}"
                             method="POST"
                             enctype="multipart/form-data"
@@ -165,99 +166,135 @@
                         >
                             @csrf
 
+                            {{-- Nom / Prénom --}}
                             <div class="row g-3 mb-3">
                                 <div class="col-12 col-sm-6">
                                     <label for="nom" class="form-label text text-14 fw-600">Nom <span class="text-danger">*</span></label>
                                     <input
                                         type="text"
                                         class="form-control radius18 @error('nom') is-invalid @enderror"
-                                        id="nom"
-                                        name="nom"
+                                        id="nom" name="nom"
                                         value="{{ old('nom') }}"
                                         placeholder="Votre nom"
                                         required
                                     >
-                                    @error('nom')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    @error('nom')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <label for="prenom" class="form-label text text-14 fw-600">Prénom <span class="text-danger">*</span></label>
                                     <input
                                         type="text"
                                         class="form-control radius18 @error('prenom') is-invalid @enderror"
-                                        id="prenom"
-                                        name="prenom"
+                                        id="prenom" name="prenom"
                                         value="{{ old('prenom') }}"
                                         placeholder="Votre prénom"
                                         required
                                     >
-                                    @error('prenom')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    @error('prenom')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                             </div>
 
+                            {{-- Pays / Sexe --}}
+                            <div class="row g-3 mb-3">
+                                <div class="col-12 col-sm-6">
+                                    <label for="pays" class="form-label text text-14 fw-600">Pays</label>
+                                    <input
+                                        type="text"
+                                        class="form-control radius18 @error('pays') is-invalid @enderror"
+                                        id="pays" name="pays"
+                                        value="{{ old('pays') }}"
+                                        placeholder="Ex : Burkina Faso"
+                                    >
+                                    @error('pays')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <label for="sexe" class="form-label text text-14 fw-600">Sexe</label>
+                                    <select
+                                        class="form-select radius18 @error('sexe') is-invalid @enderror"
+                                        id="sexe" name="sexe"
+                                    >
+                                        <option value="">-- Sélectionner --</option>
+                                        <option value="homme" {{ old('sexe') === 'homme' ? 'selected' : '' }}>Homme</option>
+                                        <option value="femme" {{ old('sexe') === 'femme' ? 'selected' : '' }}>Femme</option>
+                                        <option value="autre" {{ old('sexe') === 'autre' ? 'selected' : '' }}>Autre</option>
+                                    </select>
+                                    @error('sexe')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                </div>
+                            </div>
+
+                            {{-- Email --}}
                             <div class="mb-3">
                                 <label for="email" class="form-label text text-14 fw-600">Adresse e-mail <span class="text-danger">*</span></label>
                                 <input
                                     type="email"
                                     class="form-control radius18 @error('email') is-invalid @enderror"
-                                    id="email"
-                                    name="email"
+                                    id="email" name="email"
                                     value="{{ old('email') }}"
                                     placeholder="votre@email.com"
                                     required
                                 >
-                                @error('email')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
+                            {{-- Téléphone --}}
                             <div class="mb-3">
-                                <label for="telephone" class="form-label text text-14 fw-600">Téléphone</label>
+                                <label for="telephone" class="form-label text text-14 fw-600">Numéro de téléphone</label>
                                 <input
                                     type="tel"
                                     class="form-control radius18 @error('telephone') is-invalid @enderror"
-                                    id="telephone"
-                                    name="telephone"
+                                    id="telephone" name="telephone"
                                     value="{{ old('telephone') }}"
-                                    placeholder="+33 6 00 00 00 00"
+                                    placeholder="+226 XX XX XX XX"
                                 >
-                                @error('telephone')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                @error('telephone')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
+                            {{-- Lettre de motivation (PDF) --}}
                             <div class="mb-3">
-                                <label for="lettre_motivation" class="form-label text text-14 fw-600">Lettre de motivation <span class="text-danger">*</span></label>
-                                <textarea
+                                <label for="lettre_motivation" class="form-label text text-14 fw-600">
+                                    Lettre de motivation <span class="text-danger">*</span>
+                                    <span class="text text-12 fw-400" style="color:var(--color-foreground-subheading);">(PDF, max 5 Mo)</span>
+                                </label>
+                                <input
+                                    type="file"
                                     class="form-control radius18 @error('lettre_motivation') is-invalid @enderror"
-                                    id="lettre_motivation"
-                                    name="lettre_motivation"
-                                    rows="6"
-                                    placeholder="Expliquez pourquoi vous souhaitez participer à ce projet..."
+                                    id="lettre_motivation" name="lettre_motivation"
+                                    accept=".pdf,application/pdf"
                                     required
-                                >{{ old('lettre_motivation') }}</textarea>
-                                @error('lettre_motivation')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                >
+                                @error('lettre_motivation')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
+                            {{-- Pièce d'identité (PDF) --}}
+                            <div class="mb-3">
+                                <label for="piece_identite" class="form-label text text-14 fw-600">
+                                    Pièce d'identité <span class="text-danger">*</span>
+                                    <span class="text text-12 fw-400" style="color:var(--color-foreground-subheading);">(PDF, max 5 Mo)</span>
+                                </label>
+                                <input
+                                    type="file"
+                                    class="form-control radius18 @error('piece_identite') is-invalid @enderror"
+                                    id="piece_identite" name="piece_identite"
+                                    accept=".pdf,application/pdf"
+                                    required
+                                >
+                                @error('piece_identite')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+
+                            {{-- CV --}}
                             <div class="mb-4">
-                                <label for="cv" class="form-label text text-14 fw-600">CV (PDF, DOC ou DOCX) <span class="text-danger">*</span></label>
+                                <label for="cv" class="form-label text text-14 fw-600">
+                                    CV <span class="text-danger">*</span>
+                                    <span class="text text-12 fw-400" style="color:var(--color-foreground-subheading);">(PDF, DOC ou DOCX, max 5 Mo)</span>
+                                </label>
                                 <input
                                     type="file"
                                     class="form-control radius18 @error('cv') is-invalid @enderror"
-                                    id="cv"
-                                    name="cv"
+                                    id="cv" name="cv"
                                     accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                                     required
                                 >
-                                <div class="form-text text text-12 text-muted mt-1">Formats acceptés : PDF, DOC, DOCX. Taille maximum : 5 Mo.</div>
-                                @error('cv')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                @error('cv')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
                             <button type="submit" class="button button--primary w-100 justify-content-center">

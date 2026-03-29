@@ -87,6 +87,9 @@
             }
         }
 
+        /* Espacement inter-sections réduit */
+        .mt-100 { margin-top: 0; }
+
         /* Navbar sticky — couleur primaire */
         .header-1.header-floating:hover,
         .header-1.header-sticky.scrolled-past-header {
@@ -99,7 +102,7 @@
         }
         .footer-bottom {
             --color-background: {{ $settings->primary_color ?: '#1c2539' }};
-            filter: brightness(0.85);
+            background-color: {{ $settings->primary_color ?: '#1c2539' }} !important;
         }
         footer .social-link {
             background-color: {{ $settings->primary_color ?: '#1c2539' }};

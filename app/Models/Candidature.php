@@ -11,10 +11,14 @@ class Candidature extends Model
         'project_id',
         'nom',
         'prenom',
+        'pays',
+        'sexe',
         'email',
         'telephone',
         'lettre_motivation',
+        'lettre_motivation_path',
         'cv_path',
+        'piece_identite_path',
         'statut',
     ];
 

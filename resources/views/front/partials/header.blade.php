@@ -83,14 +83,12 @@
                                         <li class="nav-item"><a class="menu-link" href="{{ route('front.articles.index') }}">Articles</a></li>
                                         <li class="nav-item"><a class="menu-link" href="{{ route('front.activities.index') }}">Activités</a></li>
                                         <li class="nav-item"><a class="menu-link" href="{{ route('front.success-stories.index') }}">Témoignages</a></li>
+                                        <li class="nav-item"><a class="menu-link" href="{{ route('front.resources.index') }}">Ressources</a></li>
                                     </ul>
                                 </div>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('front.galleries.index') }}" class="menu-link menu-link-main">Galeries</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('front.resources.index') }}" class="menu-link menu-link-main">Ressources</a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('front.projects.index') }}" class="menu-link menu-link-main">Projets</a>

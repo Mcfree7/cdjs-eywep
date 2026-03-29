@@ -71,12 +71,24 @@
                                 </span>
                             </div>
                             @if ($candidature->telephone)
-                                <div class="info-row">
-                                    <span class="info-label">Téléphone</span>
-                                    <span class="info-value">
-                                        <a href="tel:{{ $candidature->telephone }}">{{ $candidature->telephone }}</a>
-                                    </span>
-                                </div>
+                            <div class="info-row">
+                                <span class="info-label">Téléphone</span>
+                                <span class="info-value">
+                                    <a href="tel:{{ $candidature->telephone }}">{{ $candidature->telephone }}</a>
+                                </span>
+                            </div>
+                            @endif
+                            @if ($candidature->pays)
+                            <div class="info-row">
+                                <span class="info-label">Pays</span>
+                                <span class="info-value">{{ $candidature->pays }}</span>
+                            </div>
+                            @endif
+                            @if ($candidature->sexe)
+                            <div class="info-row">
+                                <span class="info-label">Sexe</span>
+                                <span class="info-value">{{ ucfirst($candidature->sexe) }}</span>
+                            </div>
                             @endif
                             <div class="info-row">
                                 <span class="info-label">Projet</span>
@@ -89,14 +101,38 @@
                                 <span class="info-value">{{ $candidature->created_at->format('d/m/Y à H:i') }}</span>
                             </div>
                             <div class="info-row">
+                                <span class="info-label">Lettre motiv.</span>
+                                <span class="info-value">
+                                    @if ($candidature->lettre_motivation_path)
+                                        <a href="{{ asset('storage/' . $candidature->lettre_motivation_path) }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                            <i class="bi bi-file-earmark-pdf me-1"></i> Télécharger
+                                        </a>
+                                    @else
+                                        <span class="text-muted fst-italic">Non fournie</span>
+                                    @endif
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Pièce identité</span>
+                                <span class="info-value">
+                                    @if ($candidature->piece_identite_path)
+                                        <a href="{{ asset('storage/' . $candidature->piece_identite_path) }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                            <i class="bi bi-file-earmark-pdf me-1"></i> Télécharger
+                                        </a>
+                                    @else
+                                        <span class="text-muted fst-italic">Non fournie</span>
+                                    @endif
+                                </span>
+                            </div>
+                            <div class="info-row">
                                 <span class="info-label">CV</span>
                                 <span class="info-value">
                                     @if ($candidature->cv_path)
                                         <a href="{{ asset('storage/' . $candidature->cv_path) }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                            <i class="bi bi-file-earmark-arrow-down me-1"></i> Telecharger le CV
+                                            <i class="bi bi-file-earmark-arrow-down me-1"></i> Télécharger
                                         </a>
                                     @else
-                                        <span class="text-muted">Aucun CV joint</span>
+                                        <span class="text-muted fst-italic">Non fourni</span>
                                     @endif
                                 </span>
                             </div>
@@ -117,7 +153,7 @@
                                 $cStatutLabel = match($candidature->statut) {
                                     'en_attente' => 'En attente',
                                     'retenue'    => 'Retenue',
-                                    'rejetee'    => 'Rejetee',
+                                    'rejetee'    => 'Rejetée',
                                     default      => $candidature->statut,
                                 };
                             @endphp
@@ -131,7 +167,7 @@
                                     <select name="statut" id="statut" class="form-select">
                                         <option value="en_attente" {{ $candidature->statut === 'en_attente' ? 'selected' : '' }}>En attente</option>
                                         <option value="retenue" {{ $candidature->statut === 'retenue' ? 'selected' : '' }}>Retenue</option>
-                                        <option value="rejetee" {{ $candidature->statut === 'rejetee' ? 'selected' : '' }}>Rejetee</option>
+                                        <option value="rejetee" {{ $candidature->statut === 'rejetee' ? 'selected' : '' }}>Rejetée</option>
                                     </select>
                                 </div>
                                 <button type="submit" class="btn btn-primary w-100">Enregistrer</button>
@@ -140,12 +176,65 @@
                     </div>
                 </div>
 
-                <!-- Lettre de motivation -->
+                <!-- Documents soumis (aperçu PDF) -->
                 <div class="col-lg-8">
-                    <div class="card h-100">
-                        <div class="card-header"><h5 class="mb-0">Lettre de motivation</h5></div>
-                        <div class="card-body">
-                            <div style="white-space: pre-line; line-height: 1.7;">{{ $candidature->lettre_motivation }}</div>
+                    <div class="card mb-4">
+                        <div class="card-header d-flex align-items-center gap-2">
+                            <i class="bi bi-file-earmark-pdf text-danger"></i>
+                            <h5 class="mb-0">Lettre de motivation</h5>
+                        </div>
+                        <div class="card-body p-0" style="min-height: 480px;">
+                            @if ($candidature->lettre_motivation_path)
+                                <iframe
+                                    src="{{ asset('storage/' . $candidature->lettre_motivation_path) }}"
+                                    style="width:100%; height:480px; border:0; border-radius: 0 0 0.375rem 0.375rem;"
+                                    title="Lettre de motivation"
+                                ></iframe>
+                            @else
+                                <div class="d-flex align-items-center justify-content-center h-100 p-4 text-muted fst-italic" style="min-height:120px;">
+                                    Aucune lettre de motivation fournie.
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header d-flex align-items-center gap-2">
+                            <i class="bi bi-person-vcard text-primary"></i>
+                            <h5 class="mb-0">Pièce d'identité</h5>
+                        </div>
+                        <div class="card-body p-0" style="min-height: 480px;">
+                            @if ($candidature->piece_identite_path)
+                                <iframe
+                                    src="{{ asset('storage/' . $candidature->piece_identite_path) }}"
+                                    style="width:100%; height:480px; border:0; border-radius: 0 0 0.375rem 0.375rem;"
+                                    title="Pièce d'identité"
+                                ></iframe>
+                            @else
+                                <div class="d-flex align-items-center justify-content-center h-100 p-4 text-muted fst-italic" style="min-height:120px;">
+                                    Aucune pièce d'identité fournie.
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header d-flex align-items-center gap-2">
+                            <i class="bi bi-file-earmark-person text-success"></i>
+                            <h5 class="mb-0">CV</h5>
+                        </div>
+                        <div class="card-body p-0" style="min-height: 480px;">
+                            @if ($candidature->cv_path)
+                                <iframe
+                                    src="{{ asset('storage/' . $candidature->cv_path) }}"
+                                    style="width:100%; height:480px; border:0; border-radius: 0 0 0.375rem 0.375rem;"
+                                    title="CV"
+                                ></iframe>
+                            @else
+                                <div class="d-flex align-items-center justify-content-center h-100 p-4 text-muted fst-italic" style="min-height:120px;">
+                                    Aucun CV fourni.
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

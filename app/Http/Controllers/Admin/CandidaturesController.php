@@ -75,12 +75,14 @@ class CandidaturesController extends Controller
 
     public function destroy(Candidature $candidature)
     {
-        if ($candidature->cv_path) {
-            Storage::disk('public')->delete($candidature->cv_path);
+        foreach (['cv_path', 'piece_identite_path', 'lettre_motivation_path'] as $field) {
+            if ($candidature->$field) {
+                Storage::disk('public')->delete($candidature->$field);
+            }
         }
 
         $candidature->delete();
 
-        return back()->with('success', 'Candidature supprimee avec succes.');
+        return back()->with('success', 'Candidature supprimée avec succès.');
     }
 }

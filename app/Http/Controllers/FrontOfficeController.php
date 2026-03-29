@@ -13,7 +13,9 @@ use App\Models\Partner;
 use App\Models\Project;
 use App\Models\ResourceItem;
 use App\Models\SuccessStory;
+use App\Mail\CandidatureConfirmation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 
@@ -59,6 +61,13 @@ class FrontOfficeController extends Controller
                 ->orderBy('ordre')
                 ->orderBy('id')
                 ->take(5)
+                ->get(),
+            'projects' => Project::withCount('candidatures')
+                ->with('coverImage')
+                ->where('statut', '!=', 'archive')
+                ->latest('datePublication')
+                ->latest('id')
+                ->take(6)
                 ->get(),
         ]);
     }
@@ -220,36 +229,46 @@ class FrontOfficeController extends Controller
     public function applyToProject(Request $request, Project $project)
     {
         if ($project->statut !== 'ouvert') {
-            return back()->with('error', 'Les candidatures pour ce projet sont fermees.');
+            return back()->with('error', 'Les candidatures pour ce projet sont fermées.');
         }
 
         $validated = $request->validate([
-            'nom'               => ['required', 'string', 'max:100'],
-            'prenom'            => ['required', 'string', 'max:100'],
-            'email'             => ['required', 'email', 'max:255'],
-            'telephone'         => ['nullable', 'string', 'max:30'],
-            'lettre_motivation' => ['required', 'string', 'min:50'],
-            'cv'                => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:4096'],
+            'nom'                => ['required', 'string', 'max:100'],
+            'prenom'             => ['required', 'string', 'max:100'],
+            'pays'               => ['nullable', 'string', 'max:100'],
+            'sexe'               => ['nullable', 'in:homme,femme,autre'],
+            'email'              => ['required', 'email', 'max:255'],
+            'telephone'          => ['nullable', 'string', 'max:30'],
+            'lettre_motivation'  => ['required', 'file', 'mimes:pdf', 'max:5120'],
+            'cv'                 => ['required', 'file', 'mimes:pdf,doc,docx', 'max:5120'],
+            'piece_identite'     => ['required', 'file', 'mimes:pdf', 'max:5120'],
         ]);
 
-        $cvPath = null;
+        $lettreMotivationPath = $request->file('lettre_motivation')->store('candidatures/lettres-motivation', 'public');
+        $cvPath               = $request->file('cv')->store('candidatures/cv', 'public');
+        $pieceIdentitePath    = $request->file('piece_identite')->store('candidatures/pieces-identite', 'public');
 
-        if ($request->hasFile('cv')) {
-            $cvPath = $request->file('cv')->store('candidatures/cv', 'public');
+        $candidature = Candidature::create([
+            'project_id'             => $project->id,
+            'nom'                    => $validated['nom'],
+            'prenom'                 => $validated['prenom'],
+            'pays'                   => $validated['pays'] ?? null,
+            'sexe'                   => $validated['sexe'] ?? null,
+            'email'                  => $validated['email'],
+            'telephone'              => $validated['telephone'] ?? null,
+            'lettre_motivation_path' => $lettreMotivationPath,
+            'cv_path'                => $cvPath,
+            'piece_identite_path'    => $pieceIdentitePath,
+            'statut'                 => 'en_attente',
+        ]);
+
+        try {
+            Mail::to($candidature->email)->send(new CandidatureConfirmation($candidature, $project));
+        } catch (\Throwable) {
+            // L'envoi d'email ne doit pas bloquer la soumission
         }
 
-        Candidature::create([
-            'project_id'        => $project->id,
-            'nom'               => $validated['nom'],
-            'prenom'            => $validated['prenom'],
-            'email'             => $validated['email'],
-            'telephone'         => $validated['telephone'] ?? null,
-            'lettre_motivation' => $validated['lettre_motivation'],
-            'cv_path'           => $cvPath,
-            'statut'            => 'en_attente',
-        ]);
-
-        return back()->with('success', 'Votre candidature a bien ete envoyee. Nous vous contacterons bientot.');
+        return back()->with('success', 'Votre candidature a bien été envoyée. Un e-mail de confirmation vous a été transmis.');
     }
 
     public function about()

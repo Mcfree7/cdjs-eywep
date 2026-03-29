@@ -12,18 +12,23 @@
 
     @include('front.partials.page-banner', ['bannerTitle' => 'Projets'])
 
-    <div class="page-projects mt-100">
-        <div class="container-fluid">
-            <div class="row product-grid">
+    <div class="page-projects mt-100 section-padding">
+        <div class="container">
 
-                @forelse ($projects as $project)
-                @php
-                    $statutLabel = match($project->statut) {
-                        'ouvert' => 'Ouvert',
-                        'ferme'  => 'Fermé',
-                        default  => 'Archivé',
-                    };
-                @endphp
+            @forelse ($projects as $project)
+            @php
+                $statutLabel = match($project->statut) {
+                    'ouvert' => 'Ouvert',
+                    'ferme'  => 'Fermé',
+                    default  => 'Archivé',
+                };
+            @endphp
+
+            {{-- On utilise un wrapper div pour les cartes --}}
+            @if ($loop->first)
+            <div class="row product-grid">
+            @endif
+
                 <div class="col-12 col-sm-6 col-lg-4 col-xl-3" data-aos="fade-up" data-aos-delay="{{ ($loop->index % 4) * 100 }}">
                     <a
                         class="card-project radius18"
@@ -40,7 +45,23 @@
                         <div class="card-project-content-absolute">
                             <div class="card-project-content">
                                 <h2 class="heading text-24">{{ $project->titre }}</h2>
-                                <p class="text text-16">{{ $statutLabel }}{{ $project->candidatures_count ? ' · ' . $project->candidatures_count . ' candidature' . ($project->candidatures_count > 1 ? 's' : '') : '' }}</p>
+                                <p class="text text-16">
+                                    {{ $statutLabel }}{{ $project->candidatures_count ? ' · ' . $project->candidatures_count . ' candidature' . ($project->candidatures_count > 1 ? 's' : '') : '' }}
+                                </p>
+                                @if ($project->statut === 'ouvert')
+                                <span
+                                    onclick="event.preventDefault(); event.stopPropagation(); window.location='{{ route('front.projects.show', $project) }}#candidature-form';"
+                                    class="button button--primary mt-2"
+                                    style="font-size:13px; padding: 8px 18px; display:inline-flex;"
+                                    role="button"
+                                    aria-label="Postuler pour {{ $project->titre }}"
+                                >
+                                    Postuler
+                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="margin-left:6px;">
+                                        <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
+                                    </svg>
+                                </span>
+                                @endif
                             </div>
                         </div>
                         <span class="svg-wrapper icon-project-link">
@@ -52,16 +73,17 @@
                         </span>
                     </a>
                 </div>
-                @empty
-                <div class="col-12">
-                    <div class="text-center py-5">
-                        <p class="text text-18" style="color: var(--color-foreground-subheading);">Aucun projet disponible pour le moment.</p>
-                        <a href="{{ route('front.home') }}" class="button button--secondary mt-3">Retour à l'accueil</a>
-                    </div>
-                </div>
-                @endforelse
 
+            @if ($loop->last)
             </div>
+            @endif
+
+            @empty
+            <div class="text-center py-5">
+                <p class="text text-18" style="color: var(--color-foreground-subheading);">Aucun projet disponible pour le moment.</p>
+                <a href="{{ route('front.home') }}" class="button button--secondary mt-3">Retour à l'accueil</a>
+            </div>
+            @endforelse
 
             @if ($projects->hasPages())
             <div class="d-flex justify-content-center mt-5 pb-5">

@@ -629,7 +629,7 @@
          LATEST ACTIVITIES
     ======================================================== --}}
     @if ($activities->isNotEmpty())
-    <section class="featured-blog section-padding" style="margin-top: 30px;">
+    <section class="featured-blog section-padding mt-100">
         <div class="container">
             <div class="section-headings text-center mb-3">
                 <div class="subheading text-20 subheading-bg" data-aos="fade-up">
@@ -722,55 +722,92 @@
     @endif
 
     {{-- ========================================================
-         FEATURED PROJECTS
+         FEATURED PROJECTS (slider)
     ======================================================== --}}
     @if (isset($projects) && $projects->isNotEmpty())
-    <section class="page-projects mt-100 section-padding">
+    <section class="featured-blog section-padding mt-100">
         <div class="container">
-            <div class="section-headings text-center mb-60">
-                <div class="subheading text-20 subheading-bg">
+            <div class="section-headings text-center mb-3">
+                <div class="subheading text-20 subheading-bg" data-aos="fade-up">
                     <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                        <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="currentColor"/>
+                        <g clip-path="url(#clip-proj-home)">
+                            <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="currentColor"/>
+                        </g>
+                        <defs><clipPath id="clip-proj-home"><rect width="14" height="14" fill="currentColor"/></clipPath></defs>
                     </svg>
                     Projets
+                    <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <g clip-path="url(#clip-proj-home2)">
+                            <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="currentColor"/>
+                        </g>
+                        <defs><clipPath id="clip-proj-home2"><rect width="14" height="14" fill="currentColor"/></clipPath></defs>
+                    </svg>
                 </div>
-                <h2 class="heading text-50 fw-700">Nos Projets</h2>
+                <h2 class="heading text-50 fw-700" data-aos="fade-up" data-aos-delay="50">Nos Derniers Projets</h2>
             </div>
-            <div class="product-grid">
-                @foreach ($projects as $project)
-                <div class="card-project radius18">
-                    <div class="card-project-img radius18">
-                        <img
-                            src="{{ $project->coverImage ? Storage::url($project->coverImage->image_path) : asset('front-assets/consulo/img/project/card/1.jpg') }}"
-                            alt="{{ $project->titre }}"
-                            loading="lazy"
-                            class="radius18"
+
+            {{-- Swiper slider projets --}}
+            <div class="projects-swiper swiper" data-aos="fade-up" data-aos-delay="100" style="padding-bottom: 50px;">
+                <div class="swiper-wrapper">
+                    @foreach ($projects as $project)
+                    <div class="swiper-slide">
+                        <a
+                            class="card-project radius18"
+                            href="{{ route('front.projects.show', $project) }}"
+                            aria-label="{{ $project->titre }}"
                         >
-                    </div>
-                    <div class="card-project-overlay radius18">
-                        <div class="card-project-content">
-                            <span class="badge {{ $project->statut === 'ouvert' ? 'bg-success' : ($project->statut === 'ferme' ? 'bg-danger' : 'bg-secondary') }} mb-2">
-                                {{ ucfirst($project->statut) }}
+                            <img
+                                src="{{ $project->coverImage ? Storage::url($project->coverImage->image_path) : asset('front-assets/consulo/img/project/card/' . (($loop->index % 8) + 1) . '.jpg') }}"
+                                alt="{{ $project->titre }}"
+                                width="645"
+                                height="690"
+                                loading="lazy"
+                            >
+                            <div class="card-project-content-absolute">
+                                <div class="card-project-content">
+                                    <h2 class="heading text-24">{{ $project->titre }}</h2>
+                                    <p class="text text-16">
+                                        {{ $project->statut === 'ouvert' ? 'Ouvert' : ($project->statut === 'ferme' ? 'Fermé' : 'Archivé') }}
+                                        @if ($project->candidatures_count)
+                                            &middot; {{ $project->candidatures_count }} candidature{{ $project->candidatures_count > 1 ? 's' : '' }}
+                                        @endif
+                                    </p>
+                                    @if ($project->statut === 'ouvert')
+                                    <span
+                                        onclick="event.preventDefault(); event.stopPropagation(); window.location='{{ route('front.projects.show', $project) }}#candidature-form';"
+                                        class="button button--primary mt-2"
+                                        style="font-size:13px; padding: 8px 18px; display:inline-flex;"
+                                        role="button"
+                                        aria-label="Postuler pour {{ $project->titre }}"
+                                    >
+                                        Postuler
+                                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="margin-left:6px;">
+                                            <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
+                                        </svg>
+                                    </span>
+                                    @endif
+                                </div>
+                            </div>
+                            <span class="svg-wrapper icon-project-link">
+                                <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="32" cy="32" r="32" fill="white"/>
+                                    <path d="M26.1667 39C25.8167 39 25.5833 38.8833 25.35 38.65C24.8833 38.1833 24.8833 37.4833 25.35 37.0167L37.0167 25.35C37.4833 24.8833 38.1833 24.8833 38.65 25.35C39.1167 25.8167 39.1167 26.5167 38.65 26.9833L26.9833 38.65C26.75 38.8833 26.5167 39 26.1667 39Z" fill="#20282D"/>
+                                    <path d="M37.8332 37.8333C37.1332 37.8333 36.6665 37.3667 36.6665 36.6667V27.3333H27.3332C26.6332 27.3333 26.1665 26.8667 26.1665 26.1667C26.1665 25.4667 26.6332 25 27.3332 25H37.8332C38.5332 25 38.9998 25.4667 38.9998 26.1667V36.6667C38.9998 37.3667 38.5332 37.8333 37.8332 37.8333Z" fill="#20282D"/>
+                                </svg>
                             </span>
-                            <h3 class="heading text-22 fw-700 text-white mb-2">
-                                {{ $project->titre }}
-                            </h3>
-                        </div>
-                        <a href="{{ route('front.projects.show', $project) }}" class="card-project-link" aria-label="Voir {{ $project->titre }}">
-                            <svg viewBox="0 0 64 64" fill="none" style="width:48px;height:48px;">
-                                <circle cx="32" cy="32" r="32" fill="white"/>
-                                <path d="M26.167 39C25.817 39 25.583 38.883 25.350 38.650C24.883 38.183 24.883 37.483 25.350 37.017L37.017 25.350C37.483 24.883 38.183 24.883 38.650 25.350C39.117 25.817 39.117 26.517 38.650 26.983L26.983 38.650C26.750 38.883 26.517 39 26.167 39Z" fill="#20282D"/>
-                                <path d="M37.833 37.833C37.133 37.833 36.667 37.367 36.667 36.667V27.333H27.333C26.633 27.333 26.167 26.867 26.167 26.167C26.167 25.467 26.633 25 27.333 25H37.833C38.533 25 39.000 25.467 39.000 26.167V36.667C39.000 37.367 38.533 37.833 37.833 37.833Z" fill="#20282D"/>
-                            </svg>
                         </a>
                     </div>
+                    @endforeach
                 </div>
-                @endforeach
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-pagination"></div>
             </div>
-            <div class="text-center mt-5">
+
+            <div class="buttons buttons-discover text-center" data-aos="fade-up">
                 <a href="{{ route('front.projects.index') }}" class="button button--secondary">
                     Voir tous les projets
-                    <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
                         <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
                     </svg>
                 </a>
@@ -843,48 +880,103 @@
     </section>
     @endif
 
+
     {{-- ========================================================
-         RESOURCES
+         GALLERIES
     ======================================================== --}}
-    @if ($resources->isNotEmpty())
-    <section class="mt-100 section-padding">
+    @if ($galleries->isNotEmpty())
+    <section class="mt-100 section-padding" style="background-color: var(--color-background, #f8f9fa);">
         <div class="container">
-            <div class="section-headings text-center mb-60">
-                <div class="subheading text-20 subheading-bg">
+            <div class="section-headings text-center mb-4">
+                <div class="subheading text-20 subheading-bg" data-aos="fade-up">
                     <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                        <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="currentColor"/>
+                        <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="CurrentColor"/>
                     </svg>
-                    Documents
+                    <span>Galeries</span>
+                    <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="CurrentColor"/>
+                    </svg>
                 </div>
-                <h2 class="heading text-50 fw-700">Ressources disponibles</h2>
+                <h2 class="heading text-50 fw-700" data-aos="fade-up" data-aos-delay="50">Nos Galeries Photos</h2>
             </div>
-            <div class="row g-4">
-                @foreach ($resources as $resource)
-                <div class="col-12 col-md-6 col-lg-4">
-                    <div class="radius18 p-4 h-100 d-flex flex-column" style="border: 1px solid rgba(0,0,0,0.08); background:#fff;">
-                        <div class="mb-3">
-                            <span class="text text-14 text-muted">
-                                {{ $resource->datePublication ? $resource->datePublication->format('d/m/Y') : '' }}
+
+            <div class="gallery-home-grid">
+                @foreach ($galleries as $gallery)
+                @php
+                    $images   = $gallery->medias->where('media_type', 'image');
+                    $cover    = $images->first();
+                    $previews = $images->skip(1)->take(3)->values();
+                    $total    = $gallery->medias->count();
+                @endphp
+                <a
+                    href="{{ route('front.galleries.show', $gallery) }}"
+                    class="gallery-home-card radius18"
+                    aria-label="{{ $gallery->titre }}"
+                    data-aos="fade-up"
+                    data-aos-delay="{{ $loop->index * 60 }}"
+                >
+                    {{-- Image principale --}}
+                    <div class="gallery-home-cover">
+                        @if ($cover)
+                            <img src="{{ Storage::url($cover->media_path) }}" alt="{{ $gallery->titre }}" loading="lazy">
+                        @else
+                            <div class="gallery-home-placeholder">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+                                    <path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z" stroke="currentColor" stroke-width="1.5"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor" stroke-width="1.5"/>
+                                    <path d="m21 15-5-5L5 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                        @endif
+
+                        {{-- Badge compteur --}}
+                        <span class="gallery-home-badge">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                                <path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor" stroke-width="2"/>
+                                <path d="m21 15-5-5L5 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            {{ $total }}
+                        </span>
+
+                        {{-- Overlay au survol --}}
+                        <div class="gallery-home-overlay">
+                            {{-- Strip de prévisualisations --}}
+                            @if ($previews->count())
+                            <div class="gallery-home-previews">
+                                @foreach ($previews as $preview)
+                                <div class="gallery-home-preview-thumb">
+                                    <img src="{{ Storage::url($preview->media_path) }}" alt="" loading="lazy">
+                                </div>
+                                @endforeach
+                                @if ($total > 4)
+                                <div class="gallery-home-preview-more">+{{ $total - 4 }}</div>
+                                @endif
+                            </div>
+                            @endif
+                            {{-- CTA --}}
+                            <span class="gallery-home-cta">
+                                Voir la galerie
+                                <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                                    <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
+                                </svg>
                             </span>
                         </div>
-                        <h3 class="heading text-20 fw-700 mb-3">{{ $resource->titre }}</h3>
-                        <p class="text text-18 flex-grow-1 mb-4">
-                            {{ Str::limit(strip_tags($resource->description), 100) }}
-                        </p>
-                        <a href="{{ route('front.resources.download', $resource) }}" class="button button--primary">
-                            Télécharger
-                            <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
-                            </svg>
-                        </a>
                     </div>
-                </div>
+
+                    {{-- Info bar --}}
+                    <div class="gallery-home-info">
+                        <span class="gallery-home-title heading text-16 fw-600">{{ $gallery->titre }}</span>
+                        <span class="gallery-home-count text text-13">{{ $total }} média{{ $total > 1 ? 's' : '' }}</span>
+                    </div>
+                </a>
                 @endforeach
             </div>
-            <div class="text-center mt-5">
-                <a href="{{ route('front.resources.index') }}" class="button button--secondary">
-                    Voir toutes les ressources
-                    <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none">
+
+            <div class="buttons buttons-discover text-center mt-4" data-aos="fade-up">
+                <a href="{{ route('front.galleries.index') }}" class="button button--secondary">
+                    Voir toutes les galeries
+                    <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
                         <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
                     </svg>
                 </a>
@@ -974,6 +1066,174 @@
 
 @push('styles')
 <style>
+/* ---- Gallery home grid ---- */
+.gallery-home-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+@media (max-width: 991px) {
+    .gallery-home-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 575px) {
+    .gallery-home-grid { grid-template-columns: 1fr; }
+}
+
+.gallery-home-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,.07);
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+.gallery-home-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(0,0,0,.14);
+}
+
+.gallery-home-cover {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: #e9ecef;
+}
+.gallery-home-cover > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .45s ease;
+}
+.gallery-home-card:hover .gallery-home-cover > img {
+    transform: scale(1.07);
+}
+.gallery-home-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #adb5bd;
+}
+
+.gallery-home-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    line-height: 1;
+}
+
+.gallery-home-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,.78) 0%, rgba(0,0,0,.15) 55%, transparent 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 14px;
+    gap: 10px;
+    opacity: 0;
+    transition: opacity .35s ease;
+}
+.gallery-home-card:hover .gallery-home-overlay {
+    opacity: 1;
+}
+
+.gallery-home-previews {
+    display: flex;
+    gap: 6px;
+}
+.gallery-home-preview-thumb {
+    flex: 1;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid rgba(255,255,255,.4);
+}
+.gallery-home-preview-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.gallery-home-preview-more {
+    flex: 1;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    background: rgba(255,255,255,.2);
+    border: 2px solid rgba(255,255,255,.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.gallery-home-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+}
+
+.gallery-home-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    gap: 8px;
+}
+.gallery-home-title {
+    color: var(--color-foreground-heading);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.gallery-home-count {
+    color: var(--color-foreground-subheading);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+/* ---- Projects swiper ---- */
+.projects-swiper .swiper-wrapper {
+    align-items: stretch;
+}
+.projects-swiper .swiper-slide {
+    height: auto;
+    display: flex;
+}
+.projects-swiper .swiper-slide .card-project {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+}
+.projects-swiper .swiper-slide .card-project img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+}
+/* ---- Activities swiper ---- */
 .activities-swiper .swiper-wrapper {
     align-items: stretch;
 }
@@ -1010,6 +1270,41 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    // Projects slider
+    var projEl = document.querySelector('.projects-swiper');
+    if (projEl && typeof Swiper !== 'undefined') {
+        new Swiper('.projects-swiper', {
+            loop: true,
+            slidesPerView: 1,
+            spaceBetween: 24,
+            autoplay: {
+                delay: 4500,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+            },
+            speed: 700,
+            pagination: {
+                el: '.projects-swiper .swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.projects-swiper .swiper-button-next',
+                prevEl: '.projects-swiper .swiper-button-prev',
+            },
+            breakpoints: {
+                768: {
+                    slidesPerView: 2,
+                    spaceBetween: 24,
+                },
+                1024: {
+                    slidesPerView: 3,
+                    spaceBetween: 24,
+                },
+            },
+        });
+    }
+
+    // Activities slider
     var el = document.querySelector('.activities-swiper');
     if (!el || typeof Swiper === 'undefined') return;
     new Swiper('.activities-swiper', {
