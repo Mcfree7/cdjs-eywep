@@ -7,6 +7,7 @@
 @section('title', $activity->titre . ' - ' . ($settings->company_name ?? 'EYWEP'))
 @section('description', Str::limit(strip_tags($activity->description), 160))
 
+
 @section('content')
 <main>
 
@@ -22,14 +23,42 @@
                 {{-- Main content --}}
                 <div class="col-12 col-lg-8">
 
-                    @if ($activity->coverImage)
-                    <div class="mb-5">
-                        <img
-                            src="{{ Storage::url($activity->coverImage->image_path) }}"
-                            alt="{{ $activity->titre }}"
-                            class="img-fluid radius18 w-100"
-                            style="max-height: 480px; object-fit: cover;"
-                        >
+                    @if ($activity->images->count() > 1)
+                    {{-- Slider multi-images --}}
+                    <div class="activity-images-swiper swiper radius18 mb-5">
+                        <div class="swiper-wrapper">
+                            @foreach ($activity->images as $img)
+                            <div class="swiper-slide">
+                                <div class="card-blog-list-media radius18">
+                                    <div class="media">
+                                        <img
+                                            src="{{ Storage::url($img->image_path) }}"
+                                            alt="{{ $activity->titre }}"
+                                            width="1000"
+                                            height="707"
+                                            loading="{{ $loop->first ? 'eager' : 'lazy' }}"
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                    @elseif ($activity->coverImage)
+                    {{-- Image unique --}}
+                    <div class="card-blog-list-media radius18 mb-5">
+                        <div class="media">
+                            <img
+                                src="{{ Storage::url($activity->coverImage->image_path) }}"
+                                alt="{{ $activity->titre }}"
+                                width="1000"
+                                height="707"
+                                loading="eager"
+                            >
+                        </div>
                     </div>
                     @endif
 
@@ -70,8 +99,8 @@
                                     <span class="text text-12 text-muted d-block mb-1">
                                         {{ $related->datePublication ? $related->datePublication->format('d/m/Y') : '' }}
                                     </span>
-                                    <a href="{{ route('front.activities.show', $related) }}" class="heading text-16 fw-600 link d-block">
-                                        {{ $related->titre }}
+                                    <a href="{{ route('front.activities.show', $related) }}" class="heading text-16 fw-600 link d-block" title="{{ $related->titre }}">
+                                        {{ Str::limit($related->titre, 60) }}
                                     </a>
                                 </div>
                             </li>
@@ -96,3 +125,29 @@
 
 </main>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var el = document.querySelector('.activity-images-swiper');
+    if (!el || typeof Swiper === 'undefined') return;
+    new Swiper('.activity-images-swiper', {
+        loop: true,
+        slidesPerView: 1,
+        effect: 'fade',
+        fadeEffect: { crossFade: true },
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+        },
+        speed: 800,
+        pagination: { el: '.activity-images-swiper .swiper-pagination', clickable: true },
+        navigation: {
+            nextEl: '.activity-images-swiper .swiper-button-next',
+            prevEl: '.activity-images-swiper .swiper-button-prev',
+        },
+    });
+});
+</script>
+@endpush

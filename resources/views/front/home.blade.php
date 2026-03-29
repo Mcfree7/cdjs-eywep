@@ -629,58 +629,90 @@
          LATEST ACTIVITIES
     ======================================================== --}}
     @if ($activities->isNotEmpty())
-    <section class="page-blog mt-100 section-padding" style="background-color: var(--color-background, #f8f9fa);">
+    <section class="featured-blog section-padding" style="margin-top: 30px;">
         <div class="container">
-            <div class="section-headings text-center mb-60">
-                <div class="subheading text-20 subheading-bg">
+            <div class="section-headings text-center mb-3">
+                <div class="subheading text-20 subheading-bg" data-aos="fade-up">
                     <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                        <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="currentColor"/>
+                        <g clip-path="url(#clip-act-home)">
+                            <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="currentColor"/>
+                        </g>
+                        <defs><clipPath id="clip-act-home"><rect width="14" height="14" fill="currentColor"/></clipPath></defs>
                     </svg>
                     Activités
+                    <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <g clip-path="url(#clip-act-home2)">
+                            <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="currentColor"/>
+                        </g>
+                        <defs><clipPath id="clip-act-home2"><rect width="14" height="14" fill="currentColor"/></clipPath></defs>
+                    </svg>
                 </div>
-                <h2 class="heading text-50 fw-700">Nos Dernières Activités</h2>
+                <h2 class="heading text-50" data-aos="fade-up" data-aos-delay="50">Nos Dernières Activités</h2>
             </div>
-            <div class="product-grid">
-                @foreach ($activities as $activity)
-                <div class="card-blog radius18">
-                    <div class="card-blog-content">
-                        <div class="card-blog-meta d-flex align-items-center gap-2 mb-3">
-                            <span class="text text-14 text-muted">
-                                {{ $activity->datePublication ? $activity->datePublication->format('d/m/Y') : '' }}
-                            </span>
-                        </div>
-                        <h3 class="heading text-22 fw-700 mb-3">
-                            <a href="{{ route('front.activities.show', $activity) }}" class="link">
-                                {{ $activity->titre }}
+
+            {{-- Swiper slider --}}
+            <div class="activities-swiper swiper" data-aos="fade-up" data-aos-delay="100" style="padding-bottom: 50px;">
+                <div class="swiper-wrapper">
+                    @foreach ($activities as $activity)
+                    <div class="swiper-slide">
+                        <div class="card-blog radius18">
+                            <div class="card-blog-top">
+                                <div class="card-blog-meta">
+                                    <div class="card-blog-meta-item text text-18">
+                                        <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M8.0007 0.046875C6.95088 0.046875 5.94406 0.463912 5.20173 1.20624C4.4594 1.94858 4.04236 2.95539 4.04236 4.00521C4.04236 5.05502 4.4594 6.06184 5.20173 6.80417C5.94406 7.5465 6.95088 7.96354 8.0007 7.96354C9.05051 7.96354 10.0573 7.5465 10.7997 6.80417C11.542 6.06184 11.959 5.05502 11.959 4.00521C11.959 2.95539 11.542 1.94858 10.7997 1.20624C10.0573 0.463912 9.05051 0.046875 8.0007 0.046875ZM5.29236 4.00521C5.29236 3.28691 5.57771 2.59804 6.08562 2.09013C6.59353 1.58222 7.2824 1.29688 8.0007 1.29688C8.71899 1.29688 9.40787 1.58222 9.91578 2.09013C10.4237 2.59804 10.709 3.28691 10.709 4.00521C10.709 4.7235 10.4237 5.41238 9.91578 5.92029C9.40787 6.4282 8.71899 6.71354 8.0007 6.71354C7.2824 6.71354 6.59353 6.4282 6.08562 5.92029C5.57771 5.41238 5.29236 4.7235 5.29236 4.00521ZM8.0007 9.21354C6.0732 9.21354 4.29653 9.65187 2.9807 10.3919C1.68403 11.1219 0.709031 12.2269 0.709031 13.5885V13.6735C0.708198 14.6419 0.707364 15.8569 1.7732 16.7252C2.29736 17.1519 3.03153 17.456 4.0232 17.656C5.01653 17.8577 6.31236 17.9635 8.0007 17.9635C9.68903 17.9635 10.984 17.8577 11.979 17.656C12.9707 17.456 13.704 17.1519 14.229 16.7252C15.2949 15.8569 15.2932 14.6419 15.2924 13.6735V13.5885C15.2924 12.2269 14.3174 11.1219 13.0215 10.3919C11.7049 9.65187 9.92903 9.21354 8.0007 9.21354ZM1.95903 13.5885C1.95903 12.8794 2.47736 12.1094 3.5932 11.4819C4.68986 10.8652 6.24653 10.4635 8.00153 10.4635C9.75486 10.4635 11.3115 10.8652 12.4082 11.4819C13.5249 12.1094 14.0424 12.8794 14.0424 13.5885C14.0424 14.6785 14.009 15.2919 13.439 15.7552C13.1307 16.0069 12.614 16.2527 11.7307 16.431C10.8499 16.6094 9.6457 16.7135 8.0007 16.7135C6.3557 16.7135 5.1507 16.6094 4.2707 16.431C3.38736 16.2527 2.8707 16.0069 2.56236 15.756C1.99236 15.2919 1.95903 14.6785 1.95903 13.5885Z" fill="currentColor"/>
+                                        </svg>
+                                        Admin
+                                    </div>
+                                    @if ($activity->datePublication)
+                                    <div class="card-blog-meta-item text text-18">
+                                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M13.1667 10.6667C13.3877 10.6667 13.5996 10.5789 13.7559 10.4226C13.9122 10.2663 14 10.0543 14 9.83333C14 9.61232 13.9122 9.40036 13.7559 9.24408C13.5996 9.0878 13.3877 9 13.1667 9C12.9457 9 12.7337 9.0878 12.5774 9.24408C12.4211 9.40036 12.3333 9.61232 12.3333 9.83333C12.3333 10.0543 12.4211 10.2663 12.5774 10.4226C12.7337 10.5789 12.9457 10.6667 13.1667 10.6667Z" fill="currentColor"/>
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.83268 0.453125C4.99844 0.453125 5.15741 0.518973 5.27462 0.636183C5.39183 0.753394 5.45768 0.912365 5.45768 1.07812V1.71396C6.00935 1.70312 6.61685 1.70312 7.28518 1.70312H10.7127C11.3818 1.70312 11.9893 1.70312 12.541 1.71396V1.07812C12.541 0.912365 12.6069 0.753394 12.7241 0.636183C12.8413 0.518973 13.0003 0.453125 13.166 0.453125C13.3318 0.453125 13.4907 0.518973 13.608 0.636183C13.7252 0.753394 13.791 0.912365 13.791 1.07812V1.76729C14.0077 1.78396 14.2127 1.80479 14.4068 1.83063C15.3835 1.96229 16.1743 2.23896 16.7985 2.86229C17.4218 3.48646 17.6985 4.27729 17.8302 5.25396C17.9577 6.20396 17.9577 7.41646 17.9577 8.94812V10.7081C17.9577 12.2398 17.9577 13.4531 17.8302 14.4023C17.6985 15.379 17.4218 16.1698 16.7985 16.794C16.1743 17.4173 15.3835 17.694 14.4068 17.8256C13.4568 17.9531 12.2443 17.9531 10.7127 17.9531H7.28602C5.75435 17.9531 4.54102 17.9531 3.59185 17.8256C2.61518 17.694 1.82435 17.4173 1.20018 16.794C0.576849 16.1698 0.300182 15.379 0.168516 14.4023C0.0410156 13.4523 0.0410156 12.2398 0.0410156 10.7081V8.94812C0.0410156 7.41646 0.0410156 6.20312 0.168516 5.25396C0.300182 4.27729 0.576849 3.48646 1.20018 2.86229C1.82435 2.23896 2.61518 1.96229 3.59185 1.83063C3.78602 1.80479 3.99185 1.78396 4.20768 1.76729V1.07812C4.20768 0.912365 4.27353 0.753394 4.39074 0.636183C4.50795 0.518973 4.66692 0.453125 4.83268 0.453125ZM3.75768 3.06979C2.92018 3.18229 2.43685 3.39396 2.08435 3.74646C1.73185 4.09896 1.52018 4.58229 1.40768 5.42062C1.38852 5.56229 1.37268 5.71229 1.35935 5.86979H16.6393C16.626 5.71146 16.6102 5.56229 16.591 5.41979C16.4785 4.58229 16.2668 4.09896 15.9143 3.74646C15.5618 3.39396 15.0785 3.18229 14.2402 3.06979C13.3843 2.95479 12.2552 2.95312 10.666 2.95312H7.33268C5.74352 2.95312 4.61518 2.95479 3.75768 3.06979ZM1.29102 8.99479C1.29102 8.28312 1.29102 7.66396 1.30185 7.11979H16.6968C16.7077 7.66396 16.7077 8.28312 16.7077 8.99479V10.6615C16.7077 12.2506 16.706 13.3798 16.591 14.2365C16.4785 15.074 16.2668 15.5573 15.9143 15.9098C15.5618 16.2623 15.0785 16.474 14.2402 16.5865C13.3843 16.7015 12.2552 16.7031 10.666 16.7031H7.33268C5.74352 16.7031 4.61518 16.7015 3.75768 16.5865C2.92018 16.474 2.43685 16.2623 2.08435 15.9098C1.73185 15.5573 1.52018 15.074 1.40768 14.2356C1.29268 13.3798 1.29102 12.2506 1.29102 10.6615V8.99479Z" fill="currentColor"/>
+                                        </svg>
+                                        {{ $activity->datePublication->translatedFormat('d M Y') }}
+                                    </div>
+                                    @endif
+                                </div>
+                                <h2 class="card-blog-heading heading text-22">
+                                    <a href="{{ route('front.activities.show', $activity) }}" class="heading text-22">
+                                        {{ $activity->titre }}
+                                    </a>
+                                </h2>
+                            </div>
+                            <a class="card-blog-bottom" href="{{ route('front.activities.show', $activity) }}" aria-label="{{ $activity->titre }}">
+                                <span class="blog-tag subheading subheading-bg text-16 fw-500">Activité</span>
+                                <div class="media">
+                                    <img
+                                        src="{{ $activity->coverImage ? Storage::url($activity->coverImage->image_path) : asset('front-assets/consulo/img/blog/1.jpg') }}"
+                                        alt="{{ $activity->titre }}"
+                                        width="1000"
+                                        height="707"
+                                        loading="lazy"
+                                    >
+                                </div>
+                                <div class="buttons">
+                                    <div class="button button--primary">
+                                        Lire la suite
+                                        <svg viewBox="0 0 11 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M2.16668 0.833333C2.16668 0.61232 2.25448 0.400358 2.41076 0.244078C2.56704 0.0877975 2.779 0 3.00001 0H9.66668C9.88769 0 10.0997 0.0877975 10.2559 0.244078C10.4122 0.400358 10.5 0.61232 10.5 0.833333V7.5C10.5 7.72101 10.4122 7.93297 10.2559 8.08926C10.0997 8.24554 9.88769 8.33333 9.66668 8.33333C9.44567 8.33333 9.2337 8.24554 9.07742 8.08926C8.92114 7.93297 8.83335 7.72101 8.83335 7.5V2.845L1.92251 9.75583C1.76535 9.90763 1.55484 9.99163 1.33635 9.98973C1.11785 9.98783 0.908839 9.90019 0.754332 9.74568C0.599825 9.59118 0.512184 9.38216 0.510285 9.16367C0.508387 8.94517 0.592382 8.73467 0.744181 8.5775L7.65501 1.66667H3.00001C2.779 1.66667 2.56704 1.57887 2.41076 1.42259C2.25448 1.26631 2.16668 1.05435 2.16668 0.833333Z" fill="currentColor"/>
+                                        </svg>
+                                    </div>
+                                </div>
                             </a>
-                        </h3>
-                        <p class="text text-18 mb-4">
-                            {{ Str::limit(strip_tags($activity->description), 150) }}
-                        </p>
-                        <a href="{{ route('front.activities.show', $activity) }}" class="button button--primary">
-                            Lire la suite
-                            <svg viewBox="0 0 11 10" fill="none" style="width:11px;height:10px;display:inline-block;margin-left:6px;">
-                                <path d="M2.167 0.833C2.167 0.612 2.254 0.400 2.411 0.244C2.567 0.088 2.779 0 3.000 0H9.667C9.888 0 10.100 0.088 10.256 0.244C10.412 0.400 10.500 0.612 10.500 0.833V7.500C10.500 7.721 10.412 7.933 10.256 8.089C10.100 8.246 9.888 8.333 9.667 8.333C9.446 8.333 9.234 8.246 9.077 8.089C8.921 7.933 8.833 7.721 8.833 7.500V2.845L1.923 9.756C1.765 9.908 1.555 9.992 1.336 9.990C1.118 9.988 0.909 9.900 0.754 9.746C0.600 9.591 0.512 9.382 0.510 9.164C0.508 8.945 0.592 8.735 0.744 8.578L7.655 1.667H3.000C2.779 1.667 2.567 1.579 2.411 1.423C2.254 1.266 2.167 1.054 2.167 0.833Z" fill="currentColor"/>
-                            </svg>
-                        </a>
+                        </div>
                     </div>
-                    <div class="card-blog-img radius18">
-                        <a href="{{ route('front.activities.show', $activity) }}">
-                            <img
-                                src="{{ $activity->coverImage ? Storage::url($activity->coverImage->image_path) : asset('front-assets/consulo/img/blog/1.jpg') }}"
-                                alt="{{ $activity->titre }}"
-                                loading="lazy"
-                                class="radius18"
-                            >
-                        </a>
-                    </div>
+                    @endforeach
                 </div>
-                @endforeach
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-pagination"></div>
             </div>
-            <div class="text-center mt-5">
+
+            <div class="buttons buttons-discover text-center" data-aos="fade-up">
                 <a href="{{ route('front.activities.index') }}" class="button button--secondary">
                     Voir toutes les activités
-                    <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
                         <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
                     </svg>
                 </a>
@@ -862,39 +894,153 @@
     @endif
 
     {{-- ========================================================
-         PARTNERS
+         FAQ / QUESTIONS
     ======================================================== --}}
-    @if ($partners->isNotEmpty())
-    <section class="mt-100 section-padding" style="background-color: var(--color-background, #f8f9fa);">
+    <div class="faq section-padding" style="margin-top: 30px;">
         <div class="container">
-            <div class="section-headings text-center mb-60">
-                <div class="subheading text-20 subheading-bg">
-                    <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                        <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="currentColor"/>
-                    </svg>
-                    Partenaires
+            <div class="row faq-row">
+                <div class="col-lg-6 col-12">
+                    <div class="section-headings">
+                        <div class="subheading text-20 subheading-bg" data-aos="fade-up">
+                            <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                <g clip-path="url(#clip-faq-a)">
+                                    <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 -1.33117e-07 8.0588 0 7C4.62818e-08 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="CurrentColor"/>
+                                </g>
+                                <defs><clipPath id="clip-faq-a"><rect width="14" height="14" fill="CurrentColor"/></clipPath></defs>
+                            </svg>
+                            <span>Questions</span>
+                            <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                <g clip-path="url(#clip-faq-b)">
+                                    <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 -1.33117e-07 8.0588 0 7C4.62818e-08 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="CurrentColor"/>
+                                </g>
+                                <defs><clipPath id="clip-faq-b"><rect width="14" height="14" fill="CurrentColor"/></clipPath></defs>
+                            </svg>
+                        </div>
+                        <h2 class="heading text-50" data-aos="fade-up" data-aos-delay="50">
+                            Des questions ? Voici quelques réponses
+                        </h2>
+                        <div class="text text-18" data-aos="fade-up" data-aos-delay="80">
+                            Vous souhaitez en savoir plus sur le programme EYWEP, les conditions de participation ou les activités proposées ? Retrouvez ci-dessous les questions les plus fréquentes.
+                        </div>
+                        <div class="buttons" data-aos="fade-up" data-aos-delay="100">
+                            <a href="{{ route('front.contact') }}" class="button button--primary" aria-label="Poser votre question">
+                                En Savoir plus
+                                <span class="svg-wrapper">
+                                    <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="CurrentColor"/>
+                                    </svg>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="image-absolute" data-aos="zoom-in">
+                            <img src="{{ asset('front-assets/consulo/img/faq/question.png') }}" width="104" height="180" loading="lazy" alt="Question">
+                        </div>
+                    </div>
                 </div>
-                <h2 class="heading text-50 fw-700">Nos Partenaires</h2>
-            </div>
-            <div class="d-flex flex-wrap justify-content-center align-items-center gap-5">
-                @foreach ($partners as $partner)
-                <div class="partner-logo text-center">
-                    @if ($partner->logo_path)
-                        <img
-                            src="{{ Storage::url($partner->logo_path) }}"
-                            alt="{{ $partner->titre }}"
-                            loading="lazy"
-                            style="max-height: 80px; max-width: 180px; object-fit: contain;"
-                        >
-                    @else
-                        <span class="text text-18 fw-600">{{ $partner->titre }}</span>
-                    @endif
+                <div class="col-lg-6 col-12">
+                    <faq-accordion>
+                        <div class="accordion-list">
+                            @forelse ($faqs as $faq)
+                            <div class="accordion-block" data-aos="fade-up" @if(!$loop->first) data-aos-delay="{{ $loop->index * 50 }}" @endif>
+                                <div class="accordion-opener heading text-22">
+                                    {{ $faq->question }}
+                                    <div class="svg-wrapper">
+                                        <svg class="icon icon-24" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <g clip-path="url(#clip-faq-chevron)">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M12.7083 15.7044C12.5208 15.8919 12.2665 15.9972 12.0013 15.9972C11.7362 15.9972 11.4818 15.8919 11.2943 15.7044L5.63732 10.0474C5.54181 9.95517 5.46563 9.84482 5.41322 9.72282C5.36081 9.60081 5.33322 9.46959 5.33207 9.33681C5.33092 9.20404 5.35622 9.07236 5.4065 8.94946C5.45678 8.82656 5.53103 8.71491 5.62492 8.62102C5.71882 8.52713 5.83047 8.45287 5.95337 8.40259C6.07626 8.35231 6.20794 8.32701 6.34072 8.32816C6.4735 8.32932 6.60472 8.3569 6.72672 8.40931C6.84873 8.46172 6.95907 8.5379 7.05132 8.63341L12.0013 13.5834L16.9513 8.63341C17.1399 8.45125 17.3925 8.35046 17.6547 8.35274C17.9169 8.35502 18.1677 8.46019 18.3531 8.64559C18.5385 8.831 18.6437 9.08182 18.646 9.34401C18.6483 9.60621 18.5475 9.85881 18.3653 10.0474L12.7083 15.7044Z" fill="CurrentColor"/>
+                                            </g>
+                                            <defs><clipPath id="clip-faq-chevron"><rect width="24" height="24" fill="CurrentColor"/></clipPath></defs>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="accordion-content">
+                                    <div class="accordion-content-inner text text-18">
+                                        {{ $faq->reponse }}
+                                    </div>
+                                </div>
+                            </div>
+                            @empty
+                            <p class="text text-18" style="color:var(--color-foreground-subheading);">Aucune question disponible pour le moment.</p>
+                            @endforelse
+                        </div>
+                    </faq-accordion>
                 </div>
-                @endforeach
             </div>
         </div>
-    </section>
-    @endif
+    </div>
 
 </main>
 @endsection
+
+@push('styles')
+<style>
+.activities-swiper .swiper-wrapper {
+    align-items: stretch;
+}
+.activities-swiper .swiper-slide {
+    height: auto;
+    display: flex;
+}
+.activities-swiper .swiper-slide .card-blog {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+.activities-swiper .swiper-slide .card-blog-top {
+    flex: 1;
+}
+.activities-swiper .swiper-slide .card-blog-heading a {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+/* Titres articles section accueil */
+.featured-blog .card-blog-heading a,
+.featured-blog .card-blog-list-horizontal .card-blog-heading a {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+</style>
+@endpush
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var el = document.querySelector('.activities-swiper');
+    if (!el || typeof Swiper === 'undefined') return;
+    new Swiper('.activities-swiper', {
+        loop: true,
+        slidesPerView: 1,
+        spaceBetween: 24,
+        autoplay: {
+            delay: 4000,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+        },
+        speed: 700,
+        pagination: {
+            el: '.activities-swiper .swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.activities-swiper .swiper-button-next',
+            prevEl: '.activities-swiper .swiper-button-prev',
+        },
+        breakpoints: {
+            768: {
+                slidesPerView: 2,
+                spaceBetween: 24,
+            },
+            1024: {
+                slidesPerView: 3,
+                spaceBetween: 24,
+            },
+        },
+    });
+});
+</script>
+@endpush

@@ -7,6 +7,32 @@
 @section('title', 'Articles - ' . ($settings->company_name ?? 'EYWEP'))
 @section('description', 'Retrouvez tous les articles publiés par ' . ($settings->company_name ?? 'EYWEP'))
 
+@push('styles')
+<style>
+.page-blog .card-blog-heading a {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.page-blog .row.product-grid {
+    align-items: stretch;
+}
+.page-blog .row.product-grid > [class*="col-"] {
+    display: flex;
+}
+.page-blog .row.product-grid .card-blog {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+.page-blog .row.product-grid .card-blog .card-blog-top {
+    flex: 1;
+}
+</style>
+@endpush
+
 @section('content')
 <main>
 

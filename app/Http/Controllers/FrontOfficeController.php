@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Activity;
 use App\Models\Article;
 use App\Models\Candidature;
+use App\Models\Faq;
 use App\Models\FrontOfficeSetting;
 use App\Models\Gallery;
 use App\Models\News;
@@ -30,7 +31,7 @@ class FrontOfficeController extends Controller
             'activities' => Activity::with('coverImage')
                 ->latest('datePublication')
                 ->latest('id')
-                ->take(3)
+                ->take(5)
                 ->get(),
             'successStories' => SuccessStory::with('coverImage')
                 ->latest('datePublication')
@@ -52,6 +53,11 @@ class FrontOfficeController extends Controller
             'news' => News::query()
                 ->where('status', 'actif')
                 ->latest('id')
+                ->take(5)
+                ->get(),
+            'faqs' => Faq::actif()
+                ->orderBy('ordre')
+                ->orderBy('id')
                 ->take(5)
                 ->get(),
         ]);
@@ -251,6 +257,7 @@ class FrontOfficeController extends Controller
         return view('front.about', [
             'settings' => $this->settings(),
             'partners' => Partner::query()->latest('id')->get(),
+            'faqs'     => Faq::actif()->orderBy('ordre')->orderBy('id')->take(5)->get(),
         ]);
     }
 

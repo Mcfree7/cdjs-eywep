@@ -7,6 +7,17 @@
 @section('title', $article->titre . ' - ' . ($settings->company_name ?? 'EYWEP'))
 @section('description', Str::limit(strip_tags($article->description), 160))
 
+@push('styles')
+<style>
+.recent-post .card-blog-heading a {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+</style>
+@endpush
+
 @section('content')
 <main>
 

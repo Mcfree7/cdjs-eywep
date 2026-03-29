@@ -4,6 +4,7 @@
       - $bannerTitle      : string (required) — page title displayed in the banner
       - $breadcrumbParent : array  (optional) — ['label' => '...', 'url' => '...']
 --}}
+@php use Illuminate\Support\Str; @endphp
 <div class="page-banner overlay">
     <picture class="media media-bg">
         <source media="(max-width: 575px)" srcset="{{ asset('front-assets/consulo/img/banner/page-banner-575.jpg') }}">
@@ -18,7 +19,7 @@
     </picture>
     <div class="page-banner-content">
         <div class="container text-center">
-            <h1 class="heading text-80 fw-700" data-aos="fade-up">{{ $bannerTitle }}</h1>
+            <h1 class="heading text-80 fw-700" data-aos="fade-up" title="{{ $bannerTitle }}">{{ Str::limit($bannerTitle, 60) }}</h1>
             <ul class="breadcrumb list-unstyled" data-aos="fade-up" data-aos-delay="100">
                 <li>
                     <a href="{{ route('front.home') }}" class="text text-18" aria-label="Accueil">Accueil</a>
@@ -39,7 +40,7 @@
                     </svg>
                 </li>
                 <li>
-                    <a role="link" aria-disabled="true" class="text text-18 active">{{ $bannerTitle }}</a>
+                    <a role="link" aria-disabled="true" class="text text-18 active" title="{{ $bannerTitle }}">{{ Str::limit($bannerTitle, 45) }}</a>
                 </li>
             </ul>
         </div>

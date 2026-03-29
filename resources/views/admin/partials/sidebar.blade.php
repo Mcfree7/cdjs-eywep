@@ -26,6 +26,9 @@
     $isProjectsIndexActive = request()->routeIs('admin.projects.index', 'admin.projects.show', 'admin.projects.edit', 'admin.projects.update');
     $isCandidaturesSectionActive = request()->routeIs('admin.candidatures.*');
     $isCandidaturesIndexActive = request()->routeIs('admin.candidatures.index', 'admin.candidatures.show');
+    $isFaqsSectionActive = request()->routeIs('admin.faqs.*');
+    $isFaqsCreateActive = request()->routeIs('admin.faqs.create');
+    $isFaqsIndexActive = request()->routeIs('admin.faqs.index', 'admin.faqs.show', 'admin.faqs.edit', 'admin.faqs.update');
     $isSettingsSectionActive = request()->routeIs('admin.settings.*');
     $isFrontOfficeSettingsActive = request()->routeIs('admin.settings.front-office');
 @endphp
@@ -260,6 +263,30 @@
                             <a href="{{ route('admin.candidatures.index') }}" class="nav-link {{ $isCandidaturesSectionActive ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Candidatures</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item {{ $isFaqsSectionActive ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ $isFaqsSectionActive ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-chat-square-dots-fill"></i>
+                        <p>
+                            FAQ
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.faqs.create') }}" class="nav-link {{ $isFaqsCreateActive ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Ajouter une question</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.faqs.index') }}" class="nav-link {{ $isFaqsIndexActive ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Liste des questions</p>
                             </a>
                         </li>
                     </ul>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\ActivitiesController;
 use App\Http\Controllers\Admin\ArticlesController;
 use App\Http\Controllers\Admin\CandidaturesController;
+use App\Http\Controllers\Admin\FaqsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GalleriesController;
 use App\Http\Controllers\Admin\NewsController;
@@ -49,6 +50,7 @@ Route::middleware('auth')->group(function () {
             ->parameters(['resources' => 'resourceItem'])
             ->names('admin.resources');
         Route::resource('projects', ProjectsController::class)->names('admin.projects');
+        Route::resource('faqs', FaqsController::class)->names('admin.faqs');
         Route::resource('candidatures', CandidaturesController::class)
             ->only(['index', 'show', 'update', 'destroy'])
             ->names('admin.candidatures');

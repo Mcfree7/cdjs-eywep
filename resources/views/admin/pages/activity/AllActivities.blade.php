@@ -93,6 +93,13 @@
             color: #dc3545;
             font-size: 1.75rem;
         }
+
+        .col-titre {
+            max-width: 260px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     </style>
 @endpush
 
@@ -225,7 +232,7 @@
                                 @endphp
                                 <tr>
                                     <td>{{ $activity->id }}</td>
-                                    <td class="fw-semibold">{{ $activity->titre }}</td>
+                                    <td class="fw-semibold col-titre" title="{{ $activity->titre }}">{{ $activity->titre }}</td>
                                     <td>{{ \Illuminate\Support\Str::limit(strip_tags($activity->description), 80) }}</td>
                                     <td>
                                         {{ $activity->datePublication ? \Illuminate\Support\Carbon::parse($activity->datePublication)->format('d/m/Y') : 'Non definie' }}
