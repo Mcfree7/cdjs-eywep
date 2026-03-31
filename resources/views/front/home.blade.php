@@ -914,7 +914,8 @@
                     aria-label="{{ $gallery->titre }}"
                     data-aos="fade-up"
                     data-aos-delay="{{ $loop->index * 60 }}"
-                >
+
+                    >
                     {{-- Image principale --}}
                     <div class="gallery-home-cover">
                         @if ($cover)

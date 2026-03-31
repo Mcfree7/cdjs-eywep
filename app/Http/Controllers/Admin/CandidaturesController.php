@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\CandidaturesStatsExport;
 use App\Http\Controllers\Controller;
 use App\Models\Candidature;
 use App\Models\Project;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CandidaturesController extends Controller
 {
@@ -71,6 +74,80 @@ class CandidaturesController extends Controller
         $candidature->update(['statut' => $validated['statut']]);
 
         return back()->with('success', 'Statut de la candidature mis a jour.');
+    }
+
+    public function exportStats(Request $request)
+    {
+        $validated = $request->validate([
+            'format'     => ['required', 'in:pdf,excel'],
+            'project_id' => ['nullable', 'integer', 'exists:projects,id'],
+            'pays'       => ['nullable', 'string', 'max:100'],
+        ]);
+
+        $filters = array_filter([
+            'project_id' => $validated['project_id'] ?? null,
+            'pays'       => $validated['pays'] ?? null,
+        ]);
+
+        $filename = 'rapport-candidatures-' . now()->format('Y-m-d');
+
+        if ($validated['format'] === 'excel') {
+            return Excel::download(new CandidaturesStatsExport($filters), $filename . '.xlsx');
+        }
+
+        // PDF
+        $baseQuery = Candidature::query();
+        if (!empty($filters['project_id'])) {
+            $baseQuery->where('project_id', $filters['project_id']);
+        }
+        if (!empty($filters['pays'])) {
+            $baseQuery->where('pays', $filters['pays']);
+        }
+
+        $total      = (clone $baseQuery)->count();
+        $enAttente  = (clone $baseQuery)->where('statut', 'en_attente')->count();
+        $retenue    = (clone $baseQuery)->where('statut', 'retenue')->count();
+        $rejetee    = (clone $baseQuery)->where('statut', 'rejetee')->count();
+        $nbPays     = (clone $baseQuery)->distinct('pays')->count('pays');
+        $nbProjets  = (clone $baseQuery)->distinct('project_id')->count('project_id');
+
+        $parPays = (clone $baseQuery)
+            ->selectRaw('pays, COUNT(*) as total,
+                SUM(CASE WHEN statut = "en_attente" THEN 1 ELSE 0 END) as en_attente,
+                SUM(CASE WHEN statut = "retenue" THEN 1 ELSE 0 END) as retenue,
+                SUM(CASE WHEN statut = "rejetee" THEN 1 ELSE 0 END) as rejetee')
+            ->groupBy('pays')
+            ->orderByDesc('total')
+            ->get();
+
+        $parProjet = (clone $baseQuery)
+            ->with('project')
+            ->selectRaw('project_id, COUNT(*) as total,
+                SUM(CASE WHEN statut = "en_attente" THEN 1 ELSE 0 END) as en_attente,
+                SUM(CASE WHEN statut = "retenue" THEN 1 ELSE 0 END) as retenue,
+                SUM(CASE WHEN statut = "rejetee" THEN 1 ELSE 0 END) as rejetee')
+            ->groupBy('project_id')
+            ->orderByDesc('total')
+            ->get();
+
+        $filtreProjet = null;
+        if (!empty($filters['project_id'])) {
+            $filtreProjet = Project::find($filters['project_id'])?->titre;
+        }
+        $filtrePays = $filters['pays'] ?? null;
+
+        $candidatures = (clone $baseQuery)
+            ->with('project')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $pdf = Pdf::loadView('admin.pages.candidatures.rapport-stats-pdf', compact(
+            'total', 'enAttente', 'retenue', 'rejetee',
+            'nbPays', 'nbProjets', 'parPays', 'parProjet',
+            'filtreProjet', 'filtrePays', 'candidatures'
+        ))->setPaper('a4', 'landscape');
+
+        return $pdf->download($filename . '.pdf');
     }
 
     public function destroy(Candidature $candidature)

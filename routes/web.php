@@ -51,6 +51,8 @@ Route::middleware('auth')->group(function () {
             ->names('admin.resources');
         Route::resource('projects', ProjectsController::class)->names('admin.projects');
         Route::resource('faqs', FaqsController::class)->names('admin.faqs');
+        Route::get('candidatures/export-stats', [CandidaturesController::class, 'exportStats'])
+            ->name('admin.candidatures.export-stats');
         Route::resource('candidatures', CandidaturesController::class)
             ->only(['index', 'show', 'update', 'destroy'])
             ->names('admin.candidatures');

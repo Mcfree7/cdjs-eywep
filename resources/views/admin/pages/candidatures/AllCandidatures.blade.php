@@ -39,11 +39,14 @@
     <div class="app-content-header">
     <div class="container-fluid">
 
-        <div class="candidatures-header d-flex justify-content-between align-items-center flex-wrap">
+        <div class="candidatures-header d-flex justify-content-between align-items-center flex-wrap gap-2">
             <div class="candidatures-title">
                 <h3 class="mb-0">Liste des candidatures</h3>
                 <span class="candidatures-subtitle">Gestion de toutes les candidatures</span>
             </div>
+            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exportStatsModal">
+                <i class="bi bi-bar-chart-line me-1"></i> Rapport statistiques
+            </button>
         </div>
 
         <div class="row mt-2">
@@ -192,6 +195,66 @@
                         <div class="d-flex justify-content-center">{{ $candidatures->links() }}</div>
                     </div>
                 @endif
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal export statistiques --}}
+    <div class="modal fade" id="exportStatsModal" tabindex="-1" aria-labelledby="exportStatsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 1.25rem; overflow: hidden;">
+                <div class="modal-header border-0 pb-0">
+                    <div class="d-flex align-items-center gap-2">
+                        <div style="width:2.75rem;height:2.75rem;border-radius:.75rem;background:rgba(59,130,246,.12);color:#1d4ed8;display:flex;align-items:center;justify-content:center;font-size:1.4rem;">
+                            <i class="bi bi-bar-chart-line"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title mb-0" id="exportStatsModalLabel">Exporter un rapport statistiques</h5>
+                            <small class="text-muted">Choisissez vos filtres et le format d'export</small>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal"></button>
+                </div>
+                <form action="{{ route('admin.candidatures.export-stats') }}" method="GET" id="export-stats-form">
+                    <div class="modal-body pt-3">
+                        <div class="mb-3">
+                            <label for="export-project-id" class="form-label">Projet <span class="text-muted fw-normal">(optionnel)</span></label>
+                            <select id="export-project-id" name="project_id" class="form-select">
+                                <option value="">Tous les projets</option>
+                                @foreach ($projects as $project)
+                                    <option value="{{ $project->id }}" {{ request('project_id') == $project->id ? 'selected' : '' }}>{{ $project->titre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="export-pays" class="form-label">Pays <span class="text-muted fw-normal">(optionnel)</span></label>
+                            <input type="text" id="export-pays" name="pays" class="form-control" placeholder="Ex : Côte d'Ivoire" value="{{ request('pays') }}">
+                        </div>
+                        <div>
+                            <label class="form-label">Format d'export</label>
+                            <div class="d-flex gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="format" id="format-pdf" value="pdf" checked>
+                                    <label class="form-check-label" for="format-pdf">
+                                        <i class="bi bi-filetype-pdf text-danger me-1"></i> PDF
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="format" id="format-excel" value="excel">
+                                    <label class="form-check-label" for="format-excel">
+                                        <i class="bi bi-file-earmark-spreadsheet text-success me-1"></i> Excel
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-download me-1"></i> Télécharger
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
