@@ -101,11 +101,16 @@
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="datePublication" class="form-label">Date de publication</label>
                                 <input type="date" name="datePublication" id="datePublication" class="form-control" value="{{ old('datePublication', $defaultPublicationDate) }}">
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <label for="date_cloture" class="form-label">Date de clôture <span class="text-muted fw-normal">(optionnel)</span></label>
+                                <input type="date" name="date_cloture" id="date_cloture" class="form-control @error('date_cloture') is-invalid @enderror" value="{{ old('date_cloture', optional($project->date_cloture)->format('Y-m-d')) }}">
+                                @error('date_cloture')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                            <div class="col-md-4">
                                 <label for="statut" class="form-label">Statut</label>
                                 <select name="statut" id="statut" class="form-select" required>
                                     <option value="ouvert" {{ old('statut', $project->statut) === 'ouvert' ? 'selected' : '' }}>Ouvert (candidatures acceptees)</option>
@@ -113,6 +118,26 @@
                                     <option value="archive" {{ old('statut', $project->statut) === 'archive' ? 'selected' : '' }}>Archive</option>
                                 </select>
                             </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label d-block">Termes de Référence (TDR)</label>
+                            @if ($project->tdr_path)
+                                <div class="d-flex align-items-center gap-3 p-3 mb-2 rounded" style="background:#f8f9fa; border:1px solid var(--bs-border-color);">
+                                    <i class="bi bi-file-earmark-pdf text-danger fs-4"></i>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-semibold">TDR actuel</div>
+                                        <a href="{{ Storage::url($project->tdr_path) }}" target="_blank" class="small text-primary">Télécharger le fichier actuel</a>
+                                    </div>
+                                    <div class="form-check mb-0">
+                                        <input class="form-check-input" type="checkbox" name="remove_tdr" value="1" id="remove_tdr">
+                                        <label class="form-check-label text-danger small" for="remove_tdr">Supprimer</label>
+                                    </div>
+                                </div>
+                            @endif
+                            <input type="file" name="tdr" id="tdr" class="form-control @error('tdr') is-invalid @enderror" accept=".pdf,.doc,.docx">
+                            <div class="form-text">{{ $project->tdr_path ? 'Uploader un nouveau fichier remplacera le TDR actuel.' : 'PDF, DOC ou DOCX — max 10 Mo' }}</div>
+                            @error('tdr')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
 
                         <div class="mb-4">

@@ -109,11 +109,16 @@
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="datePublication" class="form-label">Date de publication</label>
                                 <input type="date" name="datePublication" id="datePublication" class="form-control" value="{{ old('datePublication', $defaultPublicationDate) }}">
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <label for="date_cloture" class="form-label">Date de clôture <span class="text-muted fw-normal">(optionnel)</span></label>
+                                <input type="date" name="date_cloture" id="date_cloture" class="form-control @error('date_cloture') is-invalid @enderror" value="{{ old('date_cloture') }}">
+                                @error('date_cloture')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                            <div class="col-md-4">
                                 <label for="statut" class="form-label">Statut</label>
                                 <select name="statut" id="statut" class="form-select" required>
                                     <option value="ouvert" {{ old('statut', 'ouvert') === 'ouvert' ? 'selected' : '' }}>Ouvert (candidatures acceptees)</option>
@@ -121,6 +126,13 @@
                                     <option value="archive" {{ old('statut') === 'archive' ? 'selected' : '' }}>Archive</option>
                                 </select>
                             </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tdr" class="form-label">Termes de Référence (TDR) <span class="text-muted fw-normal">(optionnel)</span></label>
+                            <input type="file" name="tdr" id="tdr" class="form-control @error('tdr') is-invalid @enderror" accept=".pdf,.doc,.docx">
+                            <div class="form-text">PDF, DOC ou DOCX — max 10 Mo</div>
+                            @error('tdr')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
 
                         <div class="mb-3">

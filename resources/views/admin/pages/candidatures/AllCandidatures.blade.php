@@ -1,3 +1,4 @@
+@php use App\Support\Countries; @endphp
 @extends('admin.layouts.admin')
 
 @push('styles')
@@ -222,13 +223,29 @@
                             <select id="export-project-id" name="project_id" class="form-select">
                                 <option value="">Tous les projets</option>
                                 @foreach ($projects as $project)
-                                    <option value="{{ $project->id }}" {{ request('project_id') == $project->id ? 'selected' : '' }}>{{ $project->titre }}</option>
+                                    <option value="{{ $project->id }}">{{ $project->titre }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="export-pays" class="form-label">Pays <span class="text-muted fw-normal">(optionnel)</span></label>
-                            <input type="text" id="export-pays" name="pays" class="form-control" placeholder="Ex : Côte d'Ivoire" value="{{ request('pays') }}">
+                        <div class="row g-3 mb-3">
+                            <div class="col-12 col-sm-6">
+                                <label for="export-pays" class="form-label">Pays <span class="text-muted fw-normal">(optionnel)</span></label>
+                                <select id="export-pays" name="pays" class="form-select">
+                                    <option value="">Tous les pays</option>
+                                    @foreach (Countries::list() as $code => $name)
+                                        <option value="{{ $name }}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <label for="export-sexe" class="form-label">Sexe <span class="text-muted fw-normal">(optionnel)</span></label>
+                                <select id="export-sexe" name="sexe" class="form-select">
+                                    <option value="">Tous</option>
+                                    <option value="homme">Homme</option>
+                                    <option value="femme">Femme</option>
+                                    <option value="autre">Autre</option>
+                                </select>
+                            </div>
                         </div>
                         <div>
                             <label class="form-label">Format d'export</label>

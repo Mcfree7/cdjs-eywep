@@ -64,20 +64,29 @@ class ProjectsController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'titre'          => ['required', 'string', 'max:255'],
-            'description'    => ['required', 'string'],
+            'titre'           => ['required', 'string', 'max:255'],
+            'description'     => ['required', 'string'],
             'datePublication' => ['nullable', 'date'],
-            'statut'         => ['required', 'in:ouvert,ferme,archive'],
-            'images'         => ['required', 'array', 'min:1'],
-            'images.*'       => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'date_cloture'    => ['nullable', 'date', 'after_or_equal:datePublication'],
+            'statut'          => ['required', 'in:ouvert,ferme,archive'],
+            'images'          => ['required', 'array', 'min:1'],
+            'images.*'        => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'tdr'             => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:10240'],
         ]);
 
         DB::transaction(function () use ($validated, $request) {
+            $tdrPath = null;
+            if ($request->hasFile('tdr')) {
+                $tdrPath = $request->file('tdr')->store('projects/tdr', 'public');
+            }
+
             $project = Project::create([
                 'titre'           => $validated['titre'],
                 'description'     => $validated['description'],
                 'datePublication' => $validated['datePublication'] ?? Carbon::today()->toDateString(),
+                'date_cloture'    => $validated['date_cloture'] ?? null,
                 'statut'          => $validated['statut'],
+                'tdr_path'        => $tdrPath,
                 'imageId'         => null,
             ]);
 
@@ -130,22 +139,43 @@ class ProjectsController extends Controller
             'titre'           => ['required', 'string', 'max:255'],
             'description'     => ['required', 'string'],
             'datePublication' => ['nullable', 'date'],
+            'date_cloture'    => ['nullable', 'date', 'after_or_equal:datePublication'],
             'statut'          => ['required', 'in:ouvert,ferme,archive'],
             'images'          => ['nullable', 'array'],
             'images.*'        => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'remove_images'   => ['nullable', 'array'],
             'remove_images.*' => ['integer'],
             'cover_image_id'  => ['nullable', 'integer'],
+            'tdr'             => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:10240'],
+            'remove_tdr'      => ['nullable', 'boolean'],
         ]);
 
         $project->load('images');
 
         DB::transaction(function () use ($project, $request, $validated) {
+            $tdrPath = $project->tdr_path;
+
+            if (!empty($validated['remove_tdr'])) {
+                if ($tdrPath) {
+                    Storage::disk('public')->delete($tdrPath);
+                }
+                $tdrPath = null;
+            }
+
+            if ($request->hasFile('tdr')) {
+                if ($tdrPath) {
+                    Storage::disk('public')->delete($tdrPath);
+                }
+                $tdrPath = $request->file('tdr')->store('projects/tdr', 'public');
+            }
+
             $project->update([
                 'titre'           => $validated['titre'],
                 'description'     => $validated['description'],
                 'datePublication' => $validated['datePublication'] ?? Carbon::today()->toDateString(),
+                'date_cloture'    => $validated['date_cloture'] ?? null,
                 'statut'          => $validated['statut'],
+                'tdr_path'        => $tdrPath,
             ]);
 
             $removeImageIds = collect($validated['remove_images'] ?? [])
@@ -192,6 +222,10 @@ class ProjectsController extends Controller
         DB::transaction(function () use ($project) {
             foreach ($project->images as $image) {
                 Storage::disk('public')->delete($image->image_path);
+            }
+
+            if ($project->tdr_path) {
+                Storage::disk('public')->delete($project->tdr_path);
             }
 
             // CVs des candidatures

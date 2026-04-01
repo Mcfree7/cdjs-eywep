@@ -14,10 +14,13 @@ class Project extends Model
         'imageId',
         'datePublication',
         'statut',
+        'tdr_path',
+        'date_cloture',
     ];
 
     protected $casts = [
         'datePublication' => 'date',
+        'date_cloture'    => 'date',
     ];
 
     public function images(): HasMany

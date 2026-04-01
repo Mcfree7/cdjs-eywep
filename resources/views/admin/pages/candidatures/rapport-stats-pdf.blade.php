@@ -54,11 +54,12 @@
         <p>Généré le {{ now()->format('d/m/Y à H:i') }}</p>
     </div>
 
-    @if($filtreProjet || $filtrePays)
+    @if($filtreProjet || $filtrePays || $filtreSexe)
     <div class="filters-bar">
         Filtres appliqués :
-        @if($filtreProjet) <strong>Projet :</strong> {{ $filtreProjet }} &nbsp;|&nbsp; @endif
-        @if($filtrePays) <strong>Pays :</strong> {{ $filtrePays }} @endif
+        @if($filtreProjet) <strong>Projet :</strong> {{ $filtreProjet }} @if($filtrePays || $filtreSexe) &nbsp;|&nbsp; @endif @endif
+        @if($filtrePays) <strong>Pays :</strong> {{ $filtrePays }} @if($filtreSexe) &nbsp;|&nbsp; @endif @endif
+        @if($filtreSexe) <strong>Sexe :</strong> {{ ucfirst($filtreSexe) }} @endif
     </div>
     @endif
 
@@ -96,17 +97,65 @@
             </td>
             <td>
                 <div class="stat-card">
+                    <div class="value">{{ $hommes }}</div>
+                    <div class="label">Hommes</div>
+                </div>
+            </td>
+            <td style="padding-right:0">
+                <div class="stat-card">
+                    <div class="value">{{ $femmes }}</div>
+                    <div class="label">Femmes</div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <table class="summary-grid" style="margin-top: -10px;">
+        <tr>
+            <td>
+                <div class="stat-card">
                     <div class="value">{{ $nbPays }}</div>
                     <div class="label">Pays représentés</div>
                 </div>
             </td>
-            <td style="padding-right:0">
+            <td>
                 <div class="stat-card">
                     <div class="value">{{ $nbProjets }}</div>
                     <div class="label">Projets concernés</div>
                 </div>
             </td>
+            <td style="padding-right:0"></td>
         </tr>
+    </table>
+
+    {{-- Par sexe --}}
+    <div class="section-title">Répartition par sexe</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Sexe</th>
+                <th>Total</th>
+                <th>En attente</th>
+                <th>Retenue</th>
+                <th>Rejetée</th>
+                <th>% Retenue</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php $sexeLabels = ['homme' => 'Homme', 'femme' => 'Femme', 'autre' => 'Autre']; @endphp
+            @forelse($parSexe as $row)
+                @php $pct = $row->total > 0 ? round(($row->retenue / $row->total) * 100) : 0; @endphp
+                <tr>
+                    <td>{{ $sexeLabels[$row->sexe] ?? ($row->sexe ?: '(non renseigné)') }}</td>
+                    <td><strong>{{ $row->total }}</strong></td>
+                    <td><span class="badge badge-warning">{{ $row->en_attente }}</span></td>
+                    <td><span class="badge badge-success">{{ $row->retenue }}</span></td>
+                    <td><span class="badge badge-danger">{{ $row->rejetee }}</span></td>
+                    <td>{{ $pct }}%</td>
+                </tr>
+            @empty
+                <tr><td colspan="6" style="text-align:center; color:#94a3b8;">Aucune donnée</td></tr>
+            @endforelse
+        </tbody>
     </table>
 
     {{-- Par pays --}}

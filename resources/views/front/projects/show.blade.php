@@ -1,4 +1,5 @@
 @php
+    use App\Support\Countries;
     use Illuminate\Support\Facades\Storage;
     use Illuminate\Support\Str;
 @endphp
@@ -130,12 +131,45 @@
                                 <span class="text text-16">{{ $project->datePublication->format('d/m/Y') }}</span>
                             </li>
                             @endif
-                            <li class="d-flex justify-content-between align-items-center py-3">
+                            @if ($project->date_cloture)
+                            @php
+                                $isExpired = $project->date_cloture->isPast();
+                                $daysLeft  = (int) now()->diffInDays($project->date_cloture, false);
+                            @endphp
+                            <li class="d-flex justify-content-between align-items-center py-3" style="border-bottom: 1px solid rgba(0,0,0,0.06);">
+                                <span class="text text-16 fw-600">Date de clôture</span>
+                                <span class="text text-16 d-flex align-items-center gap-2">
+                                    {{ $project->date_cloture->format('d/m/Y') }}
+                                    @if ($isExpired)
+                                        <span class="badge bg-danger" style="font-size:11px;">Expiré</span>
+                                    @elseif ($daysLeft <= 7)
+                                        <span class="badge bg-warning text-dark" style="font-size:11px;">{{ $daysLeft }}j</span>
+                                    @endif
+                                </span>
+                            </li>
+                            @endif
+                            <li class="d-flex justify-content-between align-items-center py-3" @if(!$project->tdr_path) style="border-bottom: none;" @endif>
                                 <span class="text text-16 fw-600">Candidatures reçues</span>
                                 <span class="text text-16 fw-700" style="color: var(--color-primary, #1c2539);">
                                     {{ $candidaturesCount ?? 0 }}
                                 </span>
                             </li>
+                            @if ($project->tdr_path)
+                            <li class="py-3" style="border-top: 1px solid rgba(0,0,0,0.06);">
+                                <a
+                                    href="{{ Storage::url($project->tdr_path) }}"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="button button--secondary w-100 justify-content-center"
+                                    style="font-size: 14px;"
+                                >
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;">
+                                        <path d="M12 16L7 11l1.4-1.45 2.6 2.6V4h2v8.15l2.6-2.6L17 11l-5 5zm-6 4v-2h12v2H6z" fill="currentColor"/>
+                                    </svg>
+                                    Télécharger les TDR
+                                </a>
+                            </li>
+                            @endif
                         </ul>
                     </div>
 
@@ -198,13 +232,15 @@
                             <div class="row g-3 mb-3">
                                 <div class="col-12 col-sm-6">
                                     <label for="pays" class="form-label text text-14 fw-600">Pays</label>
-                                    <input
-                                        type="text"
-                                        class="form-control radius18 @error('pays') is-invalid @enderror"
+                                    <select
+                                        class="form-select radius18 @error('pays') is-invalid @enderror"
                                         id="pays" name="pays"
-                                        value="{{ old('pays') }}"
-                                        placeholder="Ex : Burkina Faso"
                                     >
+                                        <option value="">-- Sélectionner --</option>
+                                        @foreach (Countries::list() as $code => $name)
+                                            <option value="{{ $name }}" {{ old('pays') === $name ? 'selected' : '' }}>{{ $name }}</option>
+                                        @endforeach
+                                    </select>
                                     @error('pays')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 <div class="col-12 col-sm-6">

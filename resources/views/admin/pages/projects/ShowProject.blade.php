@@ -99,9 +99,26 @@
                             </div>
 
                             <h5 class="fw-semibold mb-1">{{ $project->titre }}</h5>
-                            <p class="text-muted small mb-3">
-                                {{ $project->datePublication ? $project->datePublication->format('d/m/Y') : 'Date non definie' }}
+                            <p class="text-muted small mb-1">
+                                Publication : {{ $project->datePublication ? $project->datePublication->format('d/m/Y') : 'Non définie' }}
                             </p>
+                            @if ($project->date_cloture)
+                            @php
+                                $isExpired  = $project->date_cloture->isPast();
+                                $daysLeft   = (int) now()->diffInDays($project->date_cloture, false);
+                                $urgentClass = $isExpired ? 'text-danger' : ($daysLeft <= 7 ? 'text-warning' : 'text-muted');
+                            @endphp
+                            <p class="small mb-3 {{ $urgentClass }} fw-semibold">
+                                Clôture : {{ $project->date_cloture->format('d/m/Y') }}
+                                @if ($isExpired)
+                                    <span class="badge text-bg-danger ms-1">Expiré</span>
+                                @elseif ($daysLeft <= 7)
+                                    <span class="badge text-bg-warning ms-1">{{ $daysLeft }}j restants</span>
+                                @endif
+                            </p>
+                            @else
+                            <p class="text-muted small mb-3">Clôture : Non définie</p>
+                            @endif
 
                             <div class="border-top pt-3">
                                 <p class="mb-0" style="white-space: pre-line;">{{ strip_tags($project->description) }}</p>

@@ -82,11 +82,13 @@ class CandidaturesController extends Controller
             'format'     => ['required', 'in:pdf,excel'],
             'project_id' => ['nullable', 'integer', 'exists:projects,id'],
             'pays'       => ['nullable', 'string', 'max:100'],
+            'sexe'       => ['nullable', 'in:homme,femme,autre'],
         ]);
 
         $filters = array_filter([
             'project_id' => $validated['project_id'] ?? null,
             'pays'       => $validated['pays'] ?? null,
+            'sexe'       => $validated['sexe'] ?? null,
         ]);
 
         $filename = 'rapport-candidatures-' . now()->format('Y-m-d');
@@ -103,6 +105,9 @@ class CandidaturesController extends Controller
         if (!empty($filters['pays'])) {
             $baseQuery->where('pays', $filters['pays']);
         }
+        if (!empty($filters['sexe'])) {
+            $baseQuery->where('sexe', $filters['sexe']);
+        }
 
         $total      = (clone $baseQuery)->count();
         $enAttente  = (clone $baseQuery)->where('statut', 'en_attente')->count();
@@ -110,6 +115,10 @@ class CandidaturesController extends Controller
         $rejetee    = (clone $baseQuery)->where('statut', 'rejetee')->count();
         $nbPays     = (clone $baseQuery)->distinct('pays')->count('pays');
         $nbProjets  = (clone $baseQuery)->distinct('project_id')->count('project_id');
+
+        $hommes     = (clone $baseQuery)->where('sexe', 'homme')->count();
+        $femmes     = (clone $baseQuery)->where('sexe', 'femme')->count();
+        $autres     = (clone $baseQuery)->where('sexe', 'autre')->count();
 
         $parPays = (clone $baseQuery)
             ->selectRaw('pays, COUNT(*) as total,
@@ -130,11 +139,21 @@ class CandidaturesController extends Controller
             ->orderByDesc('total')
             ->get();
 
+        $parSexe = (clone $baseQuery)
+            ->selectRaw('sexe, COUNT(*) as total,
+                SUM(CASE WHEN statut = "en_attente" THEN 1 ELSE 0 END) as en_attente,
+                SUM(CASE WHEN statut = "retenue" THEN 1 ELSE 0 END) as retenue,
+                SUM(CASE WHEN statut = "rejetee" THEN 1 ELSE 0 END) as rejetee')
+            ->groupBy('sexe')
+            ->orderByDesc('total')
+            ->get();
+
         $filtreProjet = null;
         if (!empty($filters['project_id'])) {
             $filtreProjet = Project::find($filters['project_id'])?->titre;
         }
         $filtrePays = $filters['pays'] ?? null;
+        $filtreSexe = $filters['sexe'] ?? null;
 
         $candidatures = (clone $baseQuery)
             ->with('project')
@@ -143,8 +162,9 @@ class CandidaturesController extends Controller
 
         $pdf = Pdf::loadView('admin.pages.candidatures.rapport-stats-pdf', compact(
             'total', 'enAttente', 'retenue', 'rejetee',
-            'nbPays', 'nbProjets', 'parPays', 'parProjet',
-            'filtreProjet', 'filtrePays', 'candidatures'
+            'nbPays', 'nbProjets', 'hommes', 'femmes', 'autres',
+            'parPays', 'parProjet', 'parSexe',
+            'filtreProjet', 'filtrePays', 'filtreSexe', 'candidatures'
         ))->setPaper('a4', 'landscape');
 
         return $pdf->download($filename . '.pdf');

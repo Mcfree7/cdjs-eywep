@@ -12,7 +12,7 @@
 
     @include('front.partials.page-banner', ['bannerTitle' => 'Témoignages'])
 
-    <div class="page-blog mt-100">
+    <div class="page-blog mt-150 section-padding">
         <div class="container">
             <div class="row product-grid">
 
