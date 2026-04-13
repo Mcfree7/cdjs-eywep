@@ -18,9 +18,82 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class FrontOfficeController extends Controller
 {
+    public function search(Request $request)
+    {
+        $q = trim($request->get('q', ''));
+
+        $results = collect();
+
+        if (mb_strlen($q) >= 2) {
+            $like = "%{$q}%";
+
+            Article::latest('datePublication')->latest('id')
+                ->where(fn($qb) => $qb->where('titre', 'like', $like)->orWhere('description', 'like', $like))
+                ->take(6)->get()
+                ->each(fn($m) => $results->push([
+                    'type'    => 'Article',
+                    'titre'   => $m->titre,
+                    'extrait' => Str::limit(strip_tags($m->description), 120),
+                    'url'     => route('front.articles.show', $m),
+                    'date'    => $m->datePublication?->format('d/m/Y'),
+                ]));
+
+            Activity::latest('datePublication')->latest('id')
+                ->where(fn($qb) => $qb->where('titre', 'like', $like)->orWhere('description', 'like', $like))
+                ->take(6)->get()
+                ->each(fn($m) => $results->push([
+                    'type'    => 'Activité',
+                    'titre'   => $m->titre,
+                    'extrait' => Str::limit(strip_tags($m->description), 120),
+                    'url'     => route('front.activities.show', $m),
+                    'date'    => $m->datePublication?->format('d/m/Y'),
+                ]));
+
+            SuccessStory::latest('datePublication')->latest('id')
+                ->where(fn($qb) => $qb->where('titre', 'like', $like)->orWhere('description', 'like', $like))
+                ->take(4)->get()
+                ->each(fn($m) => $results->push([
+                    'type'    => 'Témoignage',
+                    'titre'   => $m->titre,
+                    'extrait' => Str::limit(strip_tags($m->description), 120),
+                    'url'     => route('front.success-stories.show', $m),
+                    'date'    => $m->datePublication?->format('d/m/Y'),
+                ]));
+
+            Project::latest('id')
+                ->where(fn($qb) => $qb->where('titre', 'like', $like)->orWhere('description', 'like', $like))
+                ->take(4)->get()
+                ->each(fn($m) => $results->push([
+                    'type'    => 'Projet',
+                    'titre'   => $m->titre,
+                    'extrait' => Str::limit(strip_tags($m->description), 120),
+                    'url'     => route('front.projects.show', $m),
+                    'date'    => $m->datePublication?->format('d/m/Y'),
+                ]));
+
+            ResourceItem::latest('datePublication')->latest('id')
+                ->where(fn($qb) => $qb->where('titre', 'like', $like)->orWhere('description', 'like', $like))
+                ->take(4)->get()
+                ->each(fn($m) => $results->push([
+                    'type'    => 'Ressource',
+                    'titre'   => $m->titre,
+                    'extrait' => Str::limit(strip_tags($m->description), 120),
+                    'url'     => route('front.resources.show', $m),
+                    'date'    => $m->datePublication?->format('d/m/Y'),
+                ]));
+        }
+
+        return view('front.search', [
+            'settings' => $this->settings(),
+            'q'        => $q,
+            'results'  => $results,
+        ]);
+    }
+
     public function home()
     {
         return view('front.home', [
@@ -219,6 +292,11 @@ class FrontOfficeController extends Controller
 
     public function project(Project $project)
     {
+        // Auto-fermeture si la date de clôture est dépassée
+        if ($project->statut === 'ouvert' && $project->date_cloture && $project->date_cloture->isPast()) {
+            $project->update(['statut' => 'ferme']);
+        }
+
         return view('front.projects.show', [
             'settings' => $this->settings(),
             'project'  => $project->load(['coverImage', 'images']),
@@ -228,6 +306,11 @@ class FrontOfficeController extends Controller
 
     public function applyToProject(Request $request, Project $project)
     {
+        // Auto-fermeture si la date de clôture est dépassée
+        if ($project->statut === 'ouvert' && $project->date_cloture && $project->date_cloture->isPast()) {
+            $project->update(['statut' => 'ferme']);
+        }
+
         if ($project->statut !== 'ouvert') {
             return back()->with('error', 'Les candidatures pour ce projet sont fermées.');
         }

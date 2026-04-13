@@ -308,6 +308,107 @@
     </hero-slider>
 
     {{-- ========================================================
+         BREAKING NEWS TICKER
+    ======================================================== --}}
+    @if($headerNews->isNotEmpty())
+    <div class="breaking-news-bar">
+        <div class="bn-label">
+            <span class="bn-dot"></span>
+            Flash Info
+        </div>
+        <div class="bn-track-wrap">
+            <div class="bn-track">
+                @foreach($headerNews as $item)
+                    <a href="{{ route('front.articles.index') }}" class="bn-item">
+                        {{ $item->titre }}
+                    </a>
+                    <span class="bn-sep" aria-hidden="true">&#9656;</span>
+                @endforeach
+                {{-- Duplicate for seamless loop --}}
+                @foreach($headerNews as $item)
+                    <a href="{{ route('front.articles.index') }}" class="bn-item" aria-hidden="true">
+                        {{ $item->titre }}
+                    </a>
+                    <span class="bn-sep" aria-hidden="true">&#9656;</span>
+                @endforeach
+            </div>
+        </div>
+    </div>
+    <style>
+    .breaking-news-bar {
+        display: flex;
+        align-items: center;
+        background: var(--clr-primary, #1a1a2e);
+        height: 52px;
+        overflow: hidden;
+        position: relative;
+        z-index: 10;
+    }
+    .bn-label {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--clr-secondary, #e63946);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        padding: 0 24px;
+        height: 100%;
+        white-space: nowrap;
+    }
+    .bn-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #fff;
+        animation: bn-blink 1.2s ease-in-out infinite;
+    }
+    @@keyframes bn-blink {
+        0%,100% { opacity: 1; } 50% { opacity: .2; }
+    }
+    .bn-track-wrap {
+        flex: 1;
+        overflow: hidden;
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
+    .bn-track {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        white-space: nowrap;
+        animation: bn-scroll 5s linear infinite;
+    }
+    .bn-track-wrap:hover .bn-track {
+        animation-play-state: paused;
+    }
+    @@keyframes bn-scroll {
+        0%   { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+    .bn-item {
+        color: rgba(255,255,255,.88);
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        padding: 0 22px;
+        transition: color .2s;
+        white-space: nowrap;
+    }
+    .bn-item:hover { color: #fff; text-decoration: underline; }
+    .bn-sep {
+        color: rgba(255,255,255,.3);
+        font-size: 10px;
+        flex-shrink: 0;
+    }
+    </style>
+    @endif
+
+    {{-- ========================================================
          ABOUT US
     ======================================================== --}}
     @php

@@ -173,10 +173,30 @@
                         </ul>
                     </div>
 
-                    {{-- Application form (ouvert) or closed message --}}
-                    @if ($project->statut === 'ouvert')
+                    {{-- Application form --}}
+                    @php $isOpen = $project->statut === 'ouvert'; @endphp
 
                     <div class="sidebar-widget radius18 p-4" style="border: 1px solid rgba(0,0,0,0.08); background: #fff;">
+
+                        {{-- Bannière fermé --}}
+                        @if (!$isOpen)
+                        <div class="d-flex align-items-center gap-3 rounded-3 mb-4 px-3 py-3" style="background: #fff3f3; border: 1px solid #f5c2c7;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#dc3545" stroke-width="1.8" style="flex-shrink:0;">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+                            </svg>
+                            <div>
+                                <div class="fw-700" style="color:#dc3545; font-size:14px;">Candidatures fermées</div>
+                                <div class="text text-13 text-muted mt-1">
+                                    @if ($project->date_cloture && $project->date_cloture->isPast())
+                                        La date limite du {{ $project->date_cloture->format('d/m/Y') }} est dépassée.
+                                    @else
+                                        Ce projet n'accepte plus de candidatures.
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+
                         <h3 class="heading text-22 fw-700 mb-2">Postuler à ce projet</h3>
                         <p class="text text-16 text-muted mb-4">Remplissez le formulaire ci-dessous pour soumettre votre candidature.</p>
 
@@ -191,12 +211,14 @@
                         </div>
                         @endif
 
+                        <div style="{{ !$isOpen ? 'opacity:.45; pointer-events:none; user-select:none;' : '' }}">
                         <form
                             id="candidature-form"
                             action="{{ route('front.projects.apply', $project) }}"
                             method="POST"
                             enctype="multipart/form-data"
                             novalidate
+                            {{ !$isOpen ? 'inert' : '' }}
                         >
                             @csrf
 
@@ -341,34 +363,8 @@
                             </button>
 
                         </form>
+                        </div>{{-- end opacity wrapper --}}
                     </div>
-
-                    @else
-
-                    {{-- Candidatures closed --}}
-                    <div class="sidebar-widget service-contact radius18 p-4 text-center" style="border: 1px solid rgba(0,0,0,0.08); background: #fff;">
-                        <div class="mb-3" style="font-size: 48px; line-height:1;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" style="color: #6c757d;">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
-                            </svg>
-                        </div>
-                        <h3 class="heading text-22 fw-700 mb-3">Candidatures fermées</h3>
-                        <p class="text text-18 text-muted mb-4">
-                            @if ($project->statut === 'ferme')
-                                Les candidatures pour ce projet sont actuellement fermées. Consultez nos autres projets ouverts.
-                            @else
-                                Ce projet est archivé. Les candidatures ne sont plus acceptées.
-                            @endif
-                        </p>
-                        <a href="{{ route('front.projects.index') }}" class="button button--secondary">
-                            Voir les autres projets
-                            <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
-                            </svg>
-                        </a>
-                    </div>
-
-                    @endif
 
                 </div>
                 {{-- end right column --}}

@@ -17,6 +17,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [FrontOfficeController::class, 'home'])->name('front.home');
+Route::get('/recherche', [FrontOfficeController::class, 'search'])->name('front.search');
 Route::get('/articles', [FrontOfficeController::class, 'articles'])->name('front.articles.index');
 Route::get('/articles/{article}', [FrontOfficeController::class, 'article'])->name('front.articles.show');
 Route::get('/activites', [FrontOfficeController::class, 'activities'])->name('front.activities.index');
@@ -29,8 +30,8 @@ Route::get('/ressources', [FrontOfficeController::class, 'resources'])->name('fr
 Route::get('/ressources/{resourceItem}', [FrontOfficeController::class, 'resource'])->name('front.resources.show');
 Route::get('/ressources/{resourceItem}/telecharger', [FrontOfficeController::class, 'downloadResource'])->name('front.resources.download');
 Route::get('/projets', [FrontOfficeController::class, 'projects'])->name('front.projects.index');
-Route::get('/projets/{project}', [FrontOfficeController::class, 'project'])->name('front.projects.show');
-Route::post('/projets/{project}/candidater', [FrontOfficeController::class, 'applyToProject'])->name('front.projects.apply');
+Route::get('/projets/{project:uuid}', [FrontOfficeController::class, 'project'])->name('front.projects.show');
+Route::post('/projets/{project:uuid}/candidater', [FrontOfficeController::class, 'applyToProject'])->name('front.projects.apply');
 Route::get('/a-propos', [FrontOfficeController::class, 'about'])->name('front.about');
 Route::get('/contact', [FrontOfficeController::class, 'contact'])->name('front.contact');
 

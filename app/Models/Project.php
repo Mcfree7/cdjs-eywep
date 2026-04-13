@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Project extends Model
 {
@@ -22,6 +23,13 @@ class Project extends Model
         'datePublication' => 'date',
         'date_cloture'    => 'date',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Project $project) {
+            $project->uuid = (string) Str::uuid();
+        });
+    }
 
     public function images(): HasMany
     {
