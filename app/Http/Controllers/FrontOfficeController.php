@@ -22,7 +22,7 @@ use Illuminate\Support\Str;
 
 class FrontOfficeController extends Controller
 {
-    public function search(Request $request)
+    public function search(string $locale, Request $request)
     {
         $q = trim($request->get('q', ''));
 
@@ -35,7 +35,7 @@ class FrontOfficeController extends Controller
                 ->where(fn($qb) => $qb->where('titre', 'like', $like)->orWhere('description', 'like', $like))
                 ->take(6)->get()
                 ->each(fn($m) => $results->push([
-                    'type'    => 'Article',
+                    'type'    => __('app.nav.articles'),
                     'titre'   => $m->titre,
                     'extrait' => Str::limit(strip_tags($m->description), 120),
                     'url'     => route('front.articles.show', $m),
@@ -46,7 +46,7 @@ class FrontOfficeController extends Controller
                 ->where(fn($qb) => $qb->where('titre', 'like', $like)->orWhere('description', 'like', $like))
                 ->take(6)->get()
                 ->each(fn($m) => $results->push([
-                    'type'    => 'Activité',
+                    'type'    => __('app.nav.activities'),
                     'titre'   => $m->titre,
                     'extrait' => Str::limit(strip_tags($m->description), 120),
                     'url'     => route('front.activities.show', $m),
@@ -57,7 +57,7 @@ class FrontOfficeController extends Controller
                 ->where(fn($qb) => $qb->where('titre', 'like', $like)->orWhere('description', 'like', $like))
                 ->take(4)->get()
                 ->each(fn($m) => $results->push([
-                    'type'    => 'Témoignage',
+                    'type'    => __('app.nav.testimonials'),
                     'titre'   => $m->titre,
                     'extrait' => Str::limit(strip_tags($m->description), 120),
                     'url'     => route('front.success-stories.show', $m),
@@ -68,7 +68,7 @@ class FrontOfficeController extends Controller
                 ->where(fn($qb) => $qb->where('titre', 'like', $like)->orWhere('description', 'like', $like))
                 ->take(4)->get()
                 ->each(fn($m) => $results->push([
-                    'type'    => 'Projet',
+                    'type'    => __('app.nav.projects'),
                     'titre'   => $m->titre,
                     'extrait' => Str::limit(strip_tags($m->description), 120),
                     'url'     => route('front.projects.show', $m),
@@ -79,7 +79,7 @@ class FrontOfficeController extends Controller
                 ->where(fn($qb) => $qb->where('titre', 'like', $like)->orWhere('description', 'like', $like))
                 ->take(4)->get()
                 ->each(fn($m) => $results->push([
-                    'type'    => 'Ressource',
+                    'type'    => __('app.nav.resources'),
                     'titre'   => $m->titre,
                     'extrait' => Str::limit(strip_tags($m->description), 120),
                     'url'     => route('front.resources.show', $m),
@@ -94,7 +94,7 @@ class FrontOfficeController extends Controller
         ]);
     }
 
-    public function home()
+    public function home(string $locale)
     {
         return view('front.home', [
             'settings' => $this->settings(),
@@ -145,7 +145,7 @@ class FrontOfficeController extends Controller
         ]);
     }
 
-    public function articles()
+    public function articles(string $locale)
     {
         return view('front.articles.index', [
             'settings' => $this->settings(),
@@ -156,7 +156,7 @@ class FrontOfficeController extends Controller
         ]);
     }
 
-    public function article(Article $article)
+    public function article(string $locale, Article $article)
     {
         return view('front.articles.show', [
             'settings' => $this->settings(),
@@ -170,7 +170,7 @@ class FrontOfficeController extends Controller
         ]);
     }
 
-    public function activities()
+    public function activities(string $locale)
     {
         return view('front.activities.index', [
             'settings' => $this->settings(),
@@ -181,7 +181,7 @@ class FrontOfficeController extends Controller
         ]);
     }
 
-    public function activity(Activity $activity)
+    public function activity(string $locale, Activity $activity)
     {
         return view('front.activities.show', [
             'settings' => $this->settings(),
@@ -195,7 +195,7 @@ class FrontOfficeController extends Controller
         ]);
     }
 
-    public function successStories()
+    public function successStories(string $locale)
     {
         return view('front.success-stories.index', [
             'settings' => $this->settings(),
@@ -206,7 +206,7 @@ class FrontOfficeController extends Controller
         ]);
     }
 
-    public function successStory(SuccessStory $successStory)
+    public function successStory(string $locale, SuccessStory $successStory)
     {
         return view('front.success-stories.show', [
             'settings' => $this->settings(),
@@ -220,7 +220,7 @@ class FrontOfficeController extends Controller
         ]);
     }
 
-    public function galleries()
+    public function galleries(string $locale)
     {
         return view('front.galleries.index', [
             'settings' => $this->settings(),
@@ -230,7 +230,7 @@ class FrontOfficeController extends Controller
         ]);
     }
 
-    public function gallery(Gallery $gallery)
+    public function gallery(string $locale, Gallery $gallery)
     {
         return view('front.galleries.show', [
             'settings' => $this->settings(),
@@ -243,7 +243,7 @@ class FrontOfficeController extends Controller
         ]);
     }
 
-    public function resources()
+    public function resources(string $locale)
     {
         return view('front.resources.index', [
             'settings' => $this->settings(),
@@ -254,7 +254,7 @@ class FrontOfficeController extends Controller
         ]);
     }
 
-    public function resource(ResourceItem $resourceItem)
+    public function resource(string $locale, ResourceItem $resourceItem)
     {
         return view('front.resources.show', [
             'settings' => $this->settings(),
@@ -269,7 +269,7 @@ class FrontOfficeController extends Controller
         ]);
     }
 
-    public function downloadResource(ResourceItem $resourceItem)
+    public function downloadResource(string $locale, ResourceItem $resourceItem)
     {
         return Response::download(
             storage_path('app/public/' . $resourceItem->file_path),
@@ -277,7 +277,7 @@ class FrontOfficeController extends Controller
         );
     }
 
-    public function projects()
+    public function projects(string $locale)
     {
         return view('front.projects.index', [
             'settings' => $this->settings(),
@@ -290,7 +290,7 @@ class FrontOfficeController extends Controller
         ]);
     }
 
-    public function project(Project $project)
+    public function project(string $locale, Project $project)
     {
         // Auto-fermeture si la date de clôture est dépassée
         if ($project->statut === 'ouvert' && $project->date_cloture && $project->date_cloture->isPast()) {
@@ -304,7 +304,7 @@ class FrontOfficeController extends Controller
         ]);
     }
 
-    public function applyToProject(Request $request, Project $project)
+    public function applyToProject(string $locale, Request $request, Project $project)
     {
         // Auto-fermeture si la date de clôture est dépassée
         if ($project->statut === 'ouvert' && $project->date_cloture && $project->date_cloture->isPast()) {
@@ -312,7 +312,7 @@ class FrontOfficeController extends Controller
         }
 
         if ($project->statut !== 'ouvert') {
-            return back()->with('error', 'Les candidatures pour ce projet sont fermées.');
+            return back()->with('error', __('app.projects.status_closed'));
         }
 
         $validated = $request->validate([
@@ -351,10 +351,10 @@ class FrontOfficeController extends Controller
             // L'envoi d'email ne doit pas bloquer la soumission
         }
 
-        return back()->with('success', 'Votre candidature a bien été envoyée. Un e-mail de confirmation vous a été transmis.');
+        return back()->with('success', __('app.projects.apply_success'));
     }
 
-    public function about()
+    public function about(string $locale)
     {
         return view('front.about', [
             'settings' => $this->settings(),
@@ -363,7 +363,7 @@ class FrontOfficeController extends Controller
         ]);
     }
 
-    public function contact()
+    public function contact(string $locale)
     {
         return view('front.contact', [
             'settings' => $this->settings(),

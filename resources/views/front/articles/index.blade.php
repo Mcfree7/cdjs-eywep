@@ -4,7 +4,7 @@
 @endphp
 @extends('front.layouts.app')
 
-@section('title', 'Articles - ' . ($settings->company_name ?? 'EYWEP'))
+@section('title', __('app.titles.articles') . ' - ' . ($settings->company_name ?? 'EYWEP'))
 @section('description', 'Retrouvez tous les articles publiés par ' . ($settings->company_name ?? 'EYWEP'))
 
 @push('styles')
@@ -36,7 +36,7 @@
 @section('content')
 <main>
 
-    @include('front.partials.page-banner', ['bannerTitle' => 'Articles'])
+    @include('front.partials.page-banner', ['bannerTitle' => __('app.pages.articles')])
 
     <div class="page-blog mt-100 section-padding">
         <div class="container">

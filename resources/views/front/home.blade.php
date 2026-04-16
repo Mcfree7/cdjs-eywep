@@ -4,7 +4,7 @@
 @endphp
 @extends('front.layouts.app')
 
-@section('title', ($settings->company_name ?? 'EYWEP') . ' - Accueil')
+@section('title', ($settings->company_name ?? 'EYWEP') . ' - ' . __('app.titles.home'))
 @section('description', $settings->company_slogan ?? 'Programme de promotion de l\'entrepreneuriat EYWEP')
 
 @section('content')
@@ -91,16 +91,16 @@
                                                 {{ $settings->hero_subtitle ?? 'Programme de promotion de l\'entrepreneuriat jeune — articles, activités, ressources et projets.' }}
                                             </div>
                                             <div class="buttons">
-                                                <a href="{{ route('front.projects.index') }}" class="button button--secondary" aria-label="Nos Projets">
-                                                    Nos Projets
+                                                <a href="{{ route('front.projects.index') }}" class="button button--secondary" aria-label="{{ __('app.home.hero_projects') }}">
+                                                    {{ __('app.home.hero_projects') }}
                                                     <span class="svg-wrapper">
                                                         <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                             <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
                                                         </svg>
                                                     </span>
                                                 </a>
-                                                <a href="{{ route('front.contact') }}" class="button button--secondary" aria-label="Nous contacter">
-                                                    Nous contacter
+                                                <a href="{{ route('front.contact') }}" class="button button--secondary" aria-label="{{ __('app.btn.contact_us') }}">
+                                                    {{ __('app.btn.contact_us') }}
                                                     <span class="svg-wrapper">
                                                         <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                             <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
@@ -117,7 +117,7 @@
                                             {{-- Badge --}}
                                             <div class="hv-badge">
                                                 <span class="hv-dot"></span>
-                                                Présentation
+                                                {{ __('app.home.hero_video_badge') }}
                                             </div>
                                             {{-- Carte vidéo --}}
                                             <div class="hv-card">
@@ -144,7 +144,7 @@
                                                                 <path d="M7 4.5v15l13-7.5L7 4.5z" fill="currentColor"/>
                                                             </svg>
                                                         </div>
-                                                        <span class="hv-label">Voir la vidéo</span>
+                                                        <span class="hv-label">{{ __('app.home.hero_video_label') }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -314,7 +314,7 @@
     <div class="breaking-news-bar">
         <div class="bn-label">
             <span class="bn-dot"></span>
-            Flash Info
+            {{ __('app.home.flash_info') }}
         </div>
         <div class="bn-track-wrap">
             <div class="bn-track">
@@ -412,26 +412,19 @@
          ABOUT US
     ======================================================== --}}
     @php
-        // ── Textes modifiables directement ici ──────────────────────────────
-        $aboutSubheading = 'À propos';
-        $aboutTitle      = 'Qui sommes-nous ?';
-        $aboutLead       = 'EYWEP (Entrepreneurship & Youth Work Empowerment Program) est un programme dédié à la promotion de l\'entrepreneuriat jeune en Afrique centrale.';
-        $aboutBody       = 'Depuis notre création, nous accompagnons des centaines de jeunes entrepreneurs à travers des formations, des ateliers pratiques, des financements seed et un réseau de mentors expérimentés. Notre mission est de transformer les idées en projets viables et de créer un écosystème entrepreneurial fort et durable.';
-        $aboutStat1      = ['value' => '500+', 'label' => 'Jeunes accompagnés'];
-        $aboutStat2      = ['value' => '120+', 'label' => 'Projets financés'];
-        $aboutStat3      = ['value' => '15',   'label' => 'Pays couverts'];
-        $aboutBullets    = [
-            'Formation pratique et accompagnement personnalisé pour chaque entrepreneur.',
-            'Accès à un réseau de mentors expérimentés et de partenaires stratégiques.',
-            'Financement seed et ressources pour concrétiser les idées innovantes.',
-            'Présence dans 15 pays avec un réseau actif de plus de 500 jeunes.',
-        ];
-        // Image : première image du carousel hero (modifiable ici)
-        $heroImgs   = $settings->hero_images ?? [];
-        $aboutImage = !empty($heroImgs)
+        $aboutSubheading = __('app.home.about_subheading');
+        $aboutTitle      = __('app.home.about_title');
+        $aboutLead       = __('app.about.lead');
+        $aboutBody       = __('app.about.body');
+        $aboutStats      = __('app.about.stats');
+        $aboutStat1      = ['value' => ($aboutStats[0]['target'] ?? 500) . ($aboutStats[0]['suffix'] ?? '+'), 'label' => $aboutStats[0]['label'] ?? ''];
+        $aboutStat2      = ['value' => ($aboutStats[1]['target'] ?? 120) . ($aboutStats[1]['suffix'] ?? '+'), 'label' => $aboutStats[1]['label'] ?? ''];
+        $aboutStat3      = ['value' => ($aboutStats[2]['target'] ?? 15)  . ($aboutStats[2]['suffix'] ?? ''),  'label' => $aboutStats[2]['label'] ?? ''];
+        $aboutBullets    = __('app.about.bullets');
+        $heroImgs        = $settings->hero_images ?? [];
+        $aboutImage      = !empty($heroImgs)
             ? Storage::url($heroImgs[0])
             : asset('front-assets/consulo/img/slider/hero-1.jpg');
-        // ────────────────────────────────────────────────────────────────────
     @endphp
     <section id="about-us" class="section-about mt-100 section-padding" style="background:#fff;">
         <div class="container">
@@ -492,7 +485,7 @@
                     </ul>
 
                     <a href="{{ route('front.about') }}" class="button button--primary">
-                        En savoir plus
+                        {{ __('app.home.learn_more') }}
                         <span class="svg-wrapper">
                             <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
@@ -520,7 +513,7 @@
                     <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                         <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="currentColor"/>
                     </svg>
-                    Nos Partenaires
+                    {{ __('app.home.partners_label') }}
                 </div>
             </div>
         </div>
@@ -601,12 +594,12 @@
                     <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                         <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="CurrentColor"/>
                     </svg>
-                    <span>Actualités</span>
+                    <span>{{ __('app.home.articles_label') }}</span>
                     <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                         <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="CurrentColor"/>
                     </svg>
                 </div>
-                <h2 class="heading text-50 fw-700" data-aos="fade-up" data-aos-delay="50">Derniers Articles</h2>
+                <h2 class="heading text-50 fw-700" data-aos="fade-up" data-aos-delay="50">{{ __('app.home.articles_title') }}</h2>
             </div>
             <div class="row product-grid">
 
@@ -698,7 +691,7 @@
                                 </h2>
                                 <div class="buttons">
                                     <a href="{{ route('front.articles.show', $article) }}" class="button--cta" aria-label="Lire l'article">
-                                        Lire la suite
+                                        {{ __('app.btn.read_more') }}
                                         <svg viewBox="0 0 11 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M2.16668 0.833333C2.16668 0.61232 2.25448 0.400358 2.41076 0.244078C2.56704 0.0877975 2.779 0 3.00001 0H9.66668C9.88769 0 10.0997 0.0877975 10.2559 0.244078C10.4122 0.400358 10.5 0.61232 10.5 0.833333V7.5C10.5 7.72101 10.4122 7.93297 10.2559 8.08926C10.0997 8.24554 9.88769 8.33333 9.66668 8.33333C9.44567 8.33333 9.2337 8.24554 9.07742 8.08926C8.92114 7.93297 8.83335 7.72101 8.83335 7.5V2.845L1.92251 9.75583C1.76535 9.90763 1.55484 9.99163 1.33635 9.98973C1.11785 9.98783 0.908839 9.90019 0.754332 9.74568C0.599825 9.59118 0.512184 9.38216 0.510285 9.16367C0.508387 8.94517 0.592382 8.73467 0.744181 8.5775L7.65501 1.66667H3.00001C2.779 1.66667 2.56704 1.57887 2.41076 1.42259C2.25448 1.26631 2.16668 1.05435 2.16668 0.833333Z" fill="currentColor"/>
                                         </svg>
@@ -713,8 +706,8 @@
 
             </div>
             <div class="buttons buttons-discover" data-aos="fade-up">
-                <a href="{{ route('front.articles.index') }}" class="button button--secondary" aria-label="Voir tous les articles">
-                    Voir tous les articles
+                <a href="{{ route('front.articles.index') }}" class="button button--secondary" aria-label="{{ __('app.home.see_all_articles') }}">
+                    {{ __('app.home.see_all_articles') }}
                     <span class="svg-wrapper">
                         <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
@@ -740,7 +733,7 @@
                         </g>
                         <defs><clipPath id="clip-act-home"><rect width="14" height="14" fill="currentColor"/></clipPath></defs>
                     </svg>
-                    Activités
+                    {{ __('app.home.activities_label') }}
                     <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                         <g clip-path="url(#clip-act-home2)">
                             <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="currentColor"/>
@@ -748,7 +741,7 @@
                         <defs><clipPath id="clip-act-home2"><rect width="14" height="14" fill="currentColor"/></clipPath></defs>
                     </svg>
                 </div>
-                <h2 class="heading text-50" data-aos="fade-up" data-aos-delay="50">Nos Dernières Activités</h2>
+                <h2 class="heading text-50" data-aos="fade-up" data-aos-delay="50">{{ __('app.home.activities_title') }}</h2>
             </div>
 
             {{-- Swiper slider --}}
@@ -782,7 +775,7 @@
                                 </h2>
                             </div>
                             <a class="card-blog-bottom" href="{{ route('front.activities.show', $activity) }}" aria-label="{{ $activity->titre }}">
-                                <span class="blog-tag subheading subheading-bg text-16 fw-500">Activité</span>
+                                <span class="blog-tag subheading subheading-bg text-16 fw-500">{{ __('app.home.activity_badge') }}</span>
                                 <div class="media">
                                     <img
                                         src="{{ $activity->coverImage ? Storage::url($activity->coverImage->image_path) : asset('front-assets/consulo/img/blog/1.jpg') }}"
@@ -794,7 +787,7 @@
                                 </div>
                                 <div class="buttons">
                                     <div class="button button--primary">
-                                        Lire la suite
+                                        {{ __('app.btn.read_more') }}
                                         <svg viewBox="0 0 11 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M2.16668 0.833333C2.16668 0.61232 2.25448 0.400358 2.41076 0.244078C2.56704 0.0877975 2.779 0 3.00001 0H9.66668C9.88769 0 10.0997 0.0877975 10.2559 0.244078C10.4122 0.400358 10.5 0.61232 10.5 0.833333V7.5C10.5 7.72101 10.4122 7.93297 10.2559 8.08926C10.0997 8.24554 9.88769 8.33333 9.66668 8.33333C9.44567 8.33333 9.2337 8.24554 9.07742 8.08926C8.92114 7.93297 8.83335 7.72101 8.83335 7.5V2.845L1.92251 9.75583C1.76535 9.90763 1.55484 9.99163 1.33635 9.98973C1.11785 9.98783 0.908839 9.90019 0.754332 9.74568C0.599825 9.59118 0.512184 9.38216 0.510285 9.16367C0.508387 8.94517 0.592382 8.73467 0.744181 8.5775L7.65501 1.66667H3.00001C2.779 1.66667 2.56704 1.57887 2.41076 1.42259C2.25448 1.26631 2.16668 1.05435 2.16668 0.833333Z" fill="currentColor"/>
                                         </svg>
@@ -812,7 +805,7 @@
 
             <div class="buttons buttons-discover text-center" data-aos="fade-up">
                 <a href="{{ route('front.activities.index') }}" class="button button--secondary">
-                    Voir toutes les activités
+                    {{ __('app.home.see_all_activities') }}
                     <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
                         <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
                     </svg>
@@ -836,7 +829,7 @@
                         </g>
                         <defs><clipPath id="clip-proj-home"><rect width="14" height="14" fill="currentColor"/></clipPath></defs>
                     </svg>
-                    Projets
+                    {{ __('app.nav.projects') }}
                     <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                         <g clip-path="url(#clip-proj-home2)">
                             <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="currentColor"/>
@@ -844,7 +837,7 @@
                         <defs><clipPath id="clip-proj-home2"><rect width="14" height="14" fill="currentColor"/></clipPath></defs>
                     </svg>
                 </div>
-                <h2 class="heading text-50 fw-700" data-aos="fade-up" data-aos-delay="50">Nos Derniers Projets</h2>
+                <h2 class="heading text-50 fw-700" data-aos="fade-up" data-aos-delay="50">{{ __('app.home.projects_title') }}</h2>
             </div>
 
             {{-- Swiper slider projets --}}
@@ -868,9 +861,9 @@
                                 <div class="card-project-content">
                                     <h2 class="heading text-24">{{ $project->titre }}</h2>
                                     <p class="text text-16">
-                                        {{ $project->statut === 'ouvert' ? 'Ouvert' : ($project->statut === 'ferme' ? 'Fermé' : 'Archivé') }}
+                                        {{ $project->statut === 'ouvert' ? __('app.projects.status_open') : ($project->statut === 'ferme' ? __('app.projects.status_closed') : __('app.projects.status_arch')) }}
                                         @if ($project->candidatures_count)
-                                            &middot; {{ $project->candidatures_count }} candidature{{ $project->candidatures_count > 1 ? 's' : '' }}
+                                            &middot; {{ $project->candidatures_count }} {{ $project->candidatures_count > 1 ? __('app.home.candidature_many') : __('app.home.candidature_one') }}
                                         @endif
                                     </p>
                                     @if ($project->statut === 'ouvert')
@@ -879,9 +872,9 @@
                                         class="button button--primary mt-2"
                                         style="font-size:13px; padding: 8px 18px; display:inline-flex;"
                                         role="button"
-                                        aria-label="Postuler pour {{ $project->titre }}"
+                                        aria-label="{{ __('app.btn.apply') }} — {{ $project->titre }}"
                                     >
-                                        Postuler
+                                        {{ __('app.btn.apply') }}
                                         <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="margin-left:6px;">
                                             <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
                                         </svg>
@@ -907,7 +900,7 @@
 
             <div class="buttons buttons-discover text-center" data-aos="fade-up">
                 <a href="{{ route('front.projects.index') }}" class="button button--secondary">
-                    Voir tous les projets
+                    {{ __('app.home.see_all_projects') }}
                     <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
                         <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
                     </svg>
@@ -931,7 +924,7 @@
                         </g>
                         <defs><clipPath id="clip-stories-home"><rect width="14" height="14" fill="currentColor"/></clipPath></defs>
                     </svg>
-                    Témoignages
+                    {{ __('app.home.stories_label') }}
                     <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                         <g clip-path="url(#clip-stories-home2)">
                             <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="currentColor"/>
@@ -939,7 +932,7 @@
                         <defs><clipPath id="clip-stories-home2"><rect width="14" height="14" fill="currentColor"/></clipPath></defs>
                     </svg>
                 </div>
-                <h2 class="heading text-50" data-aos="fade-up" data-aos-delay="50">Histoires de Succès</h2>
+                <h2 class="heading text-50" data-aos="fade-up" data-aos-delay="50">{{ __('app.home.stories_title') }}</h2>
             </div>
 
             {{-- Swiper slider témoignages --}}
@@ -967,7 +960,7 @@
                                 </h2>
                             </div>
                             <a class="card-blog-bottom" href="{{ route('front.success-stories.show', $story) }}" aria-label="{{ $story->titre }}">
-                                <span class="blog-tag subheading subheading-bg text-16 fw-500">Témoignage</span>
+                                <span class="blog-tag subheading subheading-bg text-16 fw-500">{{ __('app.home.story_badge') }}</span>
                                 <div class="media">
                                     <img
                                         src="{{ $story->coverImage ? Storage::url($story->coverImage->image_path) : asset('front-assets/consulo/img/blog/1.jpg') }}"
@@ -979,7 +972,7 @@
                                 </div>
                                 <div class="buttons">
                                     <div class="button button--primary">
-                                        Lire la suite
+                                        {{ __('app.btn.read_more') }}
                                         <svg viewBox="0 0 11 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M2.16668 0.833333C2.16668 0.61232 2.25448 0.400358 2.41076 0.244078C2.56704 0.0877975 2.779 0 3.00001 0H9.66668C9.88769 0 10.0997 0.0877975 10.2559 0.244078C10.4122 0.400358 10.5 0.61232 10.5 0.833333V7.5C10.5 7.72101 10.4122 7.93297 10.2559 8.08926C10.0997 8.24554 9.88769 8.33333 9.66668 8.33333C9.44567 8.33333 9.2337 8.24554 9.07742 8.08926C8.92114 7.93297 8.83335 7.72101 8.83335 7.5V2.845L1.92251 9.75583C1.76535 9.90763 1.55484 9.99163 1.33635 9.98973C1.11785 9.98783 0.908839 9.90019 0.754332 9.74568C0.599825 9.59118 0.512184 9.38216 0.510285 9.16367C0.508387 8.94517 0.592382 8.73467 0.744181 8.5775L7.65501 1.66667H3.00001C2.779 1.66667 2.56704 1.57887 2.41076 1.42259C2.25448 1.26631 2.16668 1.05435 2.16668 0.833333Z" fill="currentColor"/>
                                         </svg>
@@ -997,7 +990,7 @@
 
             <div class="buttons buttons-discover text-center" data-aos="fade-up">
                 <a href="{{ route('front.success-stories.index') }}" class="button button--secondary">
-                    Voir tous les témoignages
+                    {{ __('app.home.see_all_stories') }}
                     <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
                         <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
                     </svg>
@@ -1019,12 +1012,12 @@
                     <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                         <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="CurrentColor"/>
                     </svg>
-                    <span>Galeries</span>
+                    <span>{{ __('app.home.galleries_label') }}</span>
                     <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                         <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="CurrentColor"/>
                     </svg>
                 </div>
-                <h2 class="heading text-50 fw-700" data-aos="fade-up" data-aos-delay="50">Nos Galeries Photos</h2>
+                <h2 class="heading text-50 fw-700" data-aos="fade-up" data-aos-delay="50">{{ __('app.home.galleries_title') }}</h2>
             </div>
 
             <div class="gallery-home-grid">
@@ -1084,7 +1077,7 @@
                             @endif
                             {{-- CTA --}}
                             <span class="gallery-home-cta">
-                                Voir la galerie
+                                {{ __('app.home.see_gallery') }}
                                 <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
                                     <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
                                 </svg>
@@ -1095,7 +1088,7 @@
                     {{-- Info bar --}}
                     <div class="gallery-home-info">
                         <span class="gallery-home-title heading text-16 fw-600">{{ $gallery->titre }}</span>
-                        <span class="gallery-home-count text text-13">{{ $total }} média{{ $total > 1 ? 's' : '' }}</span>
+                        <span class="gallery-home-count text text-13">{{ $total }} {{ $total > 1 ? __('app.home.media_many') : __('app.home.media_one') }}</span>
                     </div>
                 </a>
                 @endforeach
@@ -1103,7 +1096,7 @@
 
             <div class="buttons buttons-discover text-center mt-4" data-aos="fade-up">
                 <a href="{{ route('front.galleries.index') }}" class="button button--secondary">
-                    Voir toutes les galeries
+                    {{ __('app.home.see_all_galleries') }}
                     <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
                         <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
                     </svg>
@@ -1128,7 +1121,7 @@
                                 </g>
                                 <defs><clipPath id="clip-faq-a"><rect width="14" height="14" fill="CurrentColor"/></clipPath></defs>
                             </svg>
-                            <span>Questions</span>
+                            <span>{{ __('app.about.faq_label') }}</span>
                             <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                                 <g clip-path="url(#clip-faq-b)">
                                     <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 -1.33117e-07 8.0588 0 7C4.62818e-08 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="CurrentColor"/>
@@ -1137,14 +1130,14 @@
                             </svg>
                         </div>
                         <h2 class="heading text-50" data-aos="fade-up" data-aos-delay="50">
-                            Des questions ? Voici quelques réponses
+                            {{ __('app.about.faq_title') }}
                         </h2>
                         <div class="text text-18" data-aos="fade-up" data-aos-delay="80">
-                            Vous souhaitez en savoir plus sur le programme EYWEP, les conditions de participation ou les activités proposées ? Retrouvez ci-dessous les questions les plus fréquentes.
+                            {{ __('app.about.faq_subtitle') }}
                         </div>
                         <div class="buttons" data-aos="fade-up" data-aos-delay="100">
-                            <a href="{{ route('front.contact') }}" class="button button--primary" aria-label="Poser votre question">
-                                En Savoir plus
+                            <a href="{{ route('front.contact') }}" class="button button--primary" aria-label="{{ __('app.btn.ask_question') }}">
+                                {{ __('app.home.faq_more') }}
                                 <span class="svg-wrapper">
                                     <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="CurrentColor"/>
@@ -1180,7 +1173,7 @@
                                 </div>
                             </div>
                             @empty
-                            <p class="text text-18" style="color:var(--color-foreground-subheading);">Aucune question disponible pour le moment.</p>
+                            <p class="text text-18" style="color:var(--color-foreground-subheading);">{{ __('app.about.faq_empty') }}</p>
                             @endforelse
                         </div>
                     </faq-accordion>

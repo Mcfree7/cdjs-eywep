@@ -4,13 +4,13 @@
 @endphp
 @extends('front.layouts.app')
 
-@section('title', 'Projets - ' . ($settings->company_name ?? 'EYWEP'))
+@section('title', __('app.titles.projects') . ' - ' . ($settings->company_name ?? 'EYWEP'))
 @section('description', 'Découvrez tous les projets de ' . ($settings->company_name ?? 'EYWEP') . ' et postulez en ligne.')
 
 @section('content')
 <main>
 
-    @include('front.partials.page-banner', ['bannerTitle' => 'Projets'])
+    @include('front.partials.page-banner', ['bannerTitle' => __('app.pages.projects')])
 
     <div class="page-projects mt-100 section-padding">
         <div class="container">

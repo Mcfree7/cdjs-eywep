@@ -14,27 +14,39 @@ use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SuccessStoriesController;
 use App\Http\Controllers\FrontOfficeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Middleware\SetLocale;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [FrontOfficeController::class, 'home'])->name('front.home');
-Route::get('/recherche', [FrontOfficeController::class, 'search'])->name('front.search');
-Route::get('/articles', [FrontOfficeController::class, 'articles'])->name('front.articles.index');
-Route::get('/articles/{article}', [FrontOfficeController::class, 'article'])->name('front.articles.show');
-Route::get('/activites', [FrontOfficeController::class, 'activities'])->name('front.activities.index');
-Route::get('/activites/{activity}', [FrontOfficeController::class, 'activity'])->name('front.activities.show');
-Route::get('/temoignages', [FrontOfficeController::class, 'successStories'])->name('front.success-stories.index');
-Route::get('/temoignages/{successStory}', [FrontOfficeController::class, 'successStory'])->name('front.success-stories.show');
-Route::get('/galeries', [FrontOfficeController::class, 'galleries'])->name('front.galleries.index');
-Route::get('/galeries/{gallery}', [FrontOfficeController::class, 'gallery'])->name('front.galleries.show');
-Route::get('/ressources', [FrontOfficeController::class, 'resources'])->name('front.resources.index');
-Route::get('/ressources/{resourceItem}', [FrontOfficeController::class, 'resource'])->name('front.resources.show');
-Route::get('/ressources/{resourceItem}/telecharger', [FrontOfficeController::class, 'downloadResource'])->name('front.resources.download');
-Route::get('/projets', [FrontOfficeController::class, 'projects'])->name('front.projects.index');
-Route::get('/projets/{project:uuid}', [FrontOfficeController::class, 'project'])->name('front.projects.show');
-Route::post('/projets/{project:uuid}/candidater', [FrontOfficeController::class, 'applyToProject'])->name('front.projects.apply');
-Route::get('/a-propos', [FrontOfficeController::class, 'about'])->name('front.about');
-Route::get('/contact', [FrontOfficeController::class, 'contact'])->name('front.contact');
+// ── Redirection racine vers la locale par défaut ─────────────────────────────
+Route::get('/', fn () => redirect()->to('/fr'));
 
+// ── Routes front-office multilingues ─────────────────────────────────────────
+Route::prefix('{locale}')
+    ->where(['locale' => 'fr|pt|en'])
+    ->middleware(SetLocale::class)
+    ->group(function () {
+
+        Route::get('/',                                          [FrontOfficeController::class, 'home'])->name('front.home');
+        Route::get('/recherche',                                 [FrontOfficeController::class, 'search'])->name('front.search');
+        Route::get('/articles',                                  [FrontOfficeController::class, 'articles'])->name('front.articles.index');
+        Route::get('/articles/{article}',                        [FrontOfficeController::class, 'article'])->name('front.articles.show');
+        Route::get('/activites',                                 [FrontOfficeController::class, 'activities'])->name('front.activities.index');
+        Route::get('/activites/{activity}',                      [FrontOfficeController::class, 'activity'])->name('front.activities.show');
+        Route::get('/temoignages',                               [FrontOfficeController::class, 'successStories'])->name('front.success-stories.index');
+        Route::get('/temoignages/{successStory}',                [FrontOfficeController::class, 'successStory'])->name('front.success-stories.show');
+        Route::get('/galeries',                                  [FrontOfficeController::class, 'galleries'])->name('front.galleries.index');
+        Route::get('/galeries/{gallery}',                        [FrontOfficeController::class, 'gallery'])->name('front.galleries.show');
+        Route::get('/ressources',                                [FrontOfficeController::class, 'resources'])->name('front.resources.index');
+        Route::get('/ressources/{resourceItem}',                 [FrontOfficeController::class, 'resource'])->name('front.resources.show');
+        Route::get('/ressources/{resourceItem}/telecharger',     [FrontOfficeController::class, 'downloadResource'])->name('front.resources.download');
+        Route::get('/projets',                                   [FrontOfficeController::class, 'projects'])->name('front.projects.index');
+        Route::get('/projets/{project:uuid}',                    [FrontOfficeController::class, 'project'])->name('front.projects.show');
+        Route::post('/projets/{project:uuid}/candidater',        [FrontOfficeController::class, 'applyToProject'])->name('front.projects.apply');
+        Route::get('/a-propos',                                  [FrontOfficeController::class, 'about'])->name('front.about');
+        Route::get('/contact',                                   [FrontOfficeController::class, 'contact'])->name('front.contact');
+    });
+
+// ── Back-office (admin) ───────────────────────────────────────────────────────
 Route::middleware('auth')->group(function () {
     Route::redirect('/dashboard', '/admin/dashboard')->name('dashboard');
 

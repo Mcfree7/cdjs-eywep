@@ -4,7 +4,7 @@
 @endphp
 @extends('front.layouts.app')
 
-@section('title', 'Galeries - ' . ($settings->company_name ?? 'EYWEP'))
+@section('title', __('app.titles.galleries') . ' - ' . ($settings->company_name ?? 'EYWEP'))
 @section('description', 'Parcourez les galeries photos et vidéos de ' . ($settings->company_name ?? 'EYWEP'))
 
 @push('styles')
@@ -163,7 +163,7 @@
 @section('content')
 <main>
 
-    @include('front.partials.page-banner', ['bannerTitle' => 'Galeries'])
+    @include('front.partials.page-banner', ['bannerTitle' => __('app.pages.galleries')])
 
     <section class="section-padding">
         <div class="container">

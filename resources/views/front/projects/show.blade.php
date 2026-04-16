@@ -13,7 +13,7 @@
 
     @include('front.partials.page-banner', [
         'bannerTitle'      => $project->titre,
-        'breadcrumbParent' => ['label' => 'Projets', 'url' => route('front.projects.index')],
+        'breadcrumbParent' => ['label' => __('app.apply.breadcrumb'), 'url' => route('front.projects.index')],
     ])
 
     <section class="page-project-details mt-100 section-padding">
@@ -22,25 +22,22 @@
             {{-- Flash messages --}}
             @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show mb-4 radius18" role="alert">
-                <strong>Succès !</strong> {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+                <strong>{{ __('app.flash.success') }}</strong> {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('app.apply.close_alert') }}"></button>
             </div>
             @endif
             @if (session('error'))
             <div class="alert alert-danger alert-dismissible fade show mb-4 radius18" role="alert">
-                <strong>Erreur !</strong> {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+                <strong>{{ __('app.flash.error') }}</strong> {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('app.apply.close_alert') }}"></button>
             </div>
             @endif
 
             <div class="row g-5">
 
-                {{-- ============================================================
-                     LEFT COLUMN: Project content
-                ============================================================ --}}
+                {{-- ── Colonne gauche : contenu du projet ── --}}
                 <div class="col-12 col-lg-7">
 
-                    {{-- Cover image --}}
                     @if ($project->coverImage)
                     <div class="mb-5">
                         <img
@@ -52,33 +49,30 @@
                     </div>
                     @endif
 
-                    {{-- Title & meta --}}
                     <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
                         @if ($project->statut === 'ouvert')
-                            <span class="badge bg-success" style="font-size:14px; padding: 6px 14px;">Ouvert</span>
+                            <span class="badge bg-success" style="font-size:14px; padding: 6px 14px;">{{ __('app.apply.status_open') }}</span>
                         @elseif ($project->statut === 'ferme')
-                            <span class="badge bg-danger" style="font-size:14px; padding: 6px 14px;">Fermé</span>
+                            <span class="badge bg-danger" style="font-size:14px; padding: 6px 14px;">{{ __('app.apply.status_closed') }}</span>
                         @else
-                            <span class="badge bg-secondary" style="font-size:14px; padding: 6px 14px;">Archivé</span>
+                            <span class="badge bg-secondary" style="font-size:14px; padding: 6px 14px;">{{ __('app.apply.status_archived') }}</span>
                         @endif
                         @if ($project->datePublication)
                         <span class="text text-14 text-muted">
-                            Publié le {{ $project->datePublication->format('d/m/Y') }}
+                            {{ __('app.apply.published_prefix') }} {{ $project->datePublication->format('d/m/Y') }}
                         </span>
                         @endif
                     </div>
 
                     <h1 class="heading text-50 fw-700 mb-4">{{ $project->titre }}</h1>
 
-                    {{-- Description (HTML) --}}
                     <div class="text text-18 article-body mb-5">
                         {!! $project->description !!}
                     </div>
 
-                    {{-- Project image gallery --}}
                     @if ($project->images && $project->images->isNotEmpty())
                     <div class="mt-5 pt-4" style="border-top: 1px solid rgba(0,0,0,0.08);">
-                        <h2 class="heading text-30 fw-700 mb-4">Photos du projet</h2>
+                        <h2 class="heading text-30 fw-700 mb-4">{{ __('app.apply.photos_title') }}</h2>
                         <div class="row g-3">
                             @foreach ($project->images as $image)
                             <div class="col-6 col-md-4">
@@ -86,7 +80,7 @@
                                     href="{{ Storage::url($image->image_path) }}"
                                     target="_blank"
                                     rel="noopener"
-                                    aria-label="Voir l'image en taille réelle"
+                                    aria-label="{{ __('app.apply.view_image') }}"
                                 >
                                     <img
                                         src="{{ Storage::url($image->image_path) }}"
@@ -106,28 +100,26 @@
 
                 </div>
 
-                {{-- ============================================================
-                     RIGHT COLUMN: Project info + Application form
-                ============================================================ --}}
+                {{-- ── Colonne droite : infos + formulaire ── --}}
                 <div class="col-12 col-lg-5">
 
-                    {{-- Project info widget --}}
+                    {{-- Widget infos --}}
                     <div class="sidebar-widget project-info radius18 p-4 mb-4" style="border: 1px solid rgba(0,0,0,0.08); background: #fff;">
-                        <h3 class="heading text-22 fw-700 mb-4">Informations du projet</h3>
+                        <h3 class="heading text-22 fw-700 mb-4">{{ __('app.apply.info_title') }}</h3>
                         <ul class="list-unstyled mb-0">
                             <li class="d-flex justify-content-between align-items-center py-3" style="border-bottom: 1px solid rgba(0,0,0,0.06);">
-                                <span class="text text-16 fw-600">Statut</span>
+                                <span class="text text-16 fw-600">{{ __('app.apply.status_label') }}</span>
                                 @if ($project->statut === 'ouvert')
-                                    <span class="badge bg-success">Ouvert</span>
+                                    <span class="badge bg-success">{{ __('app.apply.status_open') }}</span>
                                 @elseif ($project->statut === 'ferme')
-                                    <span class="badge bg-danger">Fermé</span>
+                                    <span class="badge bg-danger">{{ __('app.apply.status_closed') }}</span>
                                 @else
-                                    <span class="badge bg-secondary">Archivé</span>
+                                    <span class="badge bg-secondary">{{ __('app.apply.status_archived') }}</span>
                                 @endif
                             </li>
                             @if ($project->datePublication)
                             <li class="d-flex justify-content-between align-items-center py-3" style="border-bottom: 1px solid rgba(0,0,0,0.06);">
-                                <span class="text text-16 fw-600">Date de publication</span>
+                                <span class="text text-16 fw-600">{{ __('app.apply.published_label') }}</span>
                                 <span class="text text-16">{{ $project->datePublication->format('d/m/Y') }}</span>
                             </li>
                             @endif
@@ -137,11 +129,11 @@
                                 $daysLeft  = (int) now()->diffInDays($project->date_cloture, false);
                             @endphp
                             <li class="d-flex justify-content-between align-items-center py-3" style="border-bottom: 1px solid rgba(0,0,0,0.06);">
-                                <span class="text text-16 fw-600">Date de clôture</span>
+                                <span class="text text-16 fw-600">{{ __('app.apply.deadline_label') }}</span>
                                 <span class="text text-16 d-flex align-items-center gap-2">
                                     {{ $project->date_cloture->format('d/m/Y') }}
                                     @if ($isExpired)
-                                        <span class="badge bg-danger" style="font-size:11px;">Expiré</span>
+                                        <span class="badge bg-danger" style="font-size:11px;">{{ __('app.apply.deadline_expired') }}</span>
                                     @elseif ($daysLeft <= 7)
                                         <span class="badge bg-warning text-dark" style="font-size:11px;">{{ $daysLeft }}j</span>
                                     @endif
@@ -149,7 +141,7 @@
                             </li>
                             @endif
                             <li class="d-flex justify-content-between align-items-center py-3" @if(!$project->tdr_path) style="border-bottom: none;" @endif>
-                                <span class="text text-16 fw-600">Candidatures reçues</span>
+                                <span class="text text-16 fw-600">{{ __('app.apply.applications_label') }}</span>
                                 <span class="text text-16 fw-700" style="color: var(--color-primary, #1c2539);">
                                     {{ $candidaturesCount ?? 0 }}
                                 </span>
@@ -166,41 +158,39 @@
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;">
                                         <path d="M12 16L7 11l1.4-1.45 2.6 2.6V4h2v8.15l2.6-2.6L17 11l-5 5zm-6 4v-2h12v2H6z" fill="currentColor"/>
                                     </svg>
-                                    Télécharger les TDR
+                                    {{ __('app.apply.download_tdr') }}
                                 </a>
                             </li>
                             @endif
                         </ul>
                     </div>
 
-                    {{-- Application form --}}
+                    {{-- Formulaire de candidature --}}
                     @php $isOpen = $project->statut === 'ouvert'; @endphp
 
                     <div class="sidebar-widget radius18 p-4" style="border: 1px solid rgba(0,0,0,0.08); background: #fff;">
 
-                        {{-- Bannière fermé --}}
                         @if (!$isOpen)
                         <div class="d-flex align-items-center gap-3 rounded-3 mb-4 px-3 py-3" style="background: #fff3f3; border: 1px solid #f5c2c7;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#dc3545" stroke-width="1.8" style="flex-shrink:0;">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
                             </svg>
                             <div>
-                                <div class="fw-700" style="color:#dc3545; font-size:14px;">Candidatures fermées</div>
+                                <div class="fw-700" style="color:#dc3545; font-size:14px;">{{ __('app.apply.closed_banner_title') }}</div>
                                 <div class="text text-13 text-muted mt-1">
                                     @if ($project->date_cloture && $project->date_cloture->isPast())
-                                        La date limite du {{ $project->date_cloture->format('d/m/Y') }} est dépassée.
+                                        {{ __('app.apply.closed_expired', ['date' => $project->date_cloture->format('d/m/Y')]) }}
                                     @else
-                                        Ce projet n'accepte plus de candidatures.
+                                        {{ __('app.apply.closed_no_more') }}
                                     @endif
                                 </div>
                             </div>
                         </div>
                         @endif
 
-                        <h3 class="heading text-22 fw-700 mb-2">Postuler à ce projet</h3>
-                        <p class="text text-16 text-muted mb-4">Remplissez le formulaire ci-dessous pour soumettre votre candidature.</p>
+                        <h3 class="heading text-22 fw-700 mb-2">{{ __('app.apply.form_title') }}</h3>
+                        <p class="text text-16 text-muted mb-4">{{ __('app.apply.form_subtitle') }}</p>
 
-                        {{-- Validation errors --}}
                         @if ($errors->any())
                         <div class="alert alert-danger radius18 mb-4">
                             <ul class="mb-0 ps-3">
@@ -225,25 +215,29 @@
                             {{-- Nom / Prénom --}}
                             <div class="row g-3 mb-3">
                                 <div class="col-12 col-sm-6">
-                                    <label for="nom" class="form-label text text-14 fw-600">Nom <span class="text-danger">*</span></label>
+                                    <label for="nom" class="form-label text text-14 fw-600">
+                                        {{ __('app.apply.label_nom') }} <span class="text-danger">*</span>
+                                    </label>
                                     <input
                                         type="text"
                                         class="form-control radius18 @error('nom') is-invalid @enderror"
                                         id="nom" name="nom"
                                         value="{{ old('nom') }}"
-                                        placeholder="Votre nom"
+                                        placeholder="{{ __('app.apply.placeholder_nom') }}"
                                         required
                                     >
                                     @error('nom')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 <div class="col-12 col-sm-6">
-                                    <label for="prenom" class="form-label text text-14 fw-600">Prénom <span class="text-danger">*</span></label>
+                                    <label for="prenom" class="form-label text text-14 fw-600">
+                                        {{ __('app.apply.label_prenom') }} <span class="text-danger">*</span>
+                                    </label>
                                     <input
                                         type="text"
                                         class="form-control radius18 @error('prenom') is-invalid @enderror"
                                         id="prenom" name="prenom"
                                         value="{{ old('prenom') }}"
-                                        placeholder="Votre prénom"
+                                        placeholder="{{ __('app.apply.placeholder_prenom') }}"
                                         required
                                     >
                                     @error('prenom')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -253,12 +247,12 @@
                             {{-- Pays / Sexe --}}
                             <div class="row g-3 mb-3">
                                 <div class="col-12 col-sm-6">
-                                    <label for="pays" class="form-label text text-14 fw-600">Pays</label>
+                                    <label for="pays" class="form-label text text-14 fw-600">{{ __('app.apply.label_pays') }}</label>
                                     <select
                                         class="form-select radius18 @error('pays') is-invalid @enderror"
                                         id="pays" name="pays"
                                     >
-                                        <option value="">-- Sélectionner --</option>
+                                        <option value="">{{ __('app.apply.select_default') }}</option>
                                         @foreach (Countries::list() as $code => $name)
                                             <option value="{{ $name }}" {{ old('pays') === $name ? 'selected' : '' }}>{{ $name }}</option>
                                         @endforeach
@@ -266,15 +260,15 @@
                                     @error('pays')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 <div class="col-12 col-sm-6">
-                                    <label for="sexe" class="form-label text text-14 fw-600">Sexe</label>
+                                    <label for="sexe" class="form-label text text-14 fw-600">{{ __('app.apply.label_sexe') }}</label>
                                     <select
                                         class="form-select radius18 @error('sexe') is-invalid @enderror"
                                         id="sexe" name="sexe"
                                     >
-                                        <option value="">-- Sélectionner --</option>
-                                        <option value="homme" {{ old('sexe') === 'homme' ? 'selected' : '' }}>Homme</option>
-                                        <option value="femme" {{ old('sexe') === 'femme' ? 'selected' : '' }}>Femme</option>
-                                        <option value="autre" {{ old('sexe') === 'autre' ? 'selected' : '' }}>Autre</option>
+                                        <option value="">{{ __('app.apply.select_default') }}</option>
+                                        <option value="homme" {{ old('sexe') === 'homme' ? 'selected' : '' }}>{{ __('app.apply.sexe_homme') }}</option>
+                                        <option value="femme" {{ old('sexe') === 'femme' ? 'selected' : '' }}>{{ __('app.apply.sexe_femme') }}</option>
+                                        <option value="autre" {{ old('sexe') === 'autre' ? 'selected' : '' }}>{{ __('app.apply.sexe_autre') }}</option>
                                     </select>
                                     @error('sexe')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
@@ -282,7 +276,9 @@
 
                             {{-- Email --}}
                             <div class="mb-3">
-                                <label for="email" class="form-label text text-14 fw-600">Adresse e-mail <span class="text-danger">*</span></label>
+                                <label for="email" class="form-label text text-14 fw-600">
+                                    {{ __('app.apply.label_email') }} <span class="text-danger">*</span>
+                                </label>
                                 <input
                                     type="email"
                                     class="form-control radius18 @error('email') is-invalid @enderror"
@@ -296,7 +292,7 @@
 
                             {{-- Téléphone --}}
                             <div class="mb-3">
-                                <label for="telephone" class="form-label text text-14 fw-600">Numéro de téléphone</label>
+                                <label for="telephone" class="form-label text text-14 fw-600">{{ __('app.apply.label_telephone') }}</label>
                                 <input
                                     type="tel"
                                     class="form-control radius18 @error('telephone') is-invalid @enderror"
@@ -307,11 +303,11 @@
                                 @error('telephone')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            {{-- Lettre de motivation (PDF) --}}
+                            {{-- Lettre de motivation --}}
                             <div class="mb-3">
                                 <label for="lettre_motivation" class="form-label text text-14 fw-600">
-                                    Lettre de motivation <span class="text-danger">*</span>
-                                    <span class="text text-12 fw-400" style="color:var(--color-foreground-subheading);">(PDF, max 5 Mo)</span>
+                                    {{ __('app.apply.label_motivation') }} <span class="text-danger">*</span>
+                                    <span class="text text-12 fw-400" style="color:var(--color-foreground-subheading);">{{ __('app.apply.label_motivation_hint') }}</span>
                                 </label>
                                 <input
                                     type="file"
@@ -323,11 +319,11 @@
                                 @error('lettre_motivation')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            {{-- Pièce d'identité (PDF) --}}
+                            {{-- Pièce d'identité --}}
                             <div class="mb-3">
                                 <label for="piece_identite" class="form-label text text-14 fw-600">
-                                    Pièce d'identité <span class="text-danger">*</span>
-                                    <span class="text text-12 fw-400" style="color:var(--color-foreground-subheading);">(PDF, max 5 Mo)</span>
+                                    {{ __('app.apply.label_identite') }} <span class="text-danger">*</span>
+                                    <span class="text text-12 fw-400" style="color:var(--color-foreground-subheading);">{{ __('app.apply.label_identite_hint') }}</span>
                                 </label>
                                 <input
                                     type="file"
@@ -342,8 +338,8 @@
                             {{-- CV --}}
                             <div class="mb-4">
                                 <label for="cv" class="form-label text text-14 fw-600">
-                                    CV <span class="text-danger">*</span>
-                                    <span class="text text-12 fw-400" style="color:var(--color-foreground-subheading);">(PDF, DOC ou DOCX, max 5 Mo)</span>
+                                    {{ __('app.apply.label_cv') }} <span class="text-danger">*</span>
+                                    <span class="text text-12 fw-400" style="color:var(--color-foreground-subheading);">{{ __('app.apply.label_cv_hint') }}</span>
                                 </label>
                                 <input
                                     type="file"
@@ -356,18 +352,17 @@
                             </div>
 
                             <button type="submit" class="button button--primary w-100 justify-content-center">
-                                Envoyer ma candidature
+                                {{ __('app.apply.submit') }}
                                 <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none">
                                     <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
                                 </svg>
                             </button>
 
                         </form>
-                        </div>{{-- end opacity wrapper --}}
+                        </div>
                     </div>
 
                 </div>
-                {{-- end right column --}}
 
             </div>
         </div>

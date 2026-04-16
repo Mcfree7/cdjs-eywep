@@ -3,13 +3,13 @@
 @endphp
 @extends('front.layouts.app')
 
-@section('title', 'Ressources - ' . ($settings->company_name ?? 'EYWEP'))
+@section('title', __('app.titles.resources') . ' - ' . ($settings->company_name ?? 'EYWEP'))
 @section('description', 'Téléchargez les ressources et documents mis à disposition par ' . ($settings->company_name ?? 'EYWEP'))
 
 @section('content')
 <main>
 
-    @include('front.partials.page-banner', ['bannerTitle' => 'Ressources'])
+    @include('front.partials.page-banner', ['bannerTitle' => __('app.pages.resources')])
 
     <section class="mt-100 section-padding">
         <div class="container">

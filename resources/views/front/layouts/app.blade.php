@@ -12,6 +12,7 @@
     <title>@yield('title', ($settings->company_name ?? 'EYWEP') . ' - Programme d\'entrepreneuriat')</title>
 
     <link rel="shortcut icon" href="{{ asset('front-assets/consulo/img/favicon.png') }}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link
@@ -123,6 +124,28 @@
         .eywep-dynamic-logo {
             max-height: 52px;
             width: auto;
+        }
+
+        /* Sélecteur de langue */
+        .eywep-lang-switcher .eywep-lang-btn {
+            font-size: 13px !important;
+            padding: 5px 10px !important;
+            min-width: 0 !important;
+            border-radius: 20px !important;
+            line-height: 1.4 !important;
+        }
+        .eywep-lang-menu {
+            min-width: 130px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .eywep-lang-menu .dropdown-item {
+            font-size: 14px;
+            padding: 8px 14px;
+        }
+        .eywep-lang-menu .dropdown-item:hover {
+            background-color: var(--color-primary);
+            color: #fff;
         }
 
         .eywep-brand-name {

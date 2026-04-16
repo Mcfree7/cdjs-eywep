@@ -1,9 +1,20 @@
+@php
+    use Illuminate\Support\Facades\Storage;
+    $currentLocale  = app()->getLocale();
+    $locales        = ['fr' => 'fr', 'pt' => 'pt', 'en' => 'gb'];
+
+    // Génère une URL pour la même page dans une autre locale
+    $routeName      = request()->route()?->getName() ?? 'front.home';
+    $routeParams    = request()->route()?->parameters() ?? [];
+    $switchLocale   = fn(string $locale) => route($routeName, array_merge($routeParams, ['locale' => $locale]));
+@endphp
+
 {{-- Sticky Header --}}
 <sticky-header data-sticky-type="always">
     <header class="header-1 header-floating">
         <div class="container-fluid">
             <div class="header-grid">
-                <a class="header-logo d-flex align-items-center gap-2" href="{{ route('front.home') }}" aria-label="{{ $settings->company_name ?? 'EYWEP' }}">
+                <a class="header-logo d-flex align-items-center gap-2" href="{{ route('front.home', ['locale' => $currentLocale]) }}" aria-label="{{ $settings->company_name ?? 'EYWEP' }}">
                     @if ($settings->company_logo_path)
                         <img
                             src="{{ Storage::url($settings->company_logo_path) }}"
@@ -24,7 +35,7 @@
                 <drawer-menu>
                     <nav class="header-nav drawer-menu">
                         <div class="d-lg-none header-nav-headings">
-                            <a class="header-logo" href="{{ route('front.home') }}" aria-label="{{ $settings->company_name ?? 'EYWEP' }}">
+                            <a class="header-logo" href="{{ route('front.home', ['locale' => $currentLocale]) }}" aria-label="{{ $settings->company_name ?? 'EYWEP' }}">
                                 @if ($settings->company_logo_path)
                                     <img
                                         src="{{ Storage::url($settings->company_logo_path) }}"
@@ -69,47 +80,47 @@
 
                         <ul class="header-menu list-unstyled">
                             <li class="nav-item">
-                                <a href="{{ route('front.home') }}" class="menu-link menu-link-main">Accueil</a>
+                                <a href="{{ route('front.home', ['locale' => $currentLocale]) }}" class="menu-link menu-link-main">{{ __('app.nav.home') }}</a>
                             </li>
                             <li class="nav-item">
                                 <a class="menu-link menu-link-main menu-accrodion" href="#">
-                                    Publications
+                                    {{ __('app.nav.publications') }}
                                     <svg width="10" height="5" viewBox="0 0 10 5" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M5 5L0 0H10L5 5Z" fill="currentColor"/>
                                     </svg>
                                 </a>
                                 <div class="menu-absolute header-submenu submenu-color">
                                     <ul class="list-unstyled">
-                                        <li class="nav-item"><a class="menu-link" href="{{ route('front.articles.index') }}">Articles</a></li>
-                                        <li class="nav-item"><a class="menu-link" href="{{ route('front.activities.index') }}">Activités</a></li>
-                                        <li class="nav-item"><a class="menu-link" href="{{ route('front.success-stories.index') }}">Témoignages</a></li>
-                                        <li class="nav-item"><a class="menu-link" href="{{ route('front.resources.index') }}">Ressources</a></li>
+                                        <li class="nav-item"><a class="menu-link" href="{{ route('front.articles.index', ['locale' => $currentLocale]) }}">{{ __('app.nav.articles') }}</a></li>
+                                        <li class="nav-item"><a class="menu-link" href="{{ route('front.activities.index', ['locale' => $currentLocale]) }}">{{ __('app.nav.activities') }}</a></li>
+                                        <li class="nav-item"><a class="menu-link" href="{{ route('front.success-stories.index', ['locale' => $currentLocale]) }}">{{ __('app.nav.testimonials') }}</a></li>
+                                        <li class="nav-item"><a class="menu-link" href="{{ route('front.resources.index', ['locale' => $currentLocale]) }}">{{ __('app.nav.resources') }}</a></li>
                                     </ul>
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('front.galleries.index') }}" class="menu-link menu-link-main">Galeries</a>
+                                <a href="{{ route('front.galleries.index', ['locale' => $currentLocale]) }}" class="menu-link menu-link-main">{{ __('app.nav.galleries') }}</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('front.projects.index') }}" class="menu-link menu-link-main">Projets</a>
+                                <a href="{{ route('front.projects.index', ['locale' => $currentLocale]) }}" class="menu-link menu-link-main">{{ __('app.nav.projects') }}</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('front.about') }}" class="menu-link menu-link-main">À propos</a>
+                                <a href="{{ route('front.about', ['locale' => $currentLocale]) }}" class="menu-link menu-link-main">{{ __('app.nav.about') }}</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('front.contact') }}" class="menu-link menu-link-main">Contact</a>
+                                <a href="{{ route('front.contact', ['locale' => $currentLocale]) }}" class="menu-link menu-link-main">{{ __('app.nav.contact') }}</a>
                             </li>
                         </ul>
                     </nav>
                 </drawer-menu>
 
-                <div class="header-actions d-flex align-items-center">
+                <div class="header-actions d-flex align-items-center gap-2">
 
                     {{-- Bouton recherche --}}
                     <drawer-opener
                         class="header-search search-open svg-wrapper me-2"
                         data-drawer=".modal-search"
-                        aria-label="Rechercher"
+                        aria-label="{{ __('app.search.aria') }}"
                         style="cursor:pointer;"
                     >
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -117,8 +128,37 @@
                         </svg>
                     </drawer-opener>
 
-                    <a href="{{ route('login') }}" class="button button--secondary" aria-label="Connexion">
-                        Connexion
+                    {{-- Sélecteur de langue --}}
+                    <div class="eywep-lang-switcher dropdown">
+                        <button
+                            class="button button--secondary eywep-lang-btn dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            style="padding: 6px 12px; font-size: 13px; min-width: 0;"
+                        >
+                            <span class="fi fi-{{ $locales[$currentLocale] }}" style="border-radius:2px;"></span>
+                            {{ strtoupper($currentLocale) }}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end eywep-lang-menu">
+                            @foreach ($locales as $locale => $flag)
+                                @if ($locale !== $currentLocale)
+                                    <li>
+                                        <a
+                                            class="dropdown-item d-flex align-items-center gap-2"
+                                            href="{{ $switchLocale($locale) }}"
+                                        >
+                                            <span class="fi fi-{{ $flag }}" style="border-radius:2px;"></span>
+                                        {{ __('app.lang.' . $locale) }}
+                                        </a>
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+
+                    <a href="{{ route('login') }}" class="button button--secondary" aria-label="{{ __('app.nav.login') }}">
+                        {{ __('app.nav.login') }}
                         <span class="svg-wrapper">
                             <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
@@ -144,14 +184,14 @@
         </div>
     </header>
 
-    {{-- Modal Search (même pattern que le template Consulo) --}}
+    {{-- Modal Search --}}
     <modal-search class="theme-modal modal-search">
         <div class="modal-container">
             <div class="modal-header">
                 <drawer-opener
                     class="svg-wrapper search-close"
                     data-drawer=".modal-search"
-                    aria-label="Fermer la recherche"
+                    aria-label="{{ __('app.search.close') }}"
                     style="cursor:pointer;"
                 >
                     <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -162,20 +202,20 @@
             </div>
             <div class="modal-main d-flex align-items-center justify-content-center">
                 <form
-                    action="{{ route('front.search') }}"
+                    action="{{ route('front.search', ['locale' => $currentLocale]) }}"
                     method="GET"
                     class="form-search d-flex align-items-center justify-content-center flex-wrap"
                 >
-                    <label for="modal-search-input" class="text text-30">Rechercher</label>
+                    <label for="modal-search-input" class="text text-30">{{ __('app.search.label') }}</label>
                     <input
                         type="text"
-                        placeholder="Articles, projets, activités..."
+                        placeholder="{{ __('app.search.placeholder') }}"
                         name="q"
                         id="modal-search-input"
                         class="text text-16"
                         autocomplete="off"
                     >
-                    <button class="button button--primary" type="submit" aria-label="Lancer la recherche">
+                    <button class="button button--primary" type="submit" aria-label="{{ __('app.search.submit') }}">
                         <span class="svg-wrapper">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42-1.39zM11 18a7 7 0 1 1 7-7 7 7 0 0 1-7 7z" fill="currentColor"/>

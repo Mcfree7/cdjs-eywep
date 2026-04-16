@@ -1,12 +1,12 @@
 @extends('front.layouts.app')
 
-@section('title', 'Recherche' . ($q ? ' : ' . $q : '') . ' — ' . ($settings->company_name ?? 'EYWEP'))
+@section('title', __('app.titles.search') . ($q ? ' : ' . $q : '') . ' — ' . ($settings->company_name ?? 'EYWEP'))
 
 @section('content')
 <main>
 
     @include('front.partials.page-banner', [
-        'bannerTitle'      => 'Résultats de recherche',
+        'bannerTitle'      => __('app.pages.search'),
         'breadcrumbParent' => null,
     ])
 

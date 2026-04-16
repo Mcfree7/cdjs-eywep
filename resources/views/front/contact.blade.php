@@ -1,13 +1,13 @@
 @extends('front.layouts.app')
 
-@section('title', 'Contact - ' . ($settings->company_name ?? 'EYWEP'))
+@section('title', __('app.titles.contact') . ' - ' . ($settings->company_name ?? 'EYWEP'))
 @section('description', 'Contactez ' . ($settings->company_name ?? 'EYWEP') . ' - Adresse, téléphone, email et formulaire de contact.')
 
 @section('content')
 <main>
 
     {{-- Page Banner --}}
-    @include('front.partials.page-banner', ['bannerTitle' => 'Contactez-nous'])
+    @include('front.partials.page-banner', ['bannerTitle' => __('app.pages.contact')])
 
     {{-- Contact Form + Info --}}
     <div class="section-contact-form contact-2 section-padding">
@@ -20,7 +20,7 @@
                         </g>
                         <defs><clipPath id="clip0_contact"><rect width="14" height="14" fill="CurrentColor"/></clipPath></defs>
                     </svg>
-                    <span>Contactez-nous</span>
+                    <span>{{ __('app.contact.section_label') }}</span>
                     <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                         <g clip-path="url(#clip1_contact)">
                             <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="CurrentColor"/>
@@ -29,7 +29,7 @@
                     </svg>
                 </div>
                 <h2 class="heading text-50" data-aos="fade-up" data-aos-delay="50">
-                    Construisons quelque chose ensemble
+                    {{ __('app.contact.heading') }}
                 </h2>
             </div>
 
@@ -44,7 +44,7 @@
                             <div class="iframe-wrapper">
                                 <iframe
                                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15669.999!2d-1.524!3d12.364!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xe2ebe47ecd3b9e9%3A0x5a1c1f5f9b5a1c1f!2sOuagadougou%2C%20Burkina%20Faso!5e0!3m2!1sfr!2sbf!4v1700000000000"
-                                    title="Localisation EYWEP"
+                                    title="{{ __('app.contact.map_title') }}"
                                     width="1920"
                                     height="600"
                                     style="border:0"
@@ -64,7 +64,7 @@
                                     </svg>
                                 </div>
                                 <div class="content">
-                                    <h2 class="heading text-16 fw-500">Notre adresse</h2>
+                                    <h2 class="heading text-16 fw-500">{{ __('app.contact.address_label') }}</h2>
                                     <p class="text text-20">{{ $settings->company_address ?? 'Ouagadougou, Burkina Faso' }}</p>
                                 </div>
                             </div>
@@ -76,9 +76,9 @@
                                     </svg>
                                 </div>
                                 <div class="content">
-                                    <h2 class="heading text-16 fw-500">Téléphone</h2>
+                                    <h2 class="heading text-16 fw-500">{{ __('app.contact.phone_label') }}</h2>
                                     @if ($settings->company_phone)
-                                        <a href="tel:{{ $settings->company_phone }}" class="text text-20" aria-label="Nous appeler">{{ $settings->company_phone }}</a>
+                                        <a href="tel:{{ $settings->company_phone }}" class="text text-20" aria-label="{{ __('app.contact.phone_label') }}">{{ $settings->company_phone }}</a>
                                     @else
                                         <span class="text text-20">+226 00 00 00 00</span>
                                     @endif
@@ -92,18 +92,18 @@
                                     </svg>
                                 </div>
                                 <div class="content">
-                                    <h2 class="heading text-16 fw-500">Email</h2>
+                                    <h2 class="heading text-16 fw-500">{{ __('app.contact.email_label') }}</h2>
                                     @if ($settings->company_email)
-                                        <a href="mailto:{{ $settings->company_email }}" class="text text-20" aria-label="Nous écrire">{{ $settings->company_email }}</a>
+                                        <a href="mailto:{{ $settings->company_email }}" class="text text-20" aria-label="{{ __('app.contact.email_label') }}">{{ $settings->company_email }}</a>
                                     @else
-                                        <a href="mailto:contact@eywep.org" class="text text-20" aria-label="Nous écrire">contact@eywep.org</a>
+                                        <a href="mailto:contact@eywep.org" class="text text-20" aria-label="{{ __('app.contact.email_label') }}">contact@eywep.org</a>
                                     @endif
                                 </div>
                             </div>
                         </div>
 
                         <div class="contact-social" data-aos="fade-up">
-                            <h2 class="heading text-20 fw-500">Suivez-nous</h2>
+                            <h2 class="heading text-20 fw-500">{{ __('app.contact.follow_label') }}</h2>
                             <ul class="social-icons list-unstyled">
                                 <li>
                                     <a class="social-link text" href="{{ $settings->social_facebook ?? 'https://web.facebook.com/' }}" target="_blank" rel="noreferrer">
@@ -145,32 +145,32 @@
                     <div class="col-12 col-lg-6 col-contact-form">
                         <div class="contact-form-wrap radius18">
                             <div class="contact-form-headings">
-                                <h2 class="heading text-32" data-aos="fade-up">Envoyez-nous un message</h2>
+                                <h2 class="heading text-32" data-aos="fade-up">{{ __('app.contact.form_title') }}</h2>
                                 <p class="text text-16" data-aos="fade-up">
-                                    Nous vous répondons dans les plus brefs délais.
+                                    {{ __('app.contact.form_subtitle') }}
                                 </p>
                             </div>
                             <form action="#" class="form contact-form" data-aos="fade-up">
                                 @csrf
                                 <div class="field">
-                                    <label for="ContactForm-name" class="visually-hidden">Votre Nom</label>
-                                    <input id="ContactForm-name" class="text-16" type="text" placeholder="Votre Nom *" name="name" required>
+                                    <label for="ContactForm-name" class="visually-hidden">{{ __('app.contact.label_name') }}</label>
+                                    <input id="ContactForm-name" class="text-16" type="text" placeholder="{{ __('app.contact.placeholder_name') }}" name="name" required>
                                 </div>
                                 <div class="field">
-                                    <label for="ContactForm-email" class="visually-hidden">Email</label>
-                                    <input id="ContactForm-email" class="text-16" type="email" placeholder="Votre Email *" name="email" required>
+                                    <label for="ContactForm-email" class="visually-hidden">{{ __('app.contact.label_email') }}</label>
+                                    <input id="ContactForm-email" class="text-16" type="email" placeholder="{{ __('app.contact.placeholder_email') }}" name="email" required>
                                 </div>
                                 <div class="field">
-                                    <label for="ContactForm-subject" class="visually-hidden">Sujet</label>
-                                    <input id="ContactForm-subject" class="text-16" type="text" placeholder="Sujet *" name="subject" required>
+                                    <label for="ContactForm-subject" class="visually-hidden">{{ __('app.contact.label_subject') }}</label>
+                                    <input id="ContactForm-subject" class="text-16" type="text" placeholder="{{ __('app.contact.placeholder_subject') }}" name="subject" required>
                                 </div>
                                 <div class="field">
-                                    <label for="ContactForm-body" class="visually-hidden">Votre message</label>
-                                    <textarea id="ContactForm-body" class="text-16" rows="4" placeholder="Votre message *" name="message" required></textarea>
+                                    <label for="ContactForm-body" class="visually-hidden">{{ __('app.contact.label_message') }}</label>
+                                    <textarea id="ContactForm-body" class="text-16" rows="4" placeholder="{{ __('app.contact.placeholder_message') }}" name="message" required></textarea>
                                 </div>
                                 <div class="form-button">
-                                    <button type="submit" class="button button--secondary" aria-label="Envoyer le message">
-                                        Envoyer le message
+                                    <button type="submit" class="button button--secondary" aria-label="{{ __('app.contact.send_btn') }}">
+                                        {{ __('app.contact.send_btn') }}
                                         <span class="svg-wrapper">
                                             <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"></path>

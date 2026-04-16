@@ -1,3 +1,8 @@
+@php
+    use Illuminate\Support\Facades\Storage;
+    $currentLocale = app()->getLocale();
+@endphp
+
 <footer id="contact">
     {{-- Footer Main --}}
     <div
@@ -13,7 +18,7 @@
                             data-aos="fade-up"
                             data-aos-anchor=".footer-top"
                         >
-                            <a class="footer-logo" href="{{ route('front.home') }}" aria-label="{{ $settings->company_name ?? 'EYWEP' }}">
+                            <a class="footer-logo" href="{{ route('front.home', ['locale' => $currentLocale]) }}" aria-label="{{ $settings->company_name ?? 'EYWEP' }}">
                                 @if ($settings->company_logo_path)
                                     <img
                                         src="{{ Storage::url($settings->company_logo_path) }}"
@@ -32,7 +37,7 @@
                                 @endif
                             </a>
                             <p class="text text-16">
-                                {{ $settings->hero_subtitle ?? $settings->company_slogan ?? 'Programme de promotion de l\'entrepreneuriat avec contenus publics, activités et ressources.' }}
+                                {{ $settings->hero_subtitle ?? $settings->company_slogan ?? '' }}
                             </p>
                             <ul
                                 class="social-icons list-unstyled"
@@ -88,14 +93,14 @@
                             data-aos="fade-up"
                             data-aos-anchor=".footer-top"
                         >
-                            <div class="widget-heading heading text-22">Navigation</div>
+                            <div class="widget-heading heading text-22">{{ __('app.footer.navigation') }}</div>
                             <ul class="footer-menu list-unstyled">
-                                <li><a href="{{ route('front.articles.index') }}" class="text text-16 link" aria-label="Articles">Articles</a></li>
-                                <li><a href="{{ route('front.activities.index') }}" class="text text-16 link" aria-label="Activités">Activités</a></li>
-                                <li><a href="{{ route('front.success-stories.index') }}" class="text text-16 link" aria-label="Témoignages">Témoignages</a></li>
-                                <li><a href="{{ route('front.galleries.index') }}" class="text text-16 link" aria-label="Galeries">Galeries</a></li>
-                                <li><a href="{{ route('front.resources.index') }}" class="text text-16 link" aria-label="Ressources">Ressources</a></li>
-                                <li><a href="{{ route('front.projects.index') }}" class="text text-16 link" aria-label="Projets">Projets</a></li>
+                                <li><a href="{{ route('front.articles.index', ['locale' => $currentLocale]) }}" class="text text-16 link">{{ __('app.nav.articles') }}</a></li>
+                                <li><a href="{{ route('front.activities.index', ['locale' => $currentLocale]) }}" class="text text-16 link">{{ __('app.nav.activities') }}</a></li>
+                                <li><a href="{{ route('front.success-stories.index', ['locale' => $currentLocale]) }}" class="text text-16 link">{{ __('app.nav.testimonials') }}</a></li>
+                                <li><a href="{{ route('front.galleries.index', ['locale' => $currentLocale]) }}" class="text text-16 link">{{ __('app.nav.galleries') }}</a></li>
+                                <li><a href="{{ route('front.resources.index', ['locale' => $currentLocale]) }}" class="text text-16 link">{{ __('app.nav.resources') }}</a></li>
+                                <li><a href="{{ route('front.projects.index', ['locale' => $currentLocale]) }}" class="text text-16 link">{{ __('app.nav.projects') }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -105,7 +110,7 @@
                             data-aos="fade-up"
                             data-aos-anchor=".footer-top"
                         >
-                            <div class="widget-heading heading text-22">Contact</div>
+                            <div class="widget-heading heading text-22">{{ __('app.footer.contact') }}</div>
                             <ul class="footer-menu list-unstyled">
                                 @if ($settings->company_address)
                                     <li><span class="text text-16">{{ $settings->company_address }}</span></li>
@@ -117,7 +122,7 @@
                                     <li><a href="mailto:{{ $settings->company_email }}" class="text text-16 link">{{ $settings->company_email }}</a></li>
                                 @endif
                                 @if ($settings->company_location)
-                                    <li><a href="{{ $settings->company_location }}" target="_blank" rel="noreferrer" class="text text-16 link">Voir la localisation</a></li>
+                                    <li><a href="{{ $settings->company_location }}" target="_blank" rel="noreferrer" class="text text-16 link">{{ __('app.footer.location') }}</a></li>
                                 @endif
                             </ul>
                         </div>
@@ -130,14 +135,14 @@
                 <div class="row footer-bottom-row">
                     <div class="col-12 col-md-6 col-lg-6">
                         <div class="footer-copyright text text-16">
-                            Copyright &copy;<span class="current-year"></span> {{ $settings->company_name ?? 'EYWEP' }}. Tous droits réservés.
+                            Copyright &copy;<span class="current-year"></span> {{ $settings->company_name ?? 'EYWEP' }}. {{ __('app.footer.copyright') }}
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-6">
                         <ul class="footer-menu footer-policies list-unstyled">
-                            <li><a href="{{ route('front.home') }}" class="text text-16 link" aria-label="Accueil">Accueil</a></li>
-                            <li><a href="{{ route('front.resources.index') }}" class="text text-16 link" aria-label="Ressources">Ressources</a></li>
-                            <li><a href="#contact" class="text text-16 link" aria-label="Contact">Contact</a></li>
+                            <li><a href="{{ route('front.home', ['locale' => $currentLocale]) }}" class="text text-16 link">{{ __('app.nav.home') }}</a></li>
+                            <li><a href="{{ route('front.resources.index', ['locale' => $currentLocale]) }}" class="text text-16 link">{{ __('app.nav.resources') }}</a></li>
+                            <li><a href="#contact" class="text text-16 link">{{ __('app.nav.contact') }}</a></li>
                         </ul>
                     </div>
                 </div>

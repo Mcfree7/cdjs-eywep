@@ -22,7 +22,7 @@
             <h1 class="heading text-80 fw-700" data-aos="fade-up" title="{{ $bannerTitle }}">{{ Str::limit($bannerTitle, 60) }}</h1>
             <ul class="breadcrumb list-unstyled" data-aos="fade-up" data-aos-delay="100">
                 <li>
-                    <a href="{{ route('front.home') }}" class="text text-18" aria-label="Accueil">Accueil</a>
+                    <a href="{{ route('front.home', ['locale' => app()->getLocale()]) }}" class="text text-18" aria-label="{{ __('app.nav.home') }}">{{ __('app.nav.home') }}</a>
                 </li>
                 @isset($breadcrumbParent)
                 <li>
