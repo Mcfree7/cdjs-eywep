@@ -40,10 +40,14 @@
                     <div class="col-12 col-lg-6 col-contact-content">
 
                         {{-- Google Map --}}
+                        @php
+                            $mapUrl = $settings->company_location
+                                ?: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126069.27563988668!2d7.399917199999999!3d9.0578588!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x104e745f4cd62fd9%3A0x53bd17b4a20ea12b!2sAbuja%2C%20Nigeria!5e0!3m2!1sfr!2sng!4v1700000000000';
+                        @endphp
                         <div class="google-map">
                             <div class="iframe-wrapper">
                                 <iframe
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15669.999!2d-1.524!3d12.364!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xe2ebe47ecd3b9e9%3A0x5a1c1f5f9b5a1c1f!2sOuagadougou%2C%20Burkina%20Faso!5e0!3m2!1sfr!2sbf!4v1700000000000"
+                                    src="{{ $mapUrl }}"
                                     title="{{ __('app.contact.map_title') }}"
                                     width="1920"
                                     height="600"
@@ -129,47 +133,64 @@
                                         <span class="visually-hidden">Twitter / X</span>
                                     </a>
                                 </li>
+                                @if ($settings->social_whatsapp)
                                 <li>
-                                    <a class="social-link text" href="{{ $settings->social_instagram ?? 'https://www.instagram.com/' }}" target="_blank" rel="noreferrer">
+                                    <a class="social-link text" href="{{ $settings->social_whatsapp }}" target="_blank" rel="noreferrer">
                                         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M9.85724 0.671875C10.7951 0.673425 11.2703 0.678392 11.681 0.690617L11.8427 0.6959C12.0296 0.702542 12.2139 0.710875 12.4362 0.721292C13.3229 0.762267 13.9278 0.902542 14.4591 1.10879C15.0083 1.3206 15.4722 1.60671 15.9354 2.06991C16.3979 2.5331 16.6841 2.99837 16.8966 3.54629C17.1021 4.07685 17.2424 4.68241 17.2841 5.56921C17.294 5.79143 17.302 5.97577 17.3086 6.16263L17.3138 6.32437C17.326 6.73499 17.3316 7.21032 17.3333 8.14818L17.334 8.76952V9.23968L17.3335 9.8611C17.3319 10.7989 17.327 11.2743 17.3147 11.6848L17.3094 11.8466C17.3028 12.0335 17.2945 12.2178 17.2841 12.44C17.2431 13.3268 17.1021 13.9317 16.8966 14.4629C16.6847 15.0123 16.3979 15.4762 15.9354 15.9393C15.4722 16.4018 15.0062 16.6879 14.4591 16.9004C13.9278 17.106 13.3229 17.2463 12.4362 17.2879C12.2139 17.2978 12.0296 17.3059 11.8427 17.3124L11.681 17.3177C11.2703 17.3299 10.7951 17.3354 9.85724 17.3373H8.14424C7.2064 17.3358 6.73109 17.3309 6.32046 17.3186L6.15873 17.3134C5.97185 17.3067 5.78752 17.2983 5.5653 17.2879C4.67849 17.247 4.07433 17.106 3.54239 16.9004C2.99377 16.6887 2.52919 16.4018 2.06599 15.9393C1.6028 15.4762 1.31739 15.0102 1.10489 14.4629C0.898636 13.9317 0.759052 13.3268 0.717386 12.44C0.707486 12.2178 0.69941 12.0335 0.692869 11.8466L0.687627 11.6848C0.675435 11.2743 0.669877 10.7989 0.668077 9.8611L0.667969 8.14818C0.669519 7.21032 0.674477 6.73499 0.686702 6.32437L0.691994 6.16263C0.698635 5.97577 0.706969 5.79143 0.717386 5.56921C0.758352 4.68171 0.898636 4.07754 1.10489 3.54629C1.31669 2.99768 1.6028 2.5331 2.06599 2.06991C2.52919 1.60671 2.99447 1.32129 3.54239 1.10879C4.07364 0.902542 4.6778 0.762958 5.5653 0.721292C5.78752 0.7114 5.97185 0.703325 6.15873 0.696783L6.32046 0.691542C6.73109 0.679342 7.2064 0.673783 8.14424 0.671983L9.85724 0.671875ZM9.00074 4.83796C6.6983 4.83796 4.83405 6.70423 4.83405 9.0046C4.83405 11.307 6.70033 13.1713 9.00074 13.1713C11.3032 13.1713 13.1674 11.305 13.1674 9.0046C13.1674 6.70221 11.3011 4.83796 9.00074 4.83796ZM9.00074 6.50462C10.3815 6.50462 11.5007 7.62352 11.5007 9.0046C11.5007 10.3853 10.3818 11.5046 9.00074 11.5046C7.61999 11.5046 6.50072 10.3858 6.50072 9.0046C6.50072 7.62385 7.61957 6.50462 9.00074 6.50462ZM13.3757 3.58796C12.8013 3.58796 12.3341 4.05455 12.3341 4.62892C12.3341 5.20329 12.8007 5.6706 13.3757 5.6706C13.9501 5.6706 14.4174 5.20402 14.4174 4.62892C14.4174 4.05455 13.9493 3.58724 13.3757 3.58796Z" fill="currentColor"/>
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M9 1.5C4.859 1.5 1.5 4.859 1.5 9c0 1.418.392 2.746 1.073 3.878l-.7 2.849 2.849-.7A7.447 7.447 0 009 16.5c4.141 0 7.5-3.359 7.5-7.5S13.141 1.5 9 1.5zM0 9C0 4.03 4.03 0 9 0s9 4.03 9 9-4.03 9-9 9a8.952 8.952 0 01-4.362-1.127L0 18l1.127-4.638A8.952 8.952 0 010 9z" fill="currentColor"/>
+                                            <path d="M6.735 5.25c-.2-.443-.41-.452-.6-.46-.155-.007-.332-.007-.51-.007-.177 0-.465.066-.708.332-.244.266-.932.912-.932 2.222 0 1.31.953 2.576 1.086 2.754.133.177 1.863 2.998 4.576 4.075.638.274 1.136.438 1.524.56.64.203 1.224.175 1.685.106.514-.076 1.585-.647 1.808-1.272.222-.624.222-1.16.155-1.272-.066-.111-.244-.177-.51-.31-.266-.133-1.585-.784-1.83-.873-.244-.088-.422-.133-.6.133-.177.266-.687.873-.842 1.05-.155.177-.31.2-.576.067-.266-.134-1.121-.413-2.135-1.315-.789-.703-1.322-1.573-1.477-1.838-.155-.266-.016-.41.116-.543.12-.12.266-.31.4-.465.133-.155.177-.266.266-.443.088-.177.044-.332-.022-.465-.067-.133-.6-1.449-.821-1.985z" fill="currentColor"/>
                                         </svg>
-                                        <span class="visually-hidden">Instagram</span>
+                                        <span class="visually-hidden">WhatsApp</span>
                                     </a>
                                 </li>
+                                @endif
                             </ul>
                         </div>
                     </div>
 
-                    {{-- Colonne droite : formulaire --}}
+                    {{-- Colonne droite : formulaire (désactivé) --}}
                     <div class="col-12 col-lg-6 col-contact-form">
-                        <div class="contact-form-wrap radius18">
+                        <div class="contact-form-wrap radius18" style="position:relative;">
+                            {{-- Notice --}}
                             <div class="contact-form-headings">
                                 <h2 class="heading text-32" data-aos="fade-up">{{ __('app.contact.form_title') }}</h2>
                                 <p class="text text-16" data-aos="fade-up">
                                     {{ __('app.contact.form_subtitle') }}
                                 </p>
                             </div>
-                            <form action="#" class="form contact-form" data-aos="fade-up">
-                                @csrf
+                            {{-- Overlay de désactivation --}}
+                            <div style="position:absolute;inset:0;background:rgba(255,255,255,0.72);z-index:10;border-radius:inherit;cursor:not-allowed;display:flex;align-items:center;justify-content:center;">
+                                <div style="text-align:center;padding:1.5rem;">
+                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" style="color:var(--color-foreground-subheading);margin-bottom:.75rem;" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5"/>
+                                        <path d="M12 8V12M12 16H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                    <p class="text text-16 fw-500 mb-0" style="color:var(--color-foreground-subheading);">
+                                        Formulaire temporairement indisponible.<br>
+                                        Contactez-nous par email ou téléphone.
+                                    </p>
+                                </div>
+                            </div>
+                            <form action="#" class="form contact-form" data-aos="fade-up" aria-hidden="true">
+                                <fieldset disabled style="border:none;padding:0;margin:0;">
                                 <div class="field">
                                     <label for="ContactForm-name" class="visually-hidden">{{ __('app.contact.label_name') }}</label>
-                                    <input id="ContactForm-name" class="text-16" type="text" placeholder="{{ __('app.contact.placeholder_name') }}" name="name" required>
+                                    <input id="ContactForm-name" class="text-16" type="text" placeholder="{{ __('app.contact.placeholder_name') }}" name="name">
                                 </div>
                                 <div class="field">
                                     <label for="ContactForm-email" class="visually-hidden">{{ __('app.contact.label_email') }}</label>
-                                    <input id="ContactForm-email" class="text-16" type="email" placeholder="{{ __('app.contact.placeholder_email') }}" name="email" required>
+                                    <input id="ContactForm-email" class="text-16" type="email" placeholder="{{ __('app.contact.placeholder_email') }}" name="email">
                                 </div>
                                 <div class="field">
                                     <label for="ContactForm-subject" class="visually-hidden">{{ __('app.contact.label_subject') }}</label>
-                                    <input id="ContactForm-subject" class="text-16" type="text" placeholder="{{ __('app.contact.placeholder_subject') }}" name="subject" required>
+                                    <input id="ContactForm-subject" class="text-16" type="text" placeholder="{{ __('app.contact.placeholder_subject') }}" name="subject">
                                 </div>
                                 <div class="field">
                                     <label for="ContactForm-body" class="visually-hidden">{{ __('app.contact.label_message') }}</label>
-                                    <textarea id="ContactForm-body" class="text-16" rows="4" placeholder="{{ __('app.contact.placeholder_message') }}" name="message" required></textarea>
+                                    <textarea id="ContactForm-body" class="text-16" rows="4" placeholder="{{ __('app.contact.placeholder_message') }}" name="message"></textarea>
                                 </div>
                                 <div class="form-button">
-                                    <button type="submit" class="button button--secondary" aria-label="{{ __('app.contact.send_btn') }}">
+                                    <button type="button" class="button button--secondary" aria-disabled="true">
                                         {{ __('app.contact.send_btn') }}
                                         <span class="svg-wrapper">
                                             <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -178,6 +199,7 @@
                                         </span>
                                     </button>
                                 </div>
+                                </fieldset>
                             </form>
                         </div>
                     </div>

@@ -4,6 +4,86 @@
 @endphp
 @extends('front.layouts.app')
 
+@push('styles')
+<style>
+.other-galleries-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+@media (max-width: 1199px) { .other-galleries-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 767px)  { .other-galleries-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 479px)  { .other-galleries-grid { grid-template-columns: 1fr; } }
+
+.gallery-home-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,.07);
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+.gallery-home-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(0,0,0,.14);
+}
+.gallery-home-cover {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: #e9ecef;
+}
+.gallery-home-cover > img,
+.gallery-home-cover > video {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform .45s ease;
+}
+.gallery-home-card:hover .gallery-home-cover > img,
+.gallery-home-card:hover .gallery-home-cover > video { transform: scale(1.07); }
+.gallery-home-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    color: #adb5bd;
+}
+.gallery-home-badge {
+    position: absolute; top: 10px; right: 10px;
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(0,0,0,.55); backdrop-filter: blur(6px);
+    color: #fff; font-size: 12px; font-weight: 600;
+    padding: 4px 10px; border-radius: 999px; line-height: 1;
+}
+.gallery-home-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,.75) 0%, rgba(0,0,0,.1) 55%, transparent 100%);
+    display: flex; flex-direction: column;
+    justify-content: flex-end; padding: 14px; gap: 8px;
+    opacity: 0; transition: opacity .35s ease;
+}
+.gallery-home-card:hover .gallery-home-overlay { opacity: 1; }
+.gallery-home-cta {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: #fff; font-size: 13px; font-weight: 600;
+    letter-spacing: .02em; text-transform: uppercase;
+}
+.gallery-home-info {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px; gap: 8px;
+}
+.gallery-home-title {
+    color: var(--color-foreground-heading);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.gallery-home-count {
+    color: var(--color-foreground-subheading);
+    white-space: nowrap; flex-shrink: 0;
+}
+</style>
+@endpush
+
 @section('title', $gallery->titre . ' - ' . ($settings->company_name ?? 'EYWEP'))
 @section('description', Str::limit(strip_tags($gallery->description ?? ''), 160))
 
@@ -76,38 +156,65 @@
             {{-- Other galleries --}}
             @if (isset($otherGalleries) && $otherGalleries->isNotEmpty())
             <div class="mt-100">
-                <div class="section-headings mb-5">
+                <div class="section-headings mb-40">
+                    <div class="subheading text-20 subheading-bg">
+                        <svg class="icon icon-14" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                            <path d="M8.71401 5.28599C11.7514 5.4205 14 5.9412 14 7C14 8.0588 11.7514 8.5795 8.71401 8.71401C8.5795 11.7514 8.0588 14 7 14C5.9412 14 5.4205 11.7514 5.28599 8.71401C2.2486 8.5795 0 8.0588 0 7C0 5.94119 2.2486 5.4205 5.28599 5.28599C5.4205 2.2486 5.9412 0 7 0C8.0588 0 8.5795 2.2486 8.71401 5.28599Z" fill="currentColor"/>
+                        </svg>
+                        {{ __('app.pages.galleries') }}
+                    </div>
                     <h2 class="heading text-40 fw-700">Autres galeries</h2>
                 </div>
-                <div class="product-grid">
+                <div class="other-galleries-grid">
                     @foreach ($otherGalleries as $other)
                     @php
-                        $otherFirstMedia = $other->medias->first();
-                        $otherIsVideo = $otherFirstMedia && $otherFirstMedia->media_type === 'video';
-                        $otherSrc = $otherFirstMedia ? Storage::url($otherFirstMedia->media_path) : asset('front-assets/consulo/img/project/card/1.jpg');
+                        $otherImages  = $other->medias->where('media_type', 'image');
+                        $otherFirst   = $other->medias->first();
+                        $otherIsVideo = $otherFirst && $otherFirst->media_type === 'video';
+                        $otherCover   = $otherImages->first();
+                        $otherTotal   = $other->medias->count();
                     @endphp
-                    <div class="card-project radius18">
-                        <div class="card-project-img radius18">
-                            @if ($otherIsVideo)
-                                <video src="{{ $otherSrc }}" muted preload="none" class="radius18" style="width:100%;height:100%;object-fit:cover;"></video>
+                    <a href="{{ route('front.galleries.show', $other) }}"
+                       class="gallery-home-card"
+                       aria-label="{{ $other->titre }}"
+                       data-aos="fade-up"
+                       data-aos-delay="{{ $loop->index * 60 }}">
+                        <div class="gallery-home-cover">
+                            @if ($otherIsVideo && $otherFirst)
+                                <video src="{{ Storage::url($otherFirst->media_path) }}" muted preload="none"></video>
+                            @elseif ($otherCover)
+                                <img src="{{ Storage::url($otherCover->media_path) }}" alt="{{ $other->titre }}" loading="lazy">
                             @else
-                                <img src="{{ $otherSrc }}" alt="{{ $other->titre }}" loading="lazy" class="radius18">
+                                <div class="gallery-home-placeholder">
+                                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
+                                        <path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z" stroke="currentColor" stroke-width="1.5"/>
+                                        <circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor" stroke-width="1.5"/>
+                                        <path d="m21 15-5-5L5 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
                             @endif
-                        </div>
-                        <div class="card-project-overlay radius18">
-                            <div class="card-project-content">
-                                <h3 class="heading text-20 fw-700 text-white mb-1">{{ $other->titre }}</h3>
-                                <span class="badge bg-white text-dark">{{ $other->medias->count() }} média(s)</span>
-                            </div>
-                            <a href="{{ route('front.galleries.show', $other) }}" class="card-project-link" aria-label="Voir {{ $other->titre }}">
-                                <svg viewBox="0 0 64 64" fill="none" style="width:48px;height:48px;">
-                                    <circle cx="32" cy="32" r="32" fill="white"/>
-                                    <path d="M26.167 39C25.817 39 25.583 38.883 25.350 38.650C24.883 38.183 24.883 37.483 25.350 37.017L37.017 25.350C37.483 24.883 38.183 24.883 38.650 25.350C39.117 25.817 39.117 26.517 38.650 26.983L26.983 38.650C26.750 38.883 26.517 39 26.167 39Z" fill="#20282D"/>
-                                    <path d="M37.833 37.833C37.133 37.833 36.667 37.367 36.667 36.667V27.333H27.333C26.633 27.333 26.167 26.867 26.167 26.167C26.167 25.467 26.633 25 27.333 25H37.833C38.533 25 39.000 25.467 39.000 26.167V36.667C39.000 37.367 38.533 37.833 37.833 37.833Z" fill="#20282D"/>
+                            <span class="gallery-home-badge">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+                                    <path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z" stroke="currentColor" stroke-width="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor" stroke-width="2"/>
+                                    <path d="m21 15-5-5L5 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                                 </svg>
-                            </a>
+                                {{ $otherTotal }}
+                            </span>
+                            <div class="gallery-home-overlay">
+                                <span class="gallery-home-cta">
+                                    {{ __('app.home.see_gallery') }}
+                                    <svg width="13" height="13" viewBox="0 0 20 20" fill="none">
+                                        <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
+                                    </svg>
+                                </span>
+                            </div>
                         </div>
-                    </div>
+                        <div class="gallery-home-info">
+                            <span class="gallery-home-title heading text-16 fw-600">{{ $other->titre }}</span>
+                            <span class="gallery-home-count text text-13">{{ $otherTotal }} média{{ $otherTotal > 1 ? 's' : '' }}</span>
+                        </div>
+                    </a>
                     @endforeach
                 </div>
             </div>

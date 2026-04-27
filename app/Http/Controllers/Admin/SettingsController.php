@@ -42,9 +42,13 @@ class SettingsController extends Controller
             'hero_title' => ['nullable', 'string', 'max:255'],
             'hero_subtitle' => ['nullable', 'string'],
             'company_address' => ['nullable', 'string', 'max:255'],
-            'company_location' => ['nullable', 'url', 'max:255'],
+            'company_location' => ['nullable', 'url', 'max:500'],
             'company_phone' => ['nullable', 'string', 'max:255'],
             'company_email' => ['nullable', 'email', 'max:255'],
+            'social_facebook' => ['nullable', 'url', 'max:255'],
+            'social_linkedin' => ['nullable', 'url', 'max:255'],
+            'social_twitter' => ['nullable', 'url', 'max:255'],
+            'social_whatsapp' => ['nullable', 'url', 'max:255'],
             'remove_hero_images' => ['nullable', 'boolean'],
             'remove_hero_video_file' => ['nullable', 'boolean'],
         ]);
@@ -60,6 +64,10 @@ class SettingsController extends Controller
             'company_location' => $validated['company_location'] ?? null,
             'company_phone' => $validated['company_phone'] ?? null,
             'company_email' => $validated['company_email'] ?? null,
+            'social_facebook' => $validated['social_facebook'] ?? null,
+            'social_linkedin' => $validated['social_linkedin'] ?? null,
+            'social_twitter' => $validated['social_twitter'] ?? null,
+            'social_whatsapp' => $validated['social_whatsapp'] ?? null,
         ];
 
         if ($request->hasFile('company_logo')) {

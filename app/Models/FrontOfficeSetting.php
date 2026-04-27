@@ -20,6 +20,10 @@ class FrontOfficeSetting extends Model
         'company_location',
         'company_phone',
         'company_email',
+        'social_facebook',
+        'social_linkedin',
+        'social_twitter',
+        'social_whatsapp',
     ];
 
     protected $casts = [

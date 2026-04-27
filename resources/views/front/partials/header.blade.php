@@ -1,7 +1,12 @@
 @php
     use Illuminate\Support\Facades\Storage;
     $currentLocale  = app()->getLocale();
-    $locales        = ['fr' => 'fr', 'pt' => 'pt', 'en' => 'gb'];
+    $flagSvgs = [
+        'fr' => '<svg width="20" height="14" viewBox="0 0 20 14" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;display:inline-block;vertical-align:middle;flex-shrink:0;"><rect width="7" height="14" fill="#002395"/><rect x="7" width="6" height="14" fill="#fff"/><rect x="13" width="7" height="14" fill="#ED2939"/></svg>',
+        'pt' => '<svg width="20" height="14" viewBox="0 0 20 14" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;display:inline-block;vertical-align:middle;flex-shrink:0;"><rect width="8" height="14" fill="#006600"/><rect x="8" width="12" height="14" fill="#CC0000"/><circle cx="8" cy="7" r="3.5" fill="#FFD700" stroke="#006600" stroke-width=".5"/></svg>',
+        'en' => '<svg width="20" height="14" viewBox="0 0 20 14" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;display:inline-block;vertical-align:middle;flex-shrink:0;"><rect width="20" height="14" fill="#012169"/><path d="M0,0 L20,14 M20,0 L0,14" stroke="#fff" stroke-width="2.8"/><path d="M0,0 L20,14 M20,0 L0,14" stroke="#C8102E" stroke-width="1.5"/><path d="M10,0 V14 M0,7 H20" stroke="#fff" stroke-width="4"/><path d="M10,0 V14 M0,7 H20" stroke="#C8102E" stroke-width="2.5"/></svg>',
+    ];
+    $locales = ['fr' => 'fr', 'pt' => 'pt', 'en' => 'en'];
 
     // Génère une URL pour la même page dans une autre locale
     $routeName      = request()->route()?->getName() ?? 'front.home';
@@ -137,19 +142,19 @@
                             aria-expanded="false"
                             style="padding: 6px 12px; font-size: 13px; min-width: 0;"
                         >
-                            <span class="fi fi-{{ $locales[$currentLocale] }}" style="border-radius:2px;"></span>
+                            {!! $flagSvgs[$currentLocale] !!}
                             {{ strtoupper($currentLocale) }}
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end eywep-lang-menu">
-                            @foreach ($locales as $locale => $flag)
+                            @foreach ($locales as $locale => $code)
                                 @if ($locale !== $currentLocale)
                                     <li>
                                         <a
                                             class="dropdown-item d-flex align-items-center gap-2"
                                             href="{{ $switchLocale($locale) }}"
                                         >
-                                            <span class="fi fi-{{ $flag }}" style="border-radius:2px;"></span>
-                                        {{ __('app.lang.' . $locale) }}
+                                            {!! $flagSvgs[$locale] !!}
+                                            {{ __('app.lang.' . $locale) }}
                                         </a>
                                     </li>
                                 @endif

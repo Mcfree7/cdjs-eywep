@@ -502,8 +502,9 @@
                                 </div>
 
                                 <div class="col-md-12">
-                                    <label for="company_location" class="form-label">Lien Google Maps / localisation</label>
-                                    <input type="url" name="company_location" id="company_location" class="form-control" value="{{ old('company_location', $settings->company_location) }}" placeholder="https://maps.google.com/...">
+                                    <label for="company_location" class="form-label">URL d'intégration Google Maps</label>
+                                    <input type="url" name="company_location" id="company_location" class="form-control" value="{{ old('company_location', $settings->company_location) }}" placeholder="https://www.google.com/maps/embed?pb=...">
+                                    <small class="text-muted d-block mt-1">Coller l'URL d'intégration Maps (iframe src). Par défaut : Abuja, Nigeria.</small>
                                 </div>
 
                                 <div class="col-md-6">
@@ -518,6 +519,33 @@
                             </div>
                         </div>
                     </div>
+                    <div class="card settings-card">
+                        <div class="card-header">
+                            <h3 class="card-title mb-0">Réseaux sociaux</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    <label for="social_facebook" class="form-label">Facebook</label>
+                                    <input type="url" name="social_facebook" id="social_facebook" class="form-control" value="{{ old('social_facebook', $settings->social_facebook) }}" placeholder="https://www.facebook.com/...">
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="social_linkedin" class="form-label">LinkedIn</label>
+                                    <input type="url" name="social_linkedin" id="social_linkedin" class="form-control" value="{{ old('social_linkedin', $settings->social_linkedin) }}" placeholder="https://www.linkedin.com/...">
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="social_twitter" class="form-label">Twitter / X</label>
+                                    <input type="url" name="social_twitter" id="social_twitter" class="form-control" value="{{ old('social_twitter', $settings->social_twitter) }}" placeholder="https://x.com/...">
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="social_whatsapp" class="form-label">WhatsApp</label>
+                                    <input type="url" name="social_whatsapp" id="social_whatsapp" class="form-control" value="{{ old('social_whatsapp', $settings->social_whatsapp) }}" placeholder="https://wa.me/NUMERO">
+                                    <small class="text-muted d-block mt-1">Format : https://wa.me/22600000000 (sans le +)</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="card settings-card">
                         <div class="card-header">
                             <h3 class="card-title mb-0">Apercu de la marque</h3>
