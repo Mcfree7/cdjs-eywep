@@ -172,7 +172,7 @@ class CandidaturesController extends Controller
 
     public function destroy(Candidature $candidature)
     {
-        foreach (['cv_path', 'piece_identite_path', 'lettre_motivation_path'] as $field) {
+        foreach (['cv_path', 'piece_identite_path', 'lettre_motivation_path', 'business_plan_path', 'plan_financier_path', 'documents_legaux_path', 'autres_activites_path'] as $field) {
             if ($candidature->$field) {
                 Storage::disk('public')->delete($candidature->$field);
             }

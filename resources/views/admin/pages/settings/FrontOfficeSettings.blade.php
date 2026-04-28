@@ -547,6 +547,31 @@
                     </div>
 
                     <div class="card settings-card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h3 class="card-title mb-0">Liens utiles du footer</h3>
+                            <button type="button" class="btn btn-sm btn-outline-primary" id="add-footer-link">
+                                <i class="bi bi-plus-lg me-1"></i>Ajouter
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="footer-links-list">
+                                @forelse ($settings->footer_links ?? [] as $i => $link)
+                                    <div class="footer-link-row d-flex gap-2 mb-2 align-items-center">
+                                        <input type="text" name="footer_links[{{ $i }}][label]" class="form-control form-control-sm" placeholder="Libellé" value="{{ $link['label'] ?? '' }}">
+                                        <input type="text" name="footer_links[{{ $i }}][url]" class="form-control form-control-sm" placeholder="URL ou /chemin" value="{{ $link['url'] ?? '' }}">
+                                        <button type="button" class="btn btn-sm btn-outline-danger remove-footer-link flex-shrink-0" title="Supprimer">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                @empty
+                                    <p class="text-muted small mb-2">Aucun lien configuré.</p>
+                                @endforelse
+                            </div>
+                            <small class="text-muted">Ces liens apparaîtront dans le footer sous "Liens utiles".</small>
+                        </div>
+                    </div>
+
+                    <div class="card settings-card">
                         <div class="card-header">
                             <h3 class="card-title mb-0">Apercu de la marque</h3>
                         </div>
@@ -757,6 +782,48 @@
             updateLogoPreview();
             updateCarouselPreview();
             updateVideoPreview();
+
+            // Liens utiles du footer
+            const footerLinksList = document.getElementById('footer-links-list');
+            const addFooterLinkBtn = document.getElementById('add-footer-link');
+
+            function getNextIndex() {
+                return footerLinksList.querySelectorAll('.footer-link-row').length;
+            }
+
+            function removePlaceholder() {
+                const placeholder = footerLinksList.querySelector('p.text-muted');
+                if (placeholder) placeholder.remove();
+            }
+
+            addFooterLinkBtn.addEventListener('click', function () {
+                removePlaceholder();
+                const idx = getNextIndex();
+                const row = document.createElement('div');
+                row.className = 'footer-link-row d-flex gap-2 mb-2 align-items-center';
+                row.innerHTML = `
+                    <input type="text" name="footer_links[${idx}][label]" class="form-control form-control-sm" placeholder="Libellé">
+                    <input type="text" name="footer_links[${idx}][url]" class="form-control form-control-sm" placeholder="URL ou /chemin">
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-footer-link flex-shrink-0" title="Supprimer">
+                        <i class="bi bi-trash"></i>
+                    </button>`;
+                footerLinksList.appendChild(row);
+            });
+
+            footerLinksList.addEventListener('click', function (e) {
+                const btn = e.target.closest('.remove-footer-link');
+                if (!btn) return;
+                btn.closest('.footer-link-row').remove();
+                // Re-indexer les champs pour garder des indices continus
+                footerLinksList.querySelectorAll('.footer-link-row').forEach(function (row, i) {
+                    row.querySelectorAll('input').forEach(function (input) {
+                        input.name = input.name.replace(/footer_links\[\d+\]/, `footer_links[${i}]`);
+                    });
+                });
+                if (!footerLinksList.querySelector('.footer-link-row')) {
+                    footerLinksList.innerHTML = '<p class="text-muted small mb-2">Aucun lien configuré.</p>';
+                }
+            });
         });
     </script>
 @endpush

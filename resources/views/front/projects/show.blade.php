@@ -247,10 +247,11 @@
                             {{-- Pays / Sexe --}}
                             <div class="row g-3 mb-3">
                                 <div class="col-12 col-sm-6">
-                                    <label for="pays" class="form-label text text-14 fw-600">{{ __('app.apply.label_pays') }}</label>
+                                    <label for="pays" class="form-label text text-14 fw-600">{{ __('app.apply.label_pays') }} <span class="text-danger">*</span></label>
                                     <select
                                         class="form-select radius18 @error('pays') is-invalid @enderror"
                                         id="pays" name="pays"
+                                        required
                                     >
                                         <option value="">{{ __('app.apply.select_default') }}</option>
                                         @foreach (Countries::list() as $code => $name)
@@ -260,10 +261,11 @@
                                     @error('pays')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 <div class="col-12 col-sm-6">
-                                    <label for="sexe" class="form-label text text-14 fw-600">{{ __('app.apply.label_sexe') }}</label>
+                                    <label for="sexe" class="form-label text text-14 fw-600">{{ __('app.apply.label_sexe') }} <span class="text-danger">*</span></label>
                                     <select
                                         class="form-select radius18 @error('sexe') is-invalid @enderror"
                                         id="sexe" name="sexe"
+                                        required
                                     >
                                         <option value="">{{ __('app.apply.select_default') }}</option>
                                         <option value="homme" {{ old('sexe') === 'homme' ? 'selected' : '' }}>{{ __('app.apply.sexe_homme') }}</option>
@@ -351,6 +353,106 @@
                                 @error('cv')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
+                            {{-- Documents complémentaires --}}
+                            <div class="mt-2 mb-3 pt-3" style="border-top: 1px solid rgba(0,0,0,0.08);">
+                                <p class="text text-14 fw-600 mb-1">{{ __('app.apply.section_docs') }}</p>
+                                <p class="text text-12" style="color:var(--color-foreground-subheading);">{{ __('app.apply.section_docs_hint') }}</p>
+                            </div>
+
+                            {{-- Business plan simplifié --}}
+                            <div class="mb-3">
+                                <label for="business_plan" class="form-label text text-14 fw-600 d-flex align-items-center gap-2">
+                                    {{ __('app.apply.label_business_plan') }} <span class="text-danger">*</span>
+                                    <span class="text text-12 fw-400" style="color:var(--color-foreground-subheading);">{{ __('app.apply.label_pdf_hint') }}</span>
+                                    <button type="button" class="btn btn-link p-0 ms-1 lh-1 apply-info-btn"
+                                        data-bs-toggle="popover"
+                                        data-bs-trigger="hover focus"
+                                        data-bs-html="true"
+                                        data-bs-placement="left"
+                                        data-bs-content="{{ __('app.apply.tooltip_business_plan') }}"
+                                        aria-label="{{ __('app.apply.tooltip_aria') }}"
+                                    ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-foreground-subheading);"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button>
+                                </label>
+                                <input
+                                    type="file"
+                                    class="form-control radius18 @error('business_plan') is-invalid @enderror"
+                                    id="business_plan" name="business_plan"
+                                    accept=".pdf,application/pdf"
+                                    required
+                                >
+                                @error('business_plan')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+
+                            {{-- Plan financier prévisionnel --}}
+                            <div class="mb-3">
+                                <label for="plan_financier" class="form-label text text-14 fw-600 d-flex align-items-center gap-2">
+                                    {{ __('app.apply.label_plan_financier') }} <span class="text-danger">*</span>
+                                    <span class="text text-12 fw-400" style="color:var(--color-foreground-subheading);">{{ __('app.apply.label_pdf_hint') }}</span>
+                                    <button type="button" class="btn btn-link p-0 ms-1 lh-1 apply-info-btn"
+                                        data-bs-toggle="popover"
+                                        data-bs-trigger="hover focus"
+                                        data-bs-html="true"
+                                        data-bs-placement="left"
+                                        data-bs-content="{{ __('app.apply.tooltip_plan_financier') }}"
+                                        aria-label="{{ __('app.apply.tooltip_aria') }}"
+                                    ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-foreground-subheading);"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button>
+                                </label>
+                                <input
+                                    type="file"
+                                    class="form-control radius18 @error('plan_financier') is-invalid @enderror"
+                                    id="plan_financier" name="plan_financier"
+                                    accept=".pdf,application/pdf"
+                                    required
+                                >
+                                @error('plan_financier')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+
+                            {{-- Documents légaux --}}
+                            <div class="mb-3">
+                                <label for="documents_legaux" class="form-label text text-14 fw-600 d-flex align-items-center gap-2">
+                                    {{ __('app.apply.label_documents_legaux') }}
+                                    <span class="text text-12 fw-400" style="color:var(--color-foreground-subheading);">{{ __('app.apply.label_pdf_hint') }}</span>
+                                    <button type="button" class="btn btn-link p-0 ms-1 lh-1 apply-info-btn"
+                                        data-bs-toggle="popover"
+                                        data-bs-trigger="hover focus"
+                                        data-bs-html="true"
+                                        data-bs-placement="left"
+                                        data-bs-content="{{ __('app.apply.tooltip_documents_legaux') }}"
+                                        aria-label="{{ __('app.apply.tooltip_aria') }}"
+                                    ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-foreground-subheading);"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button>
+                                </label>
+                                <input
+                                    type="file"
+                                    class="form-control radius18 @error('documents_legaux') is-invalid @enderror"
+                                    id="documents_legaux" name="documents_legaux"
+                                    accept=".pdf,application/pdf"
+                                >
+                                @error('documents_legaux')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+
+                            {{-- Autres activités --}}
+                            <div class="mb-4">
+                                <label for="autres_activites" class="form-label text text-14 fw-600 d-flex align-items-center gap-2">
+                                    {{ __('app.apply.label_autres_activites') }}
+                                    <span class="text text-12 fw-400" style="color:var(--color-foreground-subheading);">{{ __('app.apply.label_pdf_hint') }}</span>
+                                    <button type="button" class="btn btn-link p-0 ms-1 lh-1 apply-info-btn"
+                                        data-bs-toggle="popover"
+                                        data-bs-trigger="hover focus"
+                                        data-bs-html="true"
+                                        data-bs-placement="left"
+                                        data-bs-content="{{ __('app.apply.tooltip_autres_activites') }}"
+                                        aria-label="{{ __('app.apply.tooltip_aria') }}"
+                                    ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-foreground-subheading);"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button>
+                                </label>
+                                <input
+                                    type="file"
+                                    class="form-control radius18 @error('autres_activites') is-invalid @enderror"
+                                    id="autres_activites" name="autres_activites"
+                                    accept=".pdf,application/pdf"
+                                >
+                                @error('autres_activites')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+
                             <button type="submit" class="button button--primary w-100 justify-content-center">
                                 {{ __('app.apply.submit') }}
                                 <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -370,3 +472,13 @@
 
 </main>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.apply-info-btn').forEach(function (el) {
+        new bootstrap.Popover(el, { html: true, sanitize: false });
+    });
+});
+</script>
+@endpush

@@ -150,26 +150,12 @@
 
                     {{-- Colonne droite : formulaire (désactivé) --}}
                     <div class="col-12 col-lg-6 col-contact-form">
-                        <div class="contact-form-wrap radius18" style="position:relative;">
-                            {{-- Notice --}}
+                        <div class="contact-form-wrap radius18">
                             <div class="contact-form-headings">
                                 <h2 class="heading text-32" data-aos="fade-up">{{ __('app.contact.form_title') }}</h2>
                                 <p class="text text-16" data-aos="fade-up">
                                     {{ __('app.contact.form_subtitle') }}
                                 </p>
-                            </div>
-                            {{-- Overlay de désactivation --}}
-                            <div style="position:absolute;inset:0;background:rgba(255,255,255,0.72);z-index:10;border-radius:inherit;cursor:not-allowed;display:flex;align-items:center;justify-content:center;">
-                                <div style="text-align:center;padding:1.5rem;">
-                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" style="color:var(--color-foreground-subheading);margin-bottom:.75rem;" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5"/>
-                                        <path d="M12 8V12M12 16H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                    </svg>
-                                    <p class="text text-16 fw-500 mb-0" style="color:var(--color-foreground-subheading);">
-                                        Formulaire temporairement indisponible.<br>
-                                        Contactez-nous par email ou téléphone.
-                                    </p>
-                                </div>
                             </div>
                             <form action="#" class="form contact-form" data-aos="fade-up" aria-hidden="true">
                                 <fieldset disabled style="border:none;padding:0;margin:0;">

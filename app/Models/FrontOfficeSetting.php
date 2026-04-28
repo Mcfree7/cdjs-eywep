@@ -24,9 +24,11 @@ class FrontOfficeSetting extends Model
         'social_linkedin',
         'social_twitter',
         'social_whatsapp',
+        'footer_links',
     ];
 
     protected $casts = [
-        'hero_images' => 'array',
+        'hero_images'   => 'array',
+        'footer_links'  => 'array',
     ];
 }

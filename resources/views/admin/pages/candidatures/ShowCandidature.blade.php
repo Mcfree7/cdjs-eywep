@@ -136,6 +136,54 @@
                                     @endif
                                 </span>
                             </div>
+                            <div class="info-row">
+                                <span class="info-label">Business plan</span>
+                                <span class="info-value">
+                                    @if ($candidature->business_plan_path)
+                                        <a href="{{ asset('storage/' . $candidature->business_plan_path) }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                            <i class="bi bi-file-earmark-pdf me-1"></i> Télécharger
+                                        </a>
+                                    @else
+                                        <span class="text-muted fst-italic">Non fourni</span>
+                                    @endif
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Plan financier</span>
+                                <span class="info-value">
+                                    @if ($candidature->plan_financier_path)
+                                        <a href="{{ asset('storage/' . $candidature->plan_financier_path) }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                            <i class="bi bi-file-earmark-pdf me-1"></i> Télécharger
+                                        </a>
+                                    @else
+                                        <span class="text-muted fst-italic">Non fourni</span>
+                                    @endif
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Docs légaux</span>
+                                <span class="info-value">
+                                    @if ($candidature->documents_legaux_path)
+                                        <a href="{{ asset('storage/' . $candidature->documents_legaux_path) }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                            <i class="bi bi-file-earmark-pdf me-1"></i> Télécharger
+                                        </a>
+                                    @else
+                                        <span class="text-muted fst-italic">Non fourni</span>
+                                    @endif
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Autres activités</span>
+                                <span class="info-value">
+                                    @if ($candidature->autres_activites_path)
+                                        <a href="{{ asset('storage/' . $candidature->autres_activites_path) }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                            <i class="bi bi-file-earmark-pdf me-1"></i> Télécharger
+                                        </a>
+                                    @else
+                                        <span class="text-muted fst-italic">Non fourni</span>
+                                    @endif
+                                </span>
+                            </div>
                         </div>
                     </div>
 
@@ -218,7 +266,7 @@
                         </div>
                     </div>
 
-                    <div class="card">
+                    <div class="card mb-4">
                         <div class="card-header d-flex align-items-center gap-2">
                             <i class="bi bi-file-earmark-person text-success"></i>
                             <h5 class="mb-0">CV</h5>
@@ -237,6 +285,75 @@
                             @endif
                         </div>
                     </div>
+
+                    {{-- Documents complémentaires --}}
+                    @if ($candidature->business_plan_path || $candidature->plan_financier_path || $candidature->documents_legaux_path || $candidature->autres_activites_path)
+                    <h5 class="fw-semibold mb-3 mt-2">Documents complémentaires</h5>
+                    @endif
+
+                    @if ($candidature->business_plan_path)
+                    <div class="card mb-4">
+                        <div class="card-header d-flex align-items-center gap-2">
+                            <i class="bi bi-file-earmark-bar-graph text-warning"></i>
+                            <h5 class="mb-0">Business plan simplifié</h5>
+                        </div>
+                        <div class="card-body p-0" style="min-height: 480px;">
+                            <iframe
+                                src="{{ asset('storage/' . $candidature->business_plan_path) }}"
+                                style="width:100%; height:480px; border:0; border-radius: 0 0 0.375rem 0.375rem;"
+                                title="Business plan"
+                            ></iframe>
+                        </div>
+                    </div>
+                    @endif
+
+                    @if ($candidature->plan_financier_path)
+                    <div class="card mb-4">
+                        <div class="card-header d-flex align-items-center gap-2">
+                            <i class="bi bi-cash-stack text-info"></i>
+                            <h5 class="mb-0">Plan financier prévisionnel</h5>
+                        </div>
+                        <div class="card-body p-0" style="min-height: 480px;">
+                            <iframe
+                                src="{{ asset('storage/' . $candidature->plan_financier_path) }}"
+                                style="width:100%; height:480px; border:0; border-radius: 0 0 0.375rem 0.375rem;"
+                                title="Plan financier"
+                            ></iframe>
+                        </div>
+                    </div>
+                    @endif
+
+                    @if ($candidature->documents_legaux_path)
+                    <div class="card mb-4">
+                        <div class="card-header d-flex align-items-center gap-2">
+                            <i class="bi bi-file-earmark-text text-secondary"></i>
+                            <h5 class="mb-0">Documents légaux de l'entreprise</h5>
+                        </div>
+                        <div class="card-body p-0" style="min-height: 480px;">
+                            <iframe
+                                src="{{ asset('storage/' . $candidature->documents_legaux_path) }}"
+                                style="width:100%; height:480px; border:0; border-radius: 0 0 0.375rem 0.375rem;"
+                                title="Documents légaux"
+                            ></iframe>
+                        </div>
+                    </div>
+                    @endif
+
+                    @if ($candidature->autres_activites_path)
+                    <div class="card mb-4">
+                        <div class="card-header d-flex align-items-center gap-2">
+                            <i class="bi bi-collection text-primary"></i>
+                            <h5 class="mb-0">Autres activités / Preuves d'activité</h5>
+                        </div>
+                        <div class="card-body p-0" style="min-height: 480px;">
+                            <iframe
+                                src="{{ asset('storage/' . $candidature->autres_activites_path) }}"
+                                style="width:100%; height:480px; border:0; border-radius: 0 0 0.375rem 0.375rem;"
+                                title="Autres activités"
+                            ></iframe>
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
 

@@ -49,6 +49,9 @@ class SettingsController extends Controller
             'social_linkedin' => ['nullable', 'url', 'max:255'],
             'social_twitter' => ['nullable', 'url', 'max:255'],
             'social_whatsapp' => ['nullable', 'url', 'max:255'],
+            'footer_links' => ['nullable', 'array'],
+            'footer_links.*.label' => ['required_with:footer_links.*', 'string', 'max:100'],
+            'footer_links.*.url' => ['required_with:footer_links.*', 'string', 'max:500'],
             'remove_hero_images' => ['nullable', 'boolean'],
             'remove_hero_video_file' => ['nullable', 'boolean'],
         ]);
@@ -68,6 +71,10 @@ class SettingsController extends Controller
             'social_linkedin' => $validated['social_linkedin'] ?? null,
             'social_twitter' => $validated['social_twitter'] ?? null,
             'social_whatsapp' => $validated['social_whatsapp'] ?? null,
+            'footer_links' => array_values(array_filter(
+                $validated['footer_links'] ?? [],
+                fn($l) => !empty($l['label']) && !empty($l['url'])
+            )),
         ];
 
         if ($request->hasFile('company_logo')) {

@@ -19,6 +19,10 @@ class Candidature extends Model
         'lettre_motivation_path',
         'cv_path',
         'piece_identite_path',
+        'business_plan_path',
+        'plan_financier_path',
+        'documents_legaux_path',
+        'autres_activites_path',
         'statut',
     ];
 

@@ -28,10 +28,11 @@ return [
 
     // ── Footer ───────────────────────────────────────────────────────────────
     'footer' => [
-        'navigation' => 'Navigation',
-        'contact'    => 'Contact',
-        'location'   => 'Voir la localisation',
-        'copyright'  => 'Tous droits réservés.',
+        'navigation'   => 'Navigation',
+        'contact'      => 'Contact',
+        'useful_links' => 'Liens utiles',
+        'location'     => 'Voir la localisation',
+        'copyright'    => 'Tous droits réservés.',
     ],
 
     // ── Bannières de page ─────────────────────────────────────────────────
@@ -177,12 +178,29 @@ return [
         'sexe_autre'         => 'Autre',
         'submit'             => 'Envoyer ma candidature',
         'close_alert'        => 'Fermer',
+
+        'section_docs'       => 'Documents complémentaires',
+        'section_docs_hint'  => 'Ces documents sont facultatifs mais renforcent votre dossier de candidature.',
+        'label_pdf_hint'     => '(PDF, max 10 Mo)',
+        'tooltip_aria'       => 'En savoir plus',
+
+        'label_business_plan'    => 'Business plan simplifié',
+        'tooltip_business_plan'  => '<strong>Présentation de l\'idée ou de l\'entreprise</strong><br>• Problème identifié et solution proposée<br>• Marché cible et clients<br>• Modèle économique<br>• Objectifs à court et moyen terme<br>• Impact attendu (économique, social, etc.)',
+
+        'label_plan_financier'   => 'Plan financier prévisionnel',
+        'tooltip_plan_financier' => '• Budget estimatif (coûts de démarrage ou d\'expansion)<br>• Besoins de financement<br>• Sources de financement envisagées',
+
+        'label_documents_legaux'   => 'Documents légaux de l\'entreprise (si existante)',
+        'tooltip_documents_legaux' => '• Registre de commerce ou équivalent<br>• Statuts de l\'entreprise<br>• Numéro d\'identification fiscale',
+
+        'label_autres_activites'   => 'Autres activités / Preuves d\'activité',
+        'tooltip_autres_activites' => '• Photos des produits ou services<br>• Lien vers site web ou réseaux sociaux<br>• Témoignages clients ou partenaires',
     ],
 
     // ── Page Contact ──────────────────────────────────────────────────────
     'contact' => [
         'section_label'   => 'Contactez-nous',
-        'heading'         => 'Construisons quelque chose ensemble',
+        'heading'         => 'Contactez-nous',
         'address_label'   => 'Notre adresse',
         'phone_label'     => 'Téléphone',
         'email_label'     => 'Email',
@@ -207,6 +225,7 @@ return [
         'status_open'   => 'Ouvert',
         'status_closed' => 'Fermé',
         'status_arch'   => 'Archivé',
+        'apply_success' => 'Votre candidature a bien été soumise. Un email de confirmation vous a été envoyé.',
     ],
 
     // ── Page d'accueil ────────────────────────────────────────────────────

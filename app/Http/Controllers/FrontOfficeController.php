@@ -318,18 +318,26 @@ class FrontOfficeController extends Controller
         $validated = $request->validate([
             'nom'                => ['required', 'string', 'max:100'],
             'prenom'             => ['required', 'string', 'max:100'],
-            'pays'               => ['nullable', 'string', 'max:100'],
-            'sexe'               => ['nullable', 'in:homme,femme,autre'],
+            'pays'               => ['required', 'string', 'max:100'],
+            'sexe'               => ['required', 'in:homme,femme,autre'],
             'email'              => ['required', 'email', 'max:255'],
             'telephone'          => ['nullable', 'string', 'max:30'],
             'lettre_motivation'  => ['required', 'file', 'mimes:pdf', 'max:5120'],
             'cv'                 => ['required', 'file', 'mimes:pdf,doc,docx', 'max:5120'],
             'piece_identite'     => ['required', 'file', 'mimes:pdf', 'max:5120'],
+            'business_plan'      => ['required', 'file', 'mimes:pdf', 'max:10240'],
+            'plan_financier'     => ['required', 'file', 'mimes:pdf', 'max:10240'],
+            'documents_legaux'   => ['nullable', 'file', 'mimes:pdf', 'max:10240'],
+            'autres_activites'   => ['nullable', 'file', 'mimes:pdf', 'max:10240'],
         ]);
 
-        $lettreMotivationPath = $request->file('lettre_motivation')->store('candidatures/lettres-motivation', 'public');
-        $cvPath               = $request->file('cv')->store('candidatures/cv', 'public');
-        $pieceIdentitePath    = $request->file('piece_identite')->store('candidatures/pieces-identite', 'public');
+        $lettreMotivationPath  = $request->file('lettre_motivation')->store('candidatures/lettres-motivation', 'public');
+        $cvPath                = $request->file('cv')->store('candidatures/cv', 'public');
+        $pieceIdentitePath     = $request->file('piece_identite')->store('candidatures/pieces-identite', 'public');
+        $businessPlanPath      = $request->hasFile('business_plan')    ? $request->file('business_plan')->store('candidatures/business-plans', 'public')       : null;
+        $planFinancierPath     = $request->hasFile('plan_financier')   ? $request->file('plan_financier')->store('candidatures/plans-financiers', 'public')    : null;
+        $documentsLegauxPath   = $request->hasFile('documents_legaux') ? $request->file('documents_legaux')->store('candidatures/documents-legaux', 'public')  : null;
+        $autresActivitesPath   = $request->hasFile('autres_activites') ? $request->file('autres_activites')->store('candidatures/autres-activites', 'public')  : null;
 
         $candidature = Candidature::create([
             'project_id'             => $project->id,
@@ -342,6 +350,10 @@ class FrontOfficeController extends Controller
             'lettre_motivation_path' => $lettreMotivationPath,
             'cv_path'                => $cvPath,
             'piece_identite_path'    => $pieceIdentitePath,
+            'business_plan_path'     => $businessPlanPath,
+            'plan_financier_path'    => $planFinancierPath,
+            'documents_legaux_path'  => $documentsLegauxPath,
+            'autres_activites_path'  => $autresActivitesPath,
             'statut'                 => 'en_attente',
         ]);
 

@@ -177,6 +177,23 @@ return [
         'sexe_autre'         => 'Outro',
         'submit'             => 'Enviar minha candidatura',
         'close_alert'        => 'Fechar',
+
+        'section_docs'       => 'Documentos complementares',
+        'section_docs_hint'  => 'Estes documentos são facultativos, exceto os marcados como obrigatórios, mas reforçarão a sua candidatura.',
+        'label_pdf_hint'     => '(PDF, máx. 10 MB)',
+        'tooltip_aria'       => 'Saber mais',
+
+        'label_business_plan'    => 'Plano de negócios simplificado',
+        'tooltip_business_plan'  => '<strong>Apresentação da ideia ou da empresa</strong><br>• Problema identificado e solução proposta<br>• Mercado-alvo e clientes<br>• Modelo de negócio<br>• Objetivos a curto e médio prazo<br>• Impacto esperado (económico, social, etc.)',
+
+        'label_plan_financier'   => 'Plano financeiro previsional',
+        'tooltip_plan_financier' => '• Orçamento estimado (custos de arranque ou expansão)<br>• Necessidades de financiamento<br>• Fontes de financiamento previstas',
+
+        'label_documents_legaux'   => 'Documentos legais da empresa (se existente)',
+        'tooltip_documents_legaux' => '• Registo comercial ou equivalente<br>• Estatutos da empresa<br>• Número de identificação fiscal',
+
+        'label_autres_activites'   => 'Outras atividades / Provas de atividade',
+        'tooltip_autres_activites' => '• Fotos dos produtos ou serviços<br>• Link para site ou redes sociais<br>• Depoimentos de clientes ou parceiros',
     ],
 
     // ── Página de contato ─────────────────────────────────────────────────

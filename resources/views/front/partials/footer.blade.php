@@ -97,6 +97,34 @@
                             </ul>
                         </div>
                     </div>
+                    @if (!empty($settings->footer_links))
+                    <div class="col-12 col-md-6">
+                        <div
+                            class="footer-widget footer-widget-menu"
+                            data-aos="fade-up"
+                            data-aos-anchor=".footer-top"
+                        >
+                            <div class="widget-heading heading text-22">{{ __('app.footer.useful_links') }}</div>
+                            <ul class="footer-menu list-unstyled">
+                                @foreach ($settings->footer_links as $link)
+                                    @php
+                                        $url = $link['url'];
+                                        $isInternal = str_starts_with($url, '/');
+                                        if (!$isInternal && !str_starts_with($url, 'http')) {
+                                            $url = 'https://' . $url;
+                                        }
+                                    @endphp
+                                    <li>
+                                        <a href="{{ $url }}" class="text text-16 link"
+                                           @if (!$isInternal) target="_blank" rel="noreferrer" @endif>
+                                            {{ $link['label'] }}
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                    @endif
                     <div class="col-12 col-md-6">
                         <div
                             class="footer-widget footer-widget-menu"

@@ -28,10 +28,11 @@ return [
 
     // ── Footer ────────────────────────────────────────────────────────────
     'footer' => [
-        'navigation' => 'Navigation',
-        'contact'    => 'Contact',
-        'location'   => 'View location',
-        'copyright'  => 'All rights reserved.',
+        'navigation'   => 'Navigation',
+        'contact'      => 'Contact',
+        'useful_links' => 'Useful links',
+        'location'     => 'View location',
+        'copyright'    => 'All rights reserved.',
     ],
 
     // ── Page banners ──────────────────────────────────────────────────────
@@ -177,6 +178,23 @@ return [
         'sexe_autre'         => 'Other',
         'submit'             => 'Submit my application',
         'close_alert'        => 'Close',
+
+        'section_docs'       => 'Supporting documents',
+        'section_docs_hint'  => 'These documents are optional but will strengthen your application.',
+        'label_pdf_hint'     => '(PDF, max 10 MB)',
+        'tooltip_aria'       => 'Learn more',
+
+        'label_business_plan'    => 'Simplified business plan',
+        'tooltip_business_plan'  => '<strong>Presentation of the idea or business</strong><br>• Problem identified and proposed solution<br>• Target market and customers<br>• Business model<br>• Short and medium-term objectives<br>• Expected impact (economic, social, etc.)',
+
+        'label_plan_financier'   => 'Financial forecast plan',
+        'tooltip_plan_financier' => '• Estimated budget (start-up or expansion costs)<br>• Financing needs<br>• Planned sources of funding',
+
+        'label_documents_legaux'   => 'Legal company documents (if applicable)',
+        'tooltip_documents_legaux' => '• Trade register or equivalent<br>• Company statutes<br>• Tax identification number',
+
+        'label_autres_activites'   => 'Other activities / Proof of activity',
+        'tooltip_autres_activites' => '• Photos of products or services<br>• Link to website or social media<br>• Customer or partner testimonials',
     ],
 
     // ── Contact page ──────────────────────────────────────────────────────
@@ -207,6 +225,7 @@ return [
         'status_open'   => 'Open',
         'status_closed' => 'Closed',
         'status_arch'   => 'Archived',
+        'apply_success' => 'Your application has been submitted. A confirmation email has been sent to you.',
     ],
 
     // ── Home page ─────────────────────────────────────────────────────────
