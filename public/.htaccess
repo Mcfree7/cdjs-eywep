@@ -5,6 +5,10 @@
 
     RewriteEngine On
 
+    # Forcer HTTPS (décommenter une fois le certificat SSL actif sur LWS)
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
@@ -23,6 +27,18 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# Supprimer les empreintes serveur (PHP, Apache)
+<IfModule mod_headers.c>
+    Header always unset X-Powered-By
+    Header always unset Server
+</IfModule>
+
+# Bloquer l'accès aux fichiers sensibles
+<FilesMatch "(\.env|\.git|composer\.json|composer\.lock|package\.json|package-lock\.json)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
 
 <IfModule mod_php.c>
     php_value upload_max_filesize 64M
