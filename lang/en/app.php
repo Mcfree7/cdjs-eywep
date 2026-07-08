@@ -105,7 +105,7 @@ return [
         ],
         'stats' => [
             ['label' => 'Pilot countries',        'target' => 6,   'suffix' => ''],
-            ['label' => 'ECOWAS member states',   'target' => 15,  'suffix' => ''],
+            ['label' => 'ECOWAS member states',   'target' => 12,  'suffix' => ''],
             ['label' => 'Young entrepreneurs',    'target' => 500, 'suffix' => '+'],
             ['label' => 'SMEs supported',         'target' => 200, 'suffix' => '+'],
         ],
@@ -177,6 +177,7 @@ return [
         'sexe_femme'         => 'Female',
         'sexe_autre'         => 'Other',
         'submit'             => 'Submit my application',
+        'submitting'         => 'Sending…',
         'close_alert'        => 'Close',
 
         'section_docs'       => 'Supporting documents',

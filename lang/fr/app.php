@@ -105,7 +105,7 @@ return [
         ],
         'stats' => [
             ['label' => 'Pays pilotes',           'target' => 6,   'suffix' => ''],
-            ['label' => 'États membres CEDEAO',   'target' => 15,  'suffix' => ''],
+            ['label' => 'États membres CEDEAO',   'target' => 12,  'suffix' => ''],
             ['label' => 'Jeunes entrepreneurs',   'target' => 500, 'suffix' => '+'],
             ['label' => 'PME soutenues',          'target' => 200, 'suffix' => '+'],
         ],
@@ -177,6 +177,7 @@ return [
         'sexe_femme'         => 'Femme',
         'sexe_autre'         => 'Autre',
         'submit'             => 'Envoyer ma candidature',
+        'submitting'         => 'Envoi en cours…',
         'close_alert'        => 'Fermer',
 
         'section_docs'       => 'Documents complémentaires',

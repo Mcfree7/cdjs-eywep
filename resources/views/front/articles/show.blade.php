@@ -4,8 +4,8 @@
 @endphp
 @extends('front.layouts.app')
 
-@section('title', $article->titre . ' - ' . ($settings->company_name ?? 'EYWEP'))
-@section('description', Str::limit(strip_tags($article->description), 160))
+@section('title', $article->translatedTitre() . ' - ' . ($settings->company_name ?? 'EYWEP'))
+@section('description', Str::limit(strip_tags($article->translatedDescription()), 160))
 
 @push('styles')
 <style>
@@ -22,7 +22,7 @@
 <main>
 
     @include('front.partials.page-banner', [
-        'bannerTitle'      => $article->titre,
+        'bannerTitle'      => $article->translatedTitre(),
         'breadcrumbParent' => ['label' => 'Articles', 'url' => route('front.articles.index')],
     ])
 
@@ -46,7 +46,7 @@
                                             <div class="media">
                                                 <img
                                                     src="{{ Storage::url($img->image_path) }}"
-                                                    alt="{{ $article->titre }}"
+                                                    alt="{{ $article->translatedTitre() }}"
                                                     width="1000"
                                                     height="707"
                                                     loading="{{ $loop->first ? 'eager' : 'lazy' }}"
@@ -66,7 +66,7 @@
                                 <div class="media">
                                     <img
                                         src="{{ Storage::url($article->coverImage->image_path) }}"
-                                        alt="{{ $article->titre }}"
+                                        alt="{{ $article->translatedTitre() }}"
                                         width="1000"
                                         height="707"
                                         loading="eager"
@@ -95,10 +95,10 @@
                                     @endif
                                 </div>
 
-                                <h2 class="card-blog-heading heading text-50">{{ $article->titre }}</h2>
+                                <h2 class="card-blog-heading heading text-50">{{ $article->translatedTitre() }}</h2>
 
                                 <div class="blog-description">
-                                    {!! $article->description !!}
+                                    {!! $article->translatedDescription() !!}
                                 </div>
                             </div>
                         </div>
@@ -160,7 +160,7 @@
                                                 <div class="media">
                                                     <img
                                                         src="{{ $related->coverImage ? Storage::url($related->coverImage->image_path) : asset('front-assets/consulo/img/blog/1.jpg') }}"
-                                                        alt="{{ $related->titre }}"
+                                                        alt="{{ $related->translatedTitre() }}"
                                                         width="1000"
                                                         height="707"
                                                         loading="lazy"
@@ -177,7 +177,7 @@
                                                 </div>
                                                 <h2 class="card-blog-heading heading text-20">
                                                     <a href="{{ route('front.articles.show', $related) }}" class="heading text-20">
-                                                        {{ $related->titre }}
+                                                        {{ $related->translatedTitre() }}
                                                     </a>
                                                 </h2>
                                                 <div class="buttons">
@@ -221,7 +221,7 @@
 @endsection
 
 @push('scripts')
-<script>
+<script @cspNonce>
 document.addEventListener('DOMContentLoaded', function () {
     var el = document.querySelector('.article-images-swiper');
     if (!el || typeof Swiper === 'undefined') return;

@@ -140,8 +140,12 @@
                                 <label for="datePublication" class="form-label">Date de publication</label>
                                 <input type="date" name="datePublication" id="datePublication" class="form-control" value="{{ old('datePublication', $defaultPublicationDate) }}">
                             </div>
+                            <div class="col-md-6">
+                                <label for="file_titre" class="form-label">Titre du document principal <span class="text-danger">*</span></label>
+                                <input type="text" name="file_titre" id="file_titre" class="form-control" value="{{ old('file_titre') }}" placeholder="Ex : Rapport annuel 2024" required>
+                            </div>
                             <div class="col-12">
-                                <label class="form-label d-block">Fichier PDF ou DOCX</label>
+                                <label class="form-label d-block">Fichier principal (PDF ou DOCX) <span class="text-danger">*</span></label>
                                 <label for="file" id="resource-dropzone" class="resource-dropzone w-100">
                                     <span class="resource-dropzone-icon">
                                         <i class="bi bi-file-earmark-arrow-up"></i>
@@ -155,6 +159,18 @@
                             </div>
                             <div class="col-12">
                                 <div id="resource-preview" class="resource-preview-card d-none"></div>
+                            </div>
+
+                            {{-- Documents supplémentaires --}}
+                            <div class="col-12">
+                                <hr class="my-2">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <label class="form-label mb-0 fw-semibold">Documents supplémentaires <span class="text-muted fw-normal">(optionnel)</span></label>
+                                    <button type="button" id="add-extra-file" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-plus-circle me-1"></i> Ajouter un document
+                                    </button>
+                                </div>
+                                <div id="extra-files-container" class="d-flex flex-column gap-3"></div>
                             </div>
                         </div>
                     </div>
@@ -171,63 +187,65 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // ── Fichier principal ─────────────────────────────────────────
             const input = document.getElementById('file');
             const dropzone = document.getElementById('resource-dropzone');
             const selectionLabel = document.getElementById('resource-selection-label');
             const preview = document.getElementById('resource-preview');
 
-            if (!input || !dropzone || !selectionLabel || !preview) {
-                return;
+            if (input && dropzone && selectionLabel && preview) {
+                const renderPreview = function () {
+                    const file = input.files[0];
+                    if (!file) {
+                        selectionLabel.textContent = '';
+                        preview.classList.add('d-none');
+                        preview.innerHTML = '';
+                        return;
+                    }
+                    selectionLabel.textContent = file.name;
+                    preview.classList.remove('d-none');
+                    preview.innerHTML = `
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                            <div>
+                                <div class="fw-semibold">${file.name}</div>
+                                <small class="text-muted">${Math.round(file.size / 1024)} Ko</small>
+                            </div>
+                            <span class="badge text-bg-primary">${file.name.split('.').pop().toUpperCase()}</span>
+                        </div>`;
+                };
+                input.addEventListener('change', renderPreview);
+                ['dragenter', 'dragover'].forEach(e => dropzone.addEventListener(e, ev => { ev.preventDefault(); ev.stopPropagation(); dropzone.classList.add('is-dragover'); }));
+                ['dragleave', 'dragend', 'drop'].forEach(e => dropzone.addEventListener(e, ev => { ev.preventDefault(); ev.stopPropagation(); dropzone.classList.remove('is-dragover'); }));
+                dropzone.addEventListener('drop', ev => { if (ev.dataTransfer.files.length) { input.files = ev.dataTransfer.files; renderPreview(); } });
             }
 
-            const renderPreview = function () {
-                const file = input.files[0];
+            // ── Documents supplémentaires ─────────────────────────────────
+            const container = document.getElementById('extra-files-container');
+            const addBtn = document.getElementById('add-extra-file');
+            let extraIndex = 0;
 
-                if (!file) {
-                    selectionLabel.textContent = '';
-                    preview.classList.add('d-none');
-                    preview.innerHTML = '';
-                    return;
-                }
-
-                selectionLabel.textContent = file.name;
-                preview.classList.remove('d-none');
-                preview.innerHTML = `
-                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                        <div>
-                            <div class="fw-semibold">${file.name}</div>
-                            <small class="text-muted">${Math.round(file.size / 1024)} Ko</small>
+            addBtn.addEventListener('click', function () {
+                const idx = extraIndex++;
+                const row = document.createElement('div');
+                row.className = 'border rounded-3 p-3 bg-light';
+                row.innerHTML = `
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-5">
+                            <label class="form-label small fw-semibold mb-1">Titre du document <span class="text-danger">*</span></label>
+                            <input type="text" name="extra_file_titres[${idx}]" class="form-control form-control-sm" placeholder="Ex : Annexe financière" required>
                         </div>
-                        <span class="badge text-bg-primary">${file.name.split('.').pop().toUpperCase()}</span>
-                    </div>
-                `;
-            };
-
-            input.addEventListener('change', renderPreview);
-
-            ['dragenter', 'dragover'].forEach(function (eventName) {
-                dropzone.addEventListener(eventName, function (event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    dropzone.classList.add('is-dragover');
-                });
-            });
-
-            ['dragleave', 'dragend', 'drop'].forEach(function (eventName) {
-                dropzone.addEventListener(eventName, function (event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    dropzone.classList.remove('is-dragover');
-                });
-            });
-
-            dropzone.addEventListener('drop', function (event) {
-                if (!event.dataTransfer.files.length) {
-                    return;
-                }
-
-                input.files = event.dataTransfer.files;
-                renderPreview();
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold mb-1">Fichier (PDF, DOC, DOCX)</label>
+                            <input type="file" name="extra_files[${idx}]" class="form-control form-control-sm" accept=".pdf,.doc,.docx" required>
+                        </div>
+                        <div class="col-md-1 d-flex align-items-end">
+                            <button type="button" class="btn btn-sm btn-outline-danger w-100 remove-extra" title="Supprimer">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>`;
+                row.querySelector('.remove-extra').addEventListener('click', () => row.remove());
+                container.appendChild(row);
             });
         });
     </script>

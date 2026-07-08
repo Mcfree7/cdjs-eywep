@@ -7,11 +7,11 @@
     <meta name="view-transition" content="same-origin">
     <meta
         name="description"
-        content="@yield('description', $settings->company_slogan ?? 'Programme EYWEP et contenus publics.')"
+        content="@yield('description', $settings->translated('company_slogan') ?? 'Programme EYWEP et contenus publics.')"
     >
     <title>@yield('title', ($settings->company_name ?? 'EYWEP') . ' - Programme d\'entrepreneuriat')</title>
 
-    <link rel="shortcut icon" href="{{ asset('front-assets/consulo/img/favicon.png') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ $settings->company_logo_path ? Storage::url($settings->company_logo_path) : asset('front-assets/consulo/img/favicon.png') }}" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link
@@ -120,8 +120,27 @@
             background: linear-gradient(90deg, {{ $settings->primary_color ?: '#1c2539' }} 0%, #101728 100%);
         }
 
+        .header-logo {
+            margin-left: -12px;
+        }
+
         .eywep-dynamic-logo {
-            max-height: 52px;
+            max-height: 88px;
+            width: auto;
+        }
+
+        .eywep-partner-separator {
+            width: 1px;
+            height: 40px;
+            background: rgba(255,255,255,0.35);
+            flex-shrink: 0;
+        }
+        .header-1.is-sticky .eywep-partner-separator {
+            background: rgba(0,0,0,0.15);
+        }
+
+        .eywep-partner-logo {
+            max-height: 68px;
             width: auto;
         }
 
@@ -158,6 +177,16 @@
 
         .header-1:not(.is-sticky) .eywep-brand-name { color: #fff; }
         .header-1.is-sticky .eywep-brand-name { color: var(--color-foreground-heading); }
+
+        @media (max-width: 575px) {
+            .eywep-dynamic-logo { max-height: 52px; }
+            .header-logo img:not(.eywep-dynamic-logo) { max-width: 100px; }
+            .eywep-partner-logo { max-height: 40px; }
+            .eywep-lang-switcher .eywep-lang-btn {
+                padding: 4px 7px !important;
+                font-size: 12px !important;
+            }
+        }
 
     </style>
 

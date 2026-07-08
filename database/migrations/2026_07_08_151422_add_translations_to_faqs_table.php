@@ -1,0 +1,31 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('faqs', function (Blueprint $table) {
+            $table->string('question_en')->nullable()->after('question');
+            $table->string('question_pt')->nullable()->after('question_en');
+            $table->text('reponse_en')->nullable()->after('reponse');
+            $table->text('reponse_pt')->nullable()->after('reponse_en');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('faqs', function (Blueprint $table) {
+            $table->dropColumn(['question_en', 'question_pt', 'reponse_en', 'reponse_pt']);
+        });
+    }
+};

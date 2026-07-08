@@ -5,7 +5,7 @@
 @extends('front.layouts.app')
 
 @section('title', ($settings->company_name ?? 'EYWEP') . ' - ' . __('app.titles.home'))
-@section('description', $settings->company_slogan ?? 'Programme de promotion de l\'entrepreneuriat EYWEP')
+@section('description', $settings->translated('company_slogan') ?? 'Programme de promotion de l\'entrepreneuriat EYWEP')
 
 @section('content')
 <main>
@@ -85,10 +85,10 @@
                                                 </svg>
                                             </div>
                                             <h2 class="heading text-90 fw-700">
-                                                {{ $settings->hero_title ?? 'Entrepreneuriat &amp; Innovation' }}
+                                                {{ $settings->translated('hero_title') ?? 'Entrepreneuriat &amp; Innovation' }}
                                             </h2>
                                             <div class="text text-18">
-                                                {{ $settings->hero_subtitle ?? 'Programme de promotion de l\'entrepreneuriat jeune — articles, activités, ressources et projets.' }}
+                                                {{ $settings->translated('hero_subtitle') ?? 'Programme de promotion de l\'entrepreneuriat jeune — articles, activités, ressources et projets.' }}
                                             </div>
                                             <div class="buttons">
                                                 <a href="{{ route('front.projects.index') }}" class="button button--secondary" aria-label="{{ __('app.home.hero_projects') }}">
@@ -263,7 +263,7 @@
                                         white-space: nowrap;
                                     }
                                     </style>
-                                    <script>
+                                    <script @cspNonce>
                                     (function(){
                                         document.addEventListener('DOMContentLoaded', function(){
                                             var overlay = document.getElementById('hv-play');
@@ -320,14 +320,14 @@
             <div class="bn-track">
                 @foreach($headerNews as $item)
                     <a href="{{ route('front.articles.index') }}" class="bn-item">
-                        {{ $item->titre }}
+                        {{ $item->translatedTitre() }}
                     </a>
                     <span class="bn-sep" aria-hidden="true">&#9656;</span>
                 @endforeach
                 {{-- Duplicate for seamless loop --}}
                 @foreach($headerNews as $item)
                     <a href="{{ route('front.articles.index') }}" class="bn-item" aria-hidden="true">
-                        {{ $item->titre }}
+                        {{ $item->translatedTitre() }}
                     </a>
                     <span class="bn-sep" aria-hidden="true">&#9656;</span>
                 @endforeach
@@ -610,7 +610,7 @@
                             <div class="media">
                                 <img
                                     src="{{ $featuredArticle->coverImage ? Storage::url($featuredArticle->coverImage->image_path) : asset('front-assets/consulo/img/blog/9.jpg') }}"
-                                    alt="{{ $featuredArticle->titre }}"
+                                    alt="{{ $featuredArticle->translatedTitre() }}"
                                     width="1000"
                                     height="707"
                                     loading="eager"
@@ -638,7 +638,7 @@
 
                         <h2 class="card-blog-heading heading text-32">
                             <a href="{{ route('front.articles.show', $featuredArticle) }}" class="heading text-32">
-                                {{ $featuredArticle->titre }}
+                                {{ $featuredArticle->translatedTitre() }}
                             </a>
                         </h2>
 
@@ -663,7 +663,7 @@
                                 <div class="media">
                                     <img
                                         src="{{ $article->coverImage ? Storage::url($article->coverImage->image_path) : asset('front-assets/consulo/img/blog/2.jpg') }}"
-                                        alt="{{ $article->titre }}"
+                                        alt="{{ $article->translatedTitre() }}"
                                         width="1000"
                                         height="707"
                                         loading="lazy"
@@ -686,7 +686,7 @@
                                 </div>
                                 <h2 class="card-blog-heading heading text-24">
                                     <a href="{{ route('front.articles.show', $article) }}" class="heading text-24">
-                                        {{ $article->titre }}
+                                        {{ $article->translatedTitre() }}
                                     </a>
                                 </h2>
                                 <div class="buttons">
@@ -770,16 +770,16 @@
                                 </div>
                                 <h2 class="card-blog-heading heading text-22">
                                     <a href="{{ route('front.activities.show', $activity) }}" class="heading text-22">
-                                        {{ $activity->titre }}
+                                        {{ $activity->translatedTitre() }}
                                     </a>
                                 </h2>
                             </div>
-                            <a class="card-blog-bottom" href="{{ route('front.activities.show', $activity) }}" aria-label="{{ $activity->titre }}">
+                            <a class="card-blog-bottom" href="{{ route('front.activities.show', $activity) }}" aria-label="{{ $activity->translatedTitre() }}">
                                 <span class="blog-tag subheading subheading-bg text-16 fw-500">{{ __('app.home.activity_badge') }}</span>
                                 <div class="media">
                                     <img
                                         src="{{ $activity->coverImage ? Storage::url($activity->coverImage->image_path) : asset('front-assets/consulo/img/blog/1.jpg') }}"
-                                        alt="{{ $activity->titre }}"
+                                        alt="{{ $activity->translatedTitre() }}"
                                         width="1000"
                                         height="707"
                                         loading="lazy"
@@ -848,18 +848,18 @@
                         <a
                             class="card-project radius18"
                             href="{{ route('front.projects.show', $project) }}"
-                            aria-label="{{ $project->titre }}"
+                            aria-label="{{ $project->translatedTitre() }}"
                         >
                             <img
                                 src="{{ $project->coverImage ? Storage::url($project->coverImage->image_path) : asset('front-assets/consulo/img/project/card/' . (($loop->index % 8) + 1) . '.jpg') }}"
-                                alt="{{ $project->titre }}"
+                                alt="{{ $project->translatedTitre() }}"
                                 width="645"
                                 height="690"
                                 loading="lazy"
                             >
                             <div class="card-project-content-absolute">
                                 <div class="card-project-content">
-                                    <h2 class="heading text-24">{{ $project->titre }}</h2>
+                                    <h2 class="heading text-24">{{ $project->translatedTitre() }}</h2>
                                     <p class="text text-16">
                                         {{ $project->statut === 'ouvert' ? __('app.projects.status_open') : ($project->statut === 'ferme' ? __('app.projects.status_closed') : __('app.projects.status_arch')) }}
                                         @if ($project->candidatures_count)
@@ -872,7 +872,7 @@
                                         class="button button--primary mt-2"
                                         style="font-size:13px; padding: 8px 18px; display:inline-flex;"
                                         role="button"
-                                        aria-label="{{ __('app.btn.apply') }} — {{ $project->titre }}"
+                                        aria-label="{{ __('app.btn.apply') }} — {{ $project->translatedTitre() }}"
                                     >
                                         {{ __('app.btn.apply') }}
                                         <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="margin-left:6px;">
@@ -955,16 +955,16 @@
                                 </div>
                                 <h2 class="card-blog-heading heading text-22">
                                     <a href="{{ route('front.success-stories.show', $story) }}" class="heading text-22">
-                                        {{ $story->titre }}
+                                        {{ $story->translatedTitre() }}
                                     </a>
                                 </h2>
                             </div>
-                            <a class="card-blog-bottom" href="{{ route('front.success-stories.show', $story) }}" aria-label="{{ $story->titre }}">
+                            <a class="card-blog-bottom" href="{{ route('front.success-stories.show', $story) }}" aria-label="{{ $story->translatedTitre() }}">
                                 <span class="blog-tag subheading subheading-bg text-16 fw-500">{{ __('app.home.story_badge') }}</span>
                                 <div class="media">
                                     <img
                                         src="{{ $story->coverImage ? Storage::url($story->coverImage->image_path) : asset('front-assets/consulo/img/blog/1.jpg') }}"
-                                        alt="{{ $story->titre }}"
+                                        alt="{{ $story->translatedTitre() }}"
                                         width="1000"
                                         height="707"
                                         loading="lazy"
@@ -1031,7 +1031,7 @@
                 <a
                     href="{{ route('front.galleries.show', $gallery) }}"
                     class="gallery-home-card radius18"
-                    aria-label="{{ $gallery->titre }}"
+                    aria-label="{{ $gallery->translatedTitre() }}"
                     data-aos="fade-up"
                     data-aos-delay="{{ $loop->index * 60 }}"
 
@@ -1039,7 +1039,7 @@
                     {{-- Image principale --}}
                     <div class="gallery-home-cover">
                         @if ($cover)
-                            <img src="{{ Storage::url($cover->media_path) }}" alt="{{ $gallery->titre }}" loading="lazy">
+                            <img src="{{ Storage::url($cover->media_path) }}" alt="{{ $gallery->translatedTitre() }}" loading="lazy">
                         @else
                             <div class="gallery-home-placeholder">
                                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
@@ -1087,7 +1087,7 @@
 
                     {{-- Info bar --}}
                     <div class="gallery-home-info">
-                        <span class="gallery-home-title heading text-16 fw-600">{{ $gallery->titre }}</span>
+                        <span class="gallery-home-title heading text-16 fw-600">{{ $gallery->translatedTitre() }}</span>
                         <span class="gallery-home-count text text-13">{{ $total }} {{ $total > 1 ? __('app.home.media_many') : __('app.home.media_one') }}</span>
                     </div>
                 </a>
@@ -1156,7 +1156,7 @@
                             @forelse ($faqs as $faq)
                             <div class="accordion-block" data-aos="fade-up" @if(!$loop->first) data-aos-delay="{{ $loop->index * 50 }}" @endif>
                                 <div class="accordion-opener heading text-22">
-                                    {{ $faq->question }}
+                                    {{ $faq->translated('question') }}
                                     <div class="svg-wrapper">
                                         <svg class="icon icon-24" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <g clip-path="url(#clip-faq-chevron)">
@@ -1168,7 +1168,7 @@
                                 </div>
                                 <div class="accordion-content">
                                     <div class="accordion-content-inner text text-18">
-                                        {{ $faq->reponse }}
+                                        {{ $faq->translated('reponse') }}
                                     </div>
                                 </div>
                             </div>
@@ -1413,7 +1413,7 @@
 @endpush
 
 @push('scripts')
-<script>
+<script @cspNonce>
 document.addEventListener('DOMContentLoaded', function () {
     // Projects slider
     var projEl = document.querySelector('.projects-swiper');

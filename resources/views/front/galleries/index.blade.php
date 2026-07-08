@@ -185,7 +185,7 @@
                 <a
                     href="{{ route('front.galleries.show', $gallery) }}"
                     class="gallery-home-card radius18"
-                    aria-label="{{ $gallery->titre }}"
+                    aria-label="{{ $gallery->translatedTitre() }}"
                     data-aos="fade-up"
                     data-aos-delay="{{ ($loop->index % 4) * 60 }}"
                 >
@@ -197,7 +197,7 @@
                                 preload="none"
                             ></video>
                         @elseif ($cover)
-                            <img src="{{ Storage::url($cover->media_path) }}" alt="{{ $gallery->titre }}" loading="lazy">
+                            <img src="{{ Storage::url($cover->media_path) }}" alt="{{ $gallery->translatedTitre() }}" loading="lazy">
                         @else
                             <div class="gallery-home-placeholder">
                                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
@@ -240,7 +240,7 @@
                     </div>
 
                     <div class="gallery-home-info">
-                        <span class="gallery-home-title heading text-16 fw-600">{{ $gallery->titre }}</span>
+                        <span class="gallery-home-title heading text-16 fw-600">{{ $gallery->translatedTitre() }}</span>
                         <span class="gallery-home-count text text-13">{{ $total }} média{{ $total > 1 ? 's' : '' }}</span>
                     </div>
                 </a>

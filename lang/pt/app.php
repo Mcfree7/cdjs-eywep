@@ -28,10 +28,11 @@ return [
 
     // ── Rodapé ────────────────────────────────────────────────────────────
     'footer' => [
-        'navigation' => 'Navegação',
-        'contact'    => 'Contato',
-        'location'   => 'Ver localização',
-        'copyright'  => 'Todos os direitos reservados.',
+        'navigation'  => 'Navegação',
+        'useful_links' => 'Links úteis',
+        'contact'     => 'Contato',
+        'location'    => 'Ver localização',
+        'copyright'   => 'Todos os direitos reservados.',
     ],
 
     // ── Banners de página ─────────────────────────────────────────────────
@@ -104,7 +105,7 @@ return [
         ],
         'stats' => [
             ['label' => 'Países piloto',          'target' => 6,   'suffix' => ''],
-            ['label' => 'Estados-membros CEDEAO', 'target' => 15,  'suffix' => ''],
+            ['label' => 'Estados-membros CEDEAO', 'target' => 12,  'suffix' => ''],
             ['label' => 'Jovens empreendedores',  'target' => 500, 'suffix' => '+'],
             ['label' => 'PME apoiadas',           'target' => 200, 'suffix' => '+'],
         ],
@@ -176,6 +177,7 @@ return [
         'sexe_femme'         => 'Feminino',
         'sexe_autre'         => 'Outro',
         'submit'             => 'Enviar minha candidatura',
+        'submitting'         => 'A enviar…',
         'close_alert'        => 'Fechar',
 
         'section_docs'       => 'Documentos complementares',

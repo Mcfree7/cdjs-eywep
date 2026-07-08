@@ -4,15 +4,15 @@
 @endphp
 @extends('front.layouts.app')
 
-@section('title', $activity->titre . ' - ' . ($settings->company_name ?? 'EYWEP'))
-@section('description', Str::limit(strip_tags($activity->description), 160))
+@section('title', $activity->translatedTitre() . ' - ' . ($settings->company_name ?? 'EYWEP'))
+@section('description', Str::limit(strip_tags($activity->translatedDescription()), 160))
 
 
 @section('content')
 <main>
 
     @include('front.partials.page-banner', [
-        'bannerTitle'      => $activity->titre,
+        'bannerTitle'      => $activity->translatedTitre(),
         'breadcrumbParent' => ['label' => 'Activités', 'url' => route('front.activities.index')],
     ])
 
@@ -33,7 +33,7 @@
                                     <div class="media">
                                         <img
                                             src="{{ Storage::url($img->image_path) }}"
-                                            alt="{{ $activity->titre }}"
+                                            alt="{{ $activity->translatedTitre() }}"
                                             width="1000"
                                             height="707"
                                             loading="{{ $loop->first ? 'eager' : 'lazy' }}"
@@ -53,7 +53,7 @@
                         <div class="media">
                             <img
                                 src="{{ Storage::url($activity->coverImage->image_path) }}"
-                                alt="{{ $activity->titre }}"
+                                alt="{{ $activity->translatedTitre() }}"
                                 width="1000"
                                 height="707"
                                 loading="eager"
@@ -68,10 +68,10 @@
                         </span>
                     </div>
 
-                    <h1 class="heading text-50 fw-700 mb-4">{{ $activity->titre }}</h1>
+                    <h1 class="heading text-50 fw-700 mb-4">{{ $activity->translatedTitre() }}</h1>
 
                     <div class="text text-18 article-body mb-5">
-                        {!! $activity->description !!}
+                        {!! $activity->translatedDescription() !!}
                     </div>
 
                 </div>
@@ -88,7 +88,7 @@
                                 <a href="{{ route('front.activities.show', $related) }}" class="flex-shrink-0">
                                     <img
                                         src="{{ Storage::url($related->coverImage->image_path) }}"
-                                        alt="{{ $related->titre }}"
+                                        alt="{{ $related->translatedTitre() }}"
                                         class="radius18"
                                         style="width:80px; height:60px; object-fit:cover;"
                                         loading="lazy"
@@ -99,8 +99,8 @@
                                     <span class="text text-12 text-muted d-block mb-1">
                                         {{ $related->datePublication ? $related->datePublication->format('d/m/Y') : '' }}
                                     </span>
-                                    <a href="{{ route('front.activities.show', $related) }}" class="heading text-16 fw-600 link d-block" title="{{ $related->titre }}">
-                                        {{ Str::limit($related->titre, 60) }}
+                                    <a href="{{ route('front.activities.show', $related) }}" class="heading text-16 fw-600 link d-block" title="{{ $related->translatedTitre() }}">
+                                        {{ Str::limit($related->translatedTitre(), 60) }}
                                     </a>
                                 </div>
                             </li>
@@ -127,7 +127,7 @@
 @endsection
 
 @push('scripts')
-<script>
+<script @cspNonce>
 document.addEventListener('DOMContentLoaded', function () {
     var el = document.querySelector('.activity-images-swiper');
     if (!el || typeof Swiper === 'undefined') return;

@@ -2,13 +2,22 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasAutoTranslation;
 use Illuminate\Database\Eloquent\Model;
 
 class Faq extends Model
 {
+    use HasAutoTranslation;
+
+    protected array $translatable = ['question', 'reponse'];
+
     protected $fillable = [
         'question',
+        'question_en',
+        'question_pt',
         'reponse',
+        'reponse_en',
+        'reponse_pt',
         'ordre',
         'actif',
     ];

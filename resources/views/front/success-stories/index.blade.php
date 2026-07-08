@@ -33,16 +33,16 @@
                             </div>
                             <h2 class="card-blog-heading heading text-22">
                                 <a href="{{ route('front.success-stories.show', $story) }}" class="heading text-22">
-                                    {{ $story->titre }}
+                                    {{ $story->translatedTitre() }}
                                 </a>
                             </h2>
                         </div>
-                        <a class="card-blog-bottom" href="{{ route('front.success-stories.show', $story) }}" aria-label="{{ $story->titre }}">
+                        <a class="card-blog-bottom" href="{{ route('front.success-stories.show', $story) }}" aria-label="{{ $story->translatedTitre() }}">
                             <span class="blog-tag subheading subheading-bg text-16 fw-500">Témoignage</span>
                             <div class="media">
                                 <img
                                     src="{{ $story->coverImage ? Storage::url($story->coverImage->image_path) : asset('front-assets/consulo/img/blog/3.jpg') }}"
-                                    alt="{{ $story->titre }}"
+                                    alt="{{ $story->translatedTitre() }}"
                                     width="1000"
                                     height="707"
                                     loading="lazy"

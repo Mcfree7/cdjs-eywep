@@ -32,7 +32,8 @@ class CandidaturesController extends Controller
             $direction = 'desc';
         }
 
-        $query = Candidature::with('project');
+        $query = Candidature::with(['project:id,titre'])
+            ->select(['id', 'project_id', 'nom', 'prenom', 'email', 'pays', 'sexe', 'statut', 'created_at']);
 
         if ($search) {
             $query->where(function ($q) use ($search) {
@@ -53,7 +54,7 @@ class CandidaturesController extends Controller
         $query->orderBy($sort, $direction);
 
         $candidatures = $query->paginate(10)->withQueryString();
-        $projects = Project::orderBy('titre')->get();
+        $projects = Project::select(['id', 'titre'])->orderBy('titre')->get();
 
         return view('admin.pages.candidatures.AllCandidatures', compact('candidatures', 'projects'));
     }
@@ -109,16 +110,27 @@ class CandidaturesController extends Controller
             $baseQuery->where('sexe', $filters['sexe']);
         }
 
-        $total      = (clone $baseQuery)->count();
-        $enAttente  = (clone $baseQuery)->where('statut', 'en_attente')->count();
-        $retenue    = (clone $baseQuery)->where('statut', 'retenue')->count();
-        $rejetee    = (clone $baseQuery)->where('statut', 'rejetee')->count();
-        $nbPays     = (clone $baseQuery)->distinct('pays')->count('pays');
-        $nbProjets  = (clone $baseQuery)->distinct('project_id')->count('project_id');
+        $stats = (clone $baseQuery)->selectRaw("
+            COUNT(*) as total,
+            SUM(statut = 'en_attente') as en_attente,
+            SUM(statut = 'retenue') as retenue,
+            SUM(statut = 'rejetee') as rejetee,
+            COUNT(DISTINCT pays) as nb_pays,
+            COUNT(DISTINCT project_id) as nb_projets,
+            SUM(sexe = 'homme') as hommes,
+            SUM(sexe = 'femme') as femmes,
+            SUM(sexe = 'autre') as autres
+        ")->first();
 
-        $hommes     = (clone $baseQuery)->where('sexe', 'homme')->count();
-        $femmes     = (clone $baseQuery)->where('sexe', 'femme')->count();
-        $autres     = (clone $baseQuery)->where('sexe', 'autre')->count();
+        $total     = $stats->total;
+        $enAttente = $stats->en_attente;
+        $retenue   = $stats->retenue;
+        $rejetee   = $stats->rejetee;
+        $nbPays    = $stats->nb_pays;
+        $nbProjets = $stats->nb_projets;
+        $hommes    = $stats->hommes;
+        $femmes    = $stats->femmes;
+        $autres    = $stats->autres;
 
         $parPays = (clone $baseQuery)
             ->selectRaw('pays, COUNT(*) as total,

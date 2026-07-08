@@ -65,16 +65,16 @@
                             </div>
                             <h2 class="card-blog-heading heading text-22">
                                 <a href="{{ route('front.activities.show', $activity) }}" class="heading text-22">
-                                    {{ $activity->titre }}
+                                    {{ $activity->translatedTitre() }}
                                 </a>
                             </h2>
                         </div>
-                        <a class="card-blog-bottom" href="{{ route('front.activities.show', $activity) }}" aria-label="{{ $activity->titre }}">
+                        <a class="card-blog-bottom" href="{{ route('front.activities.show', $activity) }}" aria-label="{{ $activity->translatedTitre() }}">
                             <span class="blog-tag subheading subheading-bg text-16 fw-500">Activité</span>
                             <div class="media">
                                 <img
                                     src="{{ $activity->coverImage ? Storage::url($activity->coverImage->image_path) : asset('front-assets/consulo/img/blog/2.jpg') }}"
-                                    alt="{{ $activity->titre }}"
+                                    alt="{{ $activity->translatedTitre() }}"
                                     width="1000"
                                     height="707"
                                     loading="lazy"

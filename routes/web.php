@@ -38,7 +38,8 @@ Route::prefix('{locale}')
         Route::get('/galeries/{gallery}',                        [FrontOfficeController::class, 'gallery'])->name('front.galleries.show');
         Route::get('/ressources',                                [FrontOfficeController::class, 'resources'])->name('front.resources.index');
         Route::get('/ressources/{resourceItem}',                 [FrontOfficeController::class, 'resource'])->name('front.resources.show');
-        Route::get('/ressources/{resourceItem}/telecharger',     [FrontOfficeController::class, 'downloadResource'])->name('front.resources.download');
+        Route::get('/ressources/{resourceItem}/telecharger',                         [FrontOfficeController::class, 'downloadResource'])->name('front.resources.download');
+        Route::get('/ressources/{resourceItem}/fichiers/{resourceFile}/telecharger', [FrontOfficeController::class, 'downloadResourceFile'])->name('front.resources.download.file');
         Route::get('/projets',                                   [FrontOfficeController::class, 'projects'])->name('front.projects.index');
         Route::get('/projets/{project:uuid}',                    [FrontOfficeController::class, 'project'])->name('front.projects.show');
         Route::post('/projets/{project:uuid}/candidater',        [FrontOfficeController::class, 'applyToProject'])->name('front.projects.apply');
@@ -47,7 +48,7 @@ Route::prefix('{locale}')
     });
 
 // ── Back-office (admin) ───────────────────────────────────────────────────────
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', \App\Http\Middleware\AdminSessionTimeout::class])->group(function () {
     Route::redirect('/dashboard', '/admin/dashboard')->name('dashboard');
 
     Route::prefix('admin')->group(function () {
@@ -62,6 +63,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('resources', ResourcesController::class)
             ->parameters(['resources' => 'resourceItem'])
             ->names('admin.resources');
+        Route::post('resources/{resourceItem}/files', [ResourcesController::class, 'addFile'])->name('admin.resources.files.store');
+        Route::delete('resources/files/{resourceFile}', [ResourcesController::class, 'deleteFile'])->name('admin.resources.files.destroy');
         Route::resource('projects', ProjectsController::class)->names('admin.projects');
         Route::resource('faqs', FaqsController::class)->names('admin.faqs');
         Route::get('candidatures/export-stats', [CandidaturesController::class, 'exportStats'])

@@ -11,6 +11,7 @@ use App\Models\Gallery;
 use App\Models\News;
 use App\Models\Partner;
 use App\Models\Project;
+use App\Models\ResourceFile;
 use App\Models\ResourceItem;
 use App\Models\SuccessStory;
 use App\Mail\CandidatureConfirmation;
@@ -258,7 +259,7 @@ class FrontOfficeController extends Controller
     {
         return view('front.resources.show', [
             'settings' => $this->settings(),
-            'resourceItem' => $resourceItem,
+            'resourceItem' => $resourceItem->load('files'),
             'relatedResources' => ResourceItem::query()
                 ->where('categorie', $resourceItem->categorie)
                 ->whereKeyNot($resourceItem->id)
@@ -274,6 +275,16 @@ class FrontOfficeController extends Controller
         return Response::download(
             storage_path('app/public/' . $resourceItem->file_path),
             $resourceItem->file_name
+        );
+    }
+
+    public function downloadResourceFile(string $locale, ResourceItem $resourceItem, ResourceFile $resourceFile)
+    {
+        abort_if($resourceFile->resource_item_id !== $resourceItem->id, 404);
+
+        return Response::download(
+            storage_path('app/public/' . $resourceFile->file_path),
+            $resourceFile->file_name
         );
     }
 

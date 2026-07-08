@@ -34,7 +34,15 @@
                             height="32"
                         >
                     @endif
-                    <span class="eywep-brand-name">{{ $settings->company_name ?? 'EYWEP' }}</span>
+                    <span class="eywep-brand-name d-none d-sm-inline">{{ $settings->company_name ?? 'EYWEP' }}</span>
+                    @if (file_exists(public_path('images/partners/logo-ua.png')))
+                        <span class="eywep-partner-separator d-none d-md-block"></span>
+                        <img
+                            src="{{ asset('images/partners/logo-ua.png') }}"
+                            alt="Union Africaine"
+                            class="eywep-partner-logo d-none d-md-block"
+                        >
+                    @endif
                 </a>
 
                 <drawer-menu>
@@ -163,7 +171,7 @@
                     </div>
 
                     <a href="{{ route('login') }}" class="button button--secondary" aria-label="{{ __('app.nav.login') }}">
-                        {{ __('app.nav.login') }}
+                        <span class="d-none d-sm-inline">{{ __('app.nav.login') }}</span>
                         <span class="svg-wrapper">
                             <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>

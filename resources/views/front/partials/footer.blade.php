@@ -37,7 +37,7 @@
                                 @endif
                             </a>
                             <p class="text text-16">
-                                {{ $settings->hero_subtitle ?? $settings->company_slogan ?? '' }}
+                                {{ $settings->translated('hero_subtitle') ?? $settings->translated('company_slogan') ?? '' }}
                             </p>
                             <ul
                                 class="social-icons list-unstyled"

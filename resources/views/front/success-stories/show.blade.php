@@ -4,14 +4,14 @@
 @endphp
 @extends('front.layouts.app')
 
-@section('title', $successStory->titre . ' - ' . ($settings->company_name ?? 'EYWEP'))
-@section('description', Str::limit(strip_tags($successStory->description), 160))
+@section('title', $successStory->translatedTitre() . ' - ' . ($settings->company_name ?? 'EYWEP'))
+@section('description', Str::limit(strip_tags($successStory->translatedDescription()), 160))
 
 @section('content')
 <main>
 
     @include('front.partials.page-banner', [
-        'bannerTitle'      => $successStory->titre,
+        'bannerTitle'      => $successStory->translatedTitre(),
         'breadcrumbParent' => ['label' => 'Témoignages', 'url' => route('front.success-stories.index')],
     ])
 
@@ -26,7 +26,7 @@
                     <div class="mb-5">
                         <img
                             src="{{ Storage::url($successStory->coverImage->image_path) }}"
-                            alt="{{ $successStory->titre }}"
+                            alt="{{ $successStory->translatedTitre() }}"
                             class="img-fluid radius18 w-100"
                             style="max-height: 480px; object-fit: cover;"
                         >
@@ -39,10 +39,10 @@
                         </span>
                     </div>
 
-                    <h1 class="heading text-50 fw-700 mb-4">{{ $successStory->titre }}</h1>
+                    <h1 class="heading text-50 fw-700 mb-4">{{ $successStory->translatedTitre() }}</h1>
 
                     <div class="text text-18 article-body mb-5">
-                        {!! $successStory->description !!}
+                        {!! $successStory->translatedDescription() !!}
                     </div>
 
                 </div>
@@ -59,7 +59,7 @@
                                 <a href="{{ route('front.success-stories.show', $related) }}" class="flex-shrink-0">
                                     <img
                                         src="{{ Storage::url($related->coverImage->image_path) }}"
-                                        alt="{{ $related->titre }}"
+                                        alt="{{ $related->translatedTitre() }}"
                                         class="radius18"
                                         style="width:80px; height:60px; object-fit:cover;"
                                         loading="lazy"
@@ -71,7 +71,7 @@
                                         {{ $related->datePublication ? $related->datePublication->format('d/m/Y') : '' }}
                                     </span>
                                     <a href="{{ route('front.success-stories.show', $related) }}" class="heading text-16 fw-600 link d-block">
-                                        {{ $related->titre }}
+                                        {{ $related->translatedTitre() }}
                                     </a>
                                 </div>
                             </li>

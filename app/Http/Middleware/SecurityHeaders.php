@@ -10,35 +10,34 @@ class SecurityHeaders
 {
     public function handle(Request $request, Closure $next): Response
     {
+        // Nonce généré avant le rendu de la vue pour être disponible dans les templates
+        $nonce = base64_encode(random_bytes(16));
+        app()->instance('csp-nonce', $nonce);
+
         $response = $next($request);
 
-        // Empêche le clickjacking (iframes non autorisées)
         $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
-
-        // Empêche le MIME-sniffing des navigateurs
         $response->headers->set('X-Content-Type-Options', 'nosniff');
-
-        // Protection XSS pour anciens navigateurs
         $response->headers->set('X-XSS-Protection', '1; mode=block');
-
-        // Contrôle les infos de provenance envoyées dans les requêtes
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
-
-        // Restreint l'accès aux APIs sensibles du navigateur
         $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), usb=()');
 
-        // HSTS : force HTTPS pour 1 an (uniquement activé si la connexion est déjà en HTTPS)
         if ($request->isSecure()) {
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
         }
 
-        // Content Security Policy
-        // unsafe-inline  : requis pour les blocs <style> inline et le thème Consulo
-        // unsafe-eval    : requis pour TinyMCE (éditeur admin)
-        // frame-src      : YouTube, Vimeo (vidéos hero), Google Maps (contact), PDF iframes
+        // Admin : unsafe-eval requis pour TinyMCE + unsafe-inline pour les handlers onclick.
+        // NOTE: nonce + unsafe-inline = unsafe-inline ignoré par le navigateur (spec CSP).
+        // On n'utilise donc pas de nonce côté admin pour ne pas casser les scripts inline.
+        // Front  : nonce uniquement, pas d'unsafe-inline ni d'unsafe-eval
+        $isAdmin = str_starts_with($request->path(), 'admin');
+        $scriptSrc = $isAdmin
+            ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net"
+            : "script-src 'self' 'nonce-{$nonce}' https://cdn.jsdelivr.net";
+
         $csp = implode('; ', [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+            $scriptSrc,
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://fonts.bunny.net",
             "font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net https://fonts.bunny.net",
             "img-src 'self' data: blob:",

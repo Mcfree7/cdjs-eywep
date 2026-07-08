@@ -32,19 +32,19 @@
                 <div class="col-12 col-sm-6 col-lg-4 col-xl-3" data-aos="fade-up" data-aos-delay="{{ ($loop->index % 4) * 100 }}">
                     <a
                         class="card-project radius18"
-                        aria-label="{{ $project->titre }}"
+                        aria-label="{{ $project->translatedTitre() }}"
                         href="{{ route('front.projects.show', $project) }}"
                     >
                         <img
                             src="{{ $project->coverImage ? Storage::url($project->coverImage->image_path) : asset('front-assets/consulo/img/project/card/' . (($loop->index % 8) + 1) . '.jpg') }}"
-                            alt="{{ $project->titre }}"
+                            alt="{{ $project->translatedTitre() }}"
                             width="645"
                             height="690"
                             loading="lazy"
                         >
                         <div class="card-project-content-absolute">
                             <div class="card-project-content">
-                                <h2 class="heading text-24">{{ $project->titre }}</h2>
+                                <h2 class="heading text-24">{{ $project->translatedTitre() }}</h2>
                                 <p class="text text-16">
                                     {{ $statutLabel }}{{ $project->candidatures_count ? ' · ' . $project->candidatures_count . ' candidature' . ($project->candidatures_count > 1 ? 's' : '') : '' }}
                                 </p>
@@ -54,7 +54,7 @@
                                     class="button button--primary mt-2"
                                     style="font-size:13px; padding: 8px 18px; display:inline-flex;"
                                     role="button"
-                                    aria-label="Postuler pour {{ $project->titre }}"
+                                    aria-label="Postuler pour {{ $project->translatedTitre() }}"
                                 >
                                     Postuler
                                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="margin-left:6px;">

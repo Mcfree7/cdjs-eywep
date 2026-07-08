@@ -14,25 +14,45 @@
     <section class="mt-100 section-padding">
         <div class="container">
 
+            @php
+                $fileColors = [
+                    'pdf'  => ['bg' => '#dc3545', 'label' => 'PDF'],
+                    'doc'  => ['bg' => '#0d6efd', 'label' => 'DOC'],
+                    'docx' => ['bg' => '#0d6efd', 'label' => 'DOCX'],
+                    'xls'  => ['bg' => '#198754', 'label' => 'XLS'],
+                    'xlsx' => ['bg' => '#198754', 'label' => 'XLSX'],
+                    'ppt'  => ['bg' => '#fd7e14', 'label' => 'PPT'],
+                    'pptx' => ['bg' => '#fd7e14', 'label' => 'PPTX'],
+                ];
+            @endphp
             <div class="row g-4">
                 @forelse ($resources as $resource)
+                @php
+                    $ft   = strtolower($resource->file_type ?? 'pdf');
+                    $fc   = $fileColors[$ft] ?? ['bg' => '#6c757d', 'label' => strtoupper($ft)];
+                @endphp
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="radius18 p-4 h-100 d-flex flex-column" style="border: 1px solid rgba(0,0,0,0.08); background:#fff; box-shadow: 0 2px 12px rgba(0,0,0,0.04);">
-                        <div class="d-flex align-items-center gap-2 mb-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" style="color: var(--color-primary, #1c2539);">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
-                            </svg>
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            {{-- Miniature type de fichier --}}
+                            <div style="position:relative; width:40px; height:48px; flex-shrink:0;">
+                                <svg viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:40px;height:48px;">
+                                    <path d="M0 4C0 1.79 1.79 0 4 0H26L40 14V44C40 46.21 38.21 48 36 48H4C1.79 48 0 46.21 0 44V4Z" fill="{{ $fc['bg'] }}"/>
+                                    <path d="M26 0L40 14H30C27.79 14 26 12.21 26 10V0Z" fill="rgba(0,0,0,0.22)"/>
+                                </svg>
+                                <span style="position:absolute;bottom:7px;left:0;right:0;text-align:center;color:#fff;font-weight:700;font-size:9px;letter-spacing:.04em;line-height:1;">{{ $fc['label'] }}</span>
+                            </div>
                             <span class="text text-14 text-muted">
                                 {{ $resource->datePublication ? $resource->datePublication->format('d/m/Y') : '' }}
                             </span>
                         </div>
                         <h2 class="heading text-20 fw-700 mb-3">
                             <a href="{{ route('front.resources.show', $resource) }}" class="link">
-                                {{ $resource->titre }}
+                                {{ $resource->translatedTitre() }}
                             </a>
                         </h2>
                         <p class="text text-18 flex-grow-1 mb-4">
-                            {{ Str::limit(strip_tags($resource->description), 120) }}
+                            {{ Str::limit(strip_tags($resource->translatedDescription()), 120) }}
                         </p>
                         <div class="d-flex gap-2 flex-wrap">
                             <a href="{{ route('front.resources.show', $resource) }}" class="button button--secondary" style="font-size:14px; padding: 8px 16px;">

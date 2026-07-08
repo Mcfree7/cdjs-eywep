@@ -5,14 +5,14 @@
 @endphp
 @extends('front.layouts.app')
 
-@section('title', $project->titre . ' - ' . ($settings->company_name ?? 'EYWEP'))
-@section('description', Str::limit(strip_tags($project->description), 160))
+@section('title', $project->translatedTitre() . ' - ' . ($settings->company_name ?? 'EYWEP'))
+@section('description', Str::limit(strip_tags($project->translatedDescription()), 160))
 
 @section('content')
 <main>
 
     @include('front.partials.page-banner', [
-        'bannerTitle'      => $project->titre,
+        'bannerTitle'      => $project->translatedTitre(),
         'breadcrumbParent' => ['label' => __('app.apply.breadcrumb'), 'url' => route('front.projects.index')],
     ])
 
@@ -42,7 +42,7 @@
                     <div class="mb-5">
                         <img
                             src="{{ Storage::url($project->coverImage->image_path) }}"
-                            alt="{{ $project->titre }}"
+                            alt="{{ $project->translatedTitre() }}"
                             class="img-fluid radius18 w-100"
                             style="max-height: 480px; object-fit: cover;"
                         >
@@ -64,10 +64,10 @@
                         @endif
                     </div>
 
-                    <h1 class="heading text-50 fw-700 mb-4">{{ $project->titre }}</h1>
+                    <h1 class="heading text-50 fw-700 mb-4">{{ $project->translatedTitre() }}</h1>
 
                     <div class="text text-18 article-body mb-5">
-                        {!! $project->description !!}
+                        {!! $project->translatedDescription() !!}
                     </div>
 
                     @if ($project->images && $project->images->isNotEmpty())
@@ -84,7 +84,7 @@
                                 >
                                     <img
                                         src="{{ Storage::url($image->image_path) }}"
-                                        alt="{{ $project->titre }}"
+                                        alt="{{ $project->translatedTitre() }}"
                                         loading="lazy"
                                         class="img-fluid radius18 w-100"
                                         style="aspect-ratio: 4/3; object-fit: cover; transition: transform 0.3s;"
@@ -453,11 +453,19 @@
                                 @error('autres_activites')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            <button type="submit" class="button button--primary w-100 justify-content-center">
-                                {{ __('app.apply.submit') }}
-                                <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                    <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
-                                </svg>
+                            <button type="submit" id="submit-btn" class="button button--primary w-100 justify-content-center">
+                                <span id="submit-label" style="display:flex; align-items:center; gap:6px;">
+                                    {{ __('app.apply.submit') }}
+                                    <svg class="icon-20" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <path d="M13.3365 7.84518L6.16435 15.0173L4.98584 13.8388L12.158 6.66667H5.83652V5H15.0032V14.1667H13.3365V7.84518Z" fill="currentColor"/>
+                                    </svg>
+                                </span>
+                                <span id="submit-loading" style="display:none; align-items:center; gap:8px;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="animation:spin 1s linear infinite;">
+                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-dasharray="31.4" stroke-dashoffset="10" stroke-linecap="round"/>
+                                    </svg>
+                                    {{ __('app.apply.submitting') }}
+                                </span>
                             </button>
 
                         </form>
@@ -474,11 +482,28 @@
 @endsection
 
 @push('scripts')
-<script>
+<script @cspNonce>
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.apply-info-btn').forEach(function (el) {
         new bootstrap.Popover(el, { html: true, sanitize: false });
     });
+
+    var form = document.getElementById('candidature-form');
+    if (form) {
+        form.addEventListener('submit', function () {
+            var btn    = document.getElementById('submit-btn');
+            var label  = document.getElementById('submit-label');
+            var loader = document.getElementById('submit-loading');
+            if (btn && label && loader) {
+                btn.disabled = true;
+                label.style.display = 'none';
+                loader.style.display = 'flex';
+            }
+        });
+    }
 });
 </script>
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
 @endpush

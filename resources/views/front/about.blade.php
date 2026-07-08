@@ -215,7 +215,7 @@
                             @forelse ($faqs as $faq)
                             <div class="accordion-block" data-aos="fade-up" @if(!$loop->first) data-aos-delay="{{ $loop->index * 50 }}" @endif>
                                 <div class="accordion-opener heading text-22">
-                                    {{ $faq->question }}
+                                    {{ $faq->translated('question') }}
                                     <div class="svg-wrapper">
                                         <svg class="icon icon-24" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <g clip-path="url(#clip-faq-about-chevron)">
@@ -227,7 +227,7 @@
                                 </div>
                                 <div class="accordion-content">
                                     <div class="accordion-content-inner text text-18">
-                                        {{ $faq->reponse }}
+                                        {{ $faq->translated('reponse') }}
                                     </div>
                                 </div>
                             </div>

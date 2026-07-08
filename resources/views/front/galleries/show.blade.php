@@ -6,6 +6,59 @@
 
 @push('styles')
 <style>
+/* ── Lightbox ─────────────────────────────────────────────────────────── */
+#lightbox {
+    display: none;
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,.92);
+    align-items: center; justify-content: center;
+}
+#lightbox.active { display: flex; }
+
+#lb-img-wrap {
+    max-width: 90vw; max-height: 88vh;
+    display: flex; align-items: center; justify-content: center;
+}
+#lb-img {
+    max-width: 90vw; max-height: 88vh;
+    object-fit: contain; border-radius: 8px;
+    user-select: none;
+}
+
+#lb-close {
+    position: absolute; top: 16px; right: 20px;
+    background: none; border: none; color: #fff;
+    font-size: 36px; line-height: 1; cursor: pointer;
+    opacity: .8; transition: opacity .2s;
+}
+#lb-close:hover { opacity: 1; }
+
+#lb-prev, #lb-next {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(255,255,255,.12); border: 2px solid rgba(255,255,255,.3);
+    color: #fff; font-size: 32px; line-height: 1;
+    width: 52px; height: 52px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background .2s, border-color .2s;
+    user-select: none;
+}
+#lb-prev { left: 16px; }
+#lb-next { right: 16px; }
+#lb-prev:hover, #lb-next:hover {
+    background: rgba(255,255,255,.28); border-color: rgba(255,255,255,.7);
+}
+#lb-prev:disabled, #lb-next:disabled { opacity: .25; cursor: default; }
+
+#lb-counter {
+    position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
+    color: rgba(255,255,255,.75); font-size: 14px; font-weight: 600;
+    letter-spacing: .05em;
+}
+
+/* thumbnail hover cursor */
+.lb-trigger { cursor: zoom-in; }
+
+/* ── Autres galeries ──────────────────────────────────────────────────── */
 .other-galleries-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -84,14 +137,14 @@
 </style>
 @endpush
 
-@section('title', $gallery->titre . ' - ' . ($settings->company_name ?? 'EYWEP'))
+@section('title', $gallery->translatedTitre() . ' - ' . ($settings->company_name ?? 'EYWEP'))
 @section('description', Str::limit(strip_tags($gallery->description ?? ''), 160))
 
 @section('content')
 <main>
 
     @include('front.partials.page-banner', [
-        'bannerTitle'      => $gallery->titre,
+        'bannerTitle'      => $gallery->translatedTitre(),
         'breadcrumbParent' => ['label' => 'Galeries', 'url' => route('front.galleries.index')],
     ])
 
@@ -101,7 +154,7 @@
             {{-- Gallery header --}}
             <div class="row justify-content-center mb-5">
                 <div class="col-12 col-lg-8 text-center">
-                    <h1 class="heading text-50 fw-700 mb-3">{{ $gallery->titre }}</h1>
+                    <h1 class="heading text-50 fw-700 mb-3">{{ $gallery->translatedTitre() }}</h1>
                     @if ($gallery->description)
                     <p class="text text-18">{{ $gallery->description }}</p>
                     @endif
@@ -109,10 +162,25 @@
                 </div>
             </div>
 
+            {{-- Lightbox overlay --}}
+            <div id="lightbox" role="dialog" aria-modal="true" aria-label="Visionneuse d'images">
+                <button id="lb-close" aria-label="Fermer">&times;</button>
+                <button id="lb-prev" aria-label="Image précédente">&#8249;</button>
+                <button id="lb-next" aria-label="Image suivante">&#8250;</button>
+                <div id="lb-img-wrap">
+                    <img id="lb-img" src="" alt="">
+                </div>
+                <div id="lb-counter"></div>
+            </div>
+
             {{-- Media grid --}}
+            @php
+                $images = $gallery->medias->where('media_type', '!=', 'video')->values();
+            @endphp
             @if ($gallery->medias->isNotEmpty())
             <div class="row g-4">
                 @foreach ($gallery->medias as $media)
+                @php $imgIndex = $images->search(fn($m) => $m->id === $media->id); @endphp
                 <div class="col-12 col-sm-6 col-lg-4">
                     <div class="radius18 overflow-hidden" style="aspect-ratio: 4/3; background:#f0f0f0;">
                         @if ($media->media_type === 'video')
@@ -126,22 +194,22 @@
                                 Votre navigateur ne supporte pas la lecture vidéo.
                             </video>
                         @else
-                            <a
-                                href="{{ Storage::url($media->media_path) }}"
-                                target="_blank"
-                                rel="noopener"
-                                aria-label="Voir l'image en taille réelle"
+                            <button
+                                type="button"
+                                class="lb-trigger w-100 h-100 p-0 border-0 bg-transparent"
+                                data-index="{{ $imgIndex }}"
+                                aria-label="Agrandir l'image"
                             >
                                 <img
                                     src="{{ Storage::url($media->media_path) }}"
-                                    alt="{{ $gallery->titre }}"
+                                    alt="{{ $gallery->translatedTitre() }}"
                                     loading="lazy"
                                     class="w-100 h-100 radius18"
                                     style="object-fit: cover; display: block; transition: transform 0.3s;"
                                     onmouseover="this.style.transform='scale(1.03)'"
                                     onmouseout="this.style.transform='scale(1)'"
                                 >
-                            </a>
+                            </button>
                         @endif
                     </div>
                 </div>
@@ -176,14 +244,14 @@
                     @endphp
                     <a href="{{ route('front.galleries.show', $other) }}"
                        class="gallery-home-card"
-                       aria-label="{{ $other->titre }}"
+                       aria-label="{{ $other->translatedTitre() }}"
                        data-aos="fade-up"
                        data-aos-delay="{{ $loop->index * 60 }}">
                         <div class="gallery-home-cover">
                             @if ($otherIsVideo && $otherFirst)
                                 <video src="{{ Storage::url($otherFirst->media_path) }}" muted preload="none"></video>
                             @elseif ($otherCover)
-                                <img src="{{ Storage::url($otherCover->media_path) }}" alt="{{ $other->titre }}" loading="lazy">
+                                <img src="{{ Storage::url($otherCover->media_path) }}" alt="{{ $other->translatedTitre() }}" loading="lazy">
                             @else
                                 <div class="gallery-home-placeholder">
                                     <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
@@ -211,7 +279,7 @@
                             </div>
                         </div>
                         <div class="gallery-home-info">
-                            <span class="gallery-home-title heading text-16 fw-600">{{ $other->titre }}</span>
+                            <span class="gallery-home-title heading text-16 fw-600">{{ $other->translatedTitre() }}</span>
                             <span class="gallery-home-count text text-13">{{ $otherTotal }} média{{ $otherTotal > 1 ? 's' : '' }}</span>
                         </div>
                     </a>
@@ -233,4 +301,59 @@
     </section>
 
 </main>
+@push('scripts')
+<script @cspNonce>
+document.addEventListener('DOMContentLoaded', function () {
+    const images = @json($images->map(fn($m) => \Illuminate\Support\Facades\Storage::url($m->media_path))->values());
+
+    const lb      = document.getElementById('lightbox');
+    const lbImg   = document.getElementById('lb-img');
+    const lbPrev  = document.getElementById('lb-prev');
+    const lbNext  = document.getElementById('lb-next');
+    const lbClose = document.getElementById('lb-close');
+    const lbCount = document.getElementById('lb-counter');
+    let current   = 0;
+
+    function open(index) {
+        current = index;
+        lbImg.src = images[current];
+        lbCount.textContent = (current + 1) + ' / ' + images.length;
+        lbPrev.disabled = current === 0;
+        lbNext.disabled = current === images.length - 1;
+        lb.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        lbClose.focus();
+    }
+
+    function close() {
+        lb.classList.remove('active');
+        lbImg.src = '';
+        document.body.style.overflow = '';
+    }
+
+    function prev() { if (current > 0) open(current - 1); }
+    function next() { if (current < images.length - 1) open(current + 1); }
+
+    document.querySelectorAll('.lb-trigger').forEach(function (btn) {
+        btn.addEventListener('click', function () { open(parseInt(this.dataset.index)); });
+    });
+
+    lbClose.addEventListener('click', close);
+    lbPrev.addEventListener('click', prev);
+    lbNext.addEventListener('click', next);
+
+    lb.addEventListener('click', function (e) {
+        if (e.target === lb) close();
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (!lb.classList.contains('active')) return;
+        if (e.key === 'Escape')      close();
+        if (e.key === 'ArrowLeft')   prev();
+        if (e.key === 'ArrowRight')  next();
+    });
+});
+</script>
+@endpush
+
 @endsection

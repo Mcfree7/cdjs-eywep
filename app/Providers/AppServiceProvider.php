@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\FrontOfficeSetting;
 use App\Models\News;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,6 +23,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Blade::directive('cspNonce', function () {
+            return '<?php echo \'nonce="\' . e(app(\'csp-nonce\')) . \'"\'; ?>';
+        });
+
         View::composer(['admin.*', 'auth.login', 'layouts.guest'], function ($view) {
             $view->with('adminSettings', FrontOfficeSetting::first());
         });

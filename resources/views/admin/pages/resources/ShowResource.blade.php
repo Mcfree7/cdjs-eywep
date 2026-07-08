@@ -76,15 +76,37 @@
                         <div class="col-md-8">
                             <p class="text-muted mb-2">Categorie : <span class="fw-semibold text-dark">{{ ucfirst($resourceItem->categorie) }}</span></p>
                             <p class="text-muted mb-4">Date de publication : {{ optional($resourceItem->datePublication)->format('d/m/Y') ?? 'Non definie' }}</p>
-                            <div>{{ $resourceItem->description ?: 'Aucune description renseignee.' }}</div>
+                            <div class="mb-4">{{ $resourceItem->description ?: 'Aucune description renseignee.' }}</div>
+
+                            @if ($resourceItem->files->isNotEmpty())
+                            <div class="border rounded-4 p-4 bg-light">
+                                <div class="fw-semibold mb-3">Documents supplémentaires ({{ $resourceItem->files->count() }})</div>
+                                <div class="list-group list-group-flush">
+                                    @foreach ($resourceItem->files as $file)
+                                    <div class="list-group-item px-0 d-flex align-items-center justify-content-between gap-2">
+                                        <div class="d-flex align-items-center gap-2 text-truncate">
+                                            <span class="badge flex-shrink-0 text-bg-{{ $file->file_type === 'pdf' ? 'danger' : 'primary' }}">{{ strtoupper($file->file_type) }}</span>
+                                            <div class="text-truncate">
+                                                <div class="small fw-semibold">{{ $file->titre }}</div>
+                                                <div class="text-muted" style="font-size:11px;">{{ $file->file_name }}</div>
+                                            </div>
+                                        </div>
+                                        <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank" class="btn btn-sm btn-outline-primary flex-shrink-0">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            @endif
                         </div>
                         <div class="col-md-4">
-                            <div class="border rounded-4 p-4 bg-light h-100">
-                                <div class="fw-semibold mb-2">Fichier</div>
-                                <p class="mb-2">{{ $resourceItem->file_name }}</p>
-                                <p class="text-muted mb-3">Type : {{ strtoupper($resourceItem->file_type) }}</p>
+                            <div class="border rounded-4 p-4 bg-light">
+                                <div class="fw-semibold mb-3">Document principal</div>
+                                <p class="mb-1">{{ $resourceItem->file_name }}</p>
+                                <p class="text-muted mb-3"><span class="badge text-bg-{{ $resourceItem->file_type === 'pdf' ? 'danger' : 'primary' }}">{{ strtoupper($resourceItem->file_type) }}</span></p>
                                 <a href="{{ asset('storage/' . $resourceItem->file_path) }}" target="_blank" class="btn btn-primary w-100">
-                                    Ouvrir le fichier
+                                    Ouvrir
                                 </a>
                             </div>
                         </div>
